@@ -1,18 +1,29 @@
 const path = require("path");
 const fs = require("fs");
-const tesseract = require("./python/ocr.py");
-const summarizeWithDeepSeek = require("./utils/deepseek");
+const { PythonShell } = require('python-shell');
+const summarizeWithDeepSeek = require("./services/deepseek");
 const sendTwilioAlert = require("./utils/twilio");
 const Transcription = require("./models/Transcription");
 
 async function ocrFile(filePath) {
-  console.log("📑 OCR 开始：", path.basename(filePath));
-  const { data: { text } } = await tesseract.recognize(filePath, "eng");
-  return text;
+  const options = {
+    mode: 'text',
+    pythonPath: 'python3',
+    scriptPath: './python',
+    args: [filePath],
+  };
+
+
+  return new Promise((resolve, reject) => {
+    PythonShell.run('ocr.py', options, (err, results) => {
+      if (err) return reject(err);
+      resolve(results.join('\n'));
+    });
+  });
 }
 
 function isCheckReport(text) {
-  const keywords = ["findings", "impression", "CT", "MRI", "lab test", "result"];
+  const keywords = ["findings", "impression", "CT", "MRI", "lab", "result"];
   return keywords.some(word => text.toLowerCase().includes(word));
 }
 

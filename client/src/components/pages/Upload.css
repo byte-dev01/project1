@@ -1,0 +1,72 @@
+.ScanPage-container {
+  max-width: 640px;
+  margin: 3rem auto;
+  padding: 2.5rem;
+  background-color: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+  font-family: "Segoe UI", sans-serif;
+  transition: box-shadow 0.3s;
+}
+
+.ScanPage-container:hover {
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+.ScanPage-title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  color: #222;
+  text-align: center;
+}
+
+.ScanPage-fileInput {
+  display: block;
+  width: 100%;
+  margin: 1.2rem 0;
+  font-size: 1rem;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background-color: #f8f8f8;
+  cursor: pointer;
+}
+
+.ScanPage-button {
+  background-color: #007bff;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: block;
+  width: 100%;
+  transition: background-color 0.2s, transform 0.1s;
+}
+
+.ScanPage-button:hover {
+  background-color: #0056b3;
+  transform: scale(1.01);
+}
+
+.ScanPage-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.ScanPage-result {
+  margin-top: 2rem;
+  background-color: #fefefe;
+  padding: 1.25rem;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  font-size: 0.95rem;
+  color: #333;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+  line-height: 1.5;
+}

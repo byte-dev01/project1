@@ -1,0 +1,156 @@
+body {
+  font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  background-color: #f5f7fa;
+  margin: 0;
+  padding: 0;
+  color: #333;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+h1, h2, h3 {
+  font-weight: 600;
+  color: #1e293b;
+}
+
+h1 {
+  font-size: 1.75rem;
+  margin-bottom: 0.5rem;
+}
+
+h2 {
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.container {
+  max-width: 960px;
+  margin: auto;
+  padding: 2rem 1.25rem;
+}
+
+/* === Section Headers === */
+.section-header {
+  background: linear-gradient(to right, #3b82f6, #2563eb);
+  color: white;
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+}
+
+.section-header h1 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.section-header p {
+  font-size: 0.875rem;
+  opacity: 0.9;
+}
+
+/* === Recording Controls === */
+button {
+  all: unset;
+  padding: 10px 16px;
+  background-color: #2563eb;
+  color: white;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: background-color 0.2s ease;
+}
+
+button:hover {
+  background-color: #1e40af;
+}
+
+button.secondary {
+  background-color: #6b7280;
+}
+
+button.secondary:hover {
+  background-color: #4b5563;
+}
+
+
+/* === Card Styling === */
+.card {
+  background-color: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.07);
+  margin-bottom: 1.5rem;
+  border: 1px solid #e5e7eb;
+}
+
+/* === Transcription Text === */
+.transcription-text {
+  background-color: #f9fafb;
+  border: 1px solid #e2e8f0;
+  padding: 1rem;
+  border-radius: 6px;
+  white-space: pre-wrap;
+  font-size: 0.95rem;
+  color: #334155;
+}
+
+/* === Timestamp === */
+.timestamp {
+  font-size: 0.8rem;
+  color: #6b7280;
+  margin-top: 0.5rem;
+}
+
+/* === Clinical Summary === */
+.summary-section {
+  padding: 1rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  background-color: #f1f5f9;
+  border-left: 4px solid #60a5fa;
+}
+
+.summary-section h4 {
+  margin: 0 0 0.5rem;
+  color: #1e3a8a;
+  font-size: 1rem;
+}
+
+.summary-section p {
+  margin: 0;
+  font-size: 0.925rem;
+}
+
+/* === Audio Controls === */
+.audio-controls {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+
+.audio-controls button {
+  padding: 8px 12px;
+  font-size: 0.9rem;
+}
+
+audio {
+  width: 100%;
+  margin-top: 0.75rem;
+}
+
+/* === Responsive Grid === */
+@media (min-width: 768px) {
+  .grid {
+    display: flex;
+    gap: 2rem;
+  }
+
+  .grid .left,
+  .grid .right {
+    flex: 1;
+  }
+}

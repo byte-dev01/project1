@@ -7,6 +7,8 @@ import json
 import os
 import tkinter as Tk
 from dotenv import load_dotenv
+from tkinter import filedialog
+
 load_dotenv()
 def extract_text_from_pdf(pdf_path):
     """Extract text from PDF using PyMuPDF"""

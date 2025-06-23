@@ -1,30 +1,26 @@
-const { Client } = require("twilio");
+const twilio = require("twilio");
 
-// 从环境变量读取配置（推荐用 dotenv 管理）
 const accountSid = process.env.TWILIO_SID;
 const authToken = process.env.TWILIO_AUTH;
-const fromNumber = process.env.TWILIO_FROM; // 你的 Twilio 号码
-const toNumber = process.env.TWILIO_TO;     // 医生或收件人号码
+const fromNumber = process.env.TWILIO_FROM;
 
-const client = new Client(accountSid, authToken);
+const client = twilio(accountSid, authToken);
 
 /**
- * 向预设号码发送严重警报短信
- * @param {string} message - 要发送的短信内容
- * @returns {Promise}
+ * 向指定号码发送短信
+ * @param {string} message - 短信内容
+ * @param {string} toNumber - 接收人号码（默认使用环境变量）
  */
-async function sendTwilioAlert(message) {
+async function sendTwilioAlert(message, toNumber = process.env.TWILIO_TO) {
   try {
-    const result = await client.messages.create({
+    const msg = await client.messages.create({
       body: message,
       from: fromNumber,
       to: toNumber,
     });
-    console.log("📤 Twilio 短信已发送:", result.sid);
-    return result;
+    console.log("✅ 短信已发送:", msg.sid);
   } catch (err) {
     console.error("❌ Twilio 发送失败:", err.message);
-    throw err;
   }
 }
 

@@ -9,7 +9,6 @@
 
 const express = require("express");
 
-
 // import models so we can interact with the database
 const Story = require("./models/story");
 const Comment = require("./models/comment");
@@ -20,10 +19,9 @@ const fs = require("fs");
 const Tesseract = require("tesseract.js");
 const axios = require("axios"); // add at the top
 const FormData = require("form-data");
-const openai_selector= require("./openai_selector.js")
 const sql = require("./db.js");
 const handleOCRData = require("./ocr_data"); // 模块化处理OCR逻辑
-const handleTranscribeData = require("./transcribe_data");
+const handleTranscribeData = require("./controllers/transcribe_data");
 
 
 const upload = multer({ dest: "uploads/" });

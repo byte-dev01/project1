@@ -1,3 +1,8 @@
+const path = require("path");
+require("dotenv").config({ path: path.join(__dirname, "../../.env") });
+
+console.log("🧪 Loaded API Key:", process.env.OPENROUTER_API_KEY);
+
 const axios = require("axios");
 
 /**

@@ -5,7 +5,9 @@ import pytesseract
 from pdf2image import convert_from_path
 import json
 import os
-
+import tkinter as Tk
+from dotenv import load_dotenv
+load_dotenv()
 def extract_text_from_pdf(pdf_path):
     """Extract text from PDF using PyMuPDF"""
     try:
@@ -31,6 +33,26 @@ def check_pdf_text_layer(pdf_path):
         return False
     except Exception:
         return False
+def select_pdf():
+    """Allow the user to select a PDF and extract its text."""
+    root = Tk.Tk()
+    root.withdraw()  # Hide the main window
+
+    file_path = filedialog.askopenfilename(title="选择文件", filetypes=[("PDF files", "*.pdf")])  
+    if not file_path:
+        print("❌ No file selected.")
+        return ""
+
+    check = check_pdf_text_layer(file_path)  # Check if PDF has selectable text
+
+    if check:
+        extracted_text = extract_text_from_pdf(file_path)  # Extract selectable text
+        print("\n✅ Extracted Text:\n", extracted_text)
+    else:
+        extracted_text = ocr_from_scanned_pdf(file_path)  # Use OCR if no text is found
+        print("\n📝 OCR Extracted Text:\n", extracted_text)
+
+    return extracted_text  # Return the extracted text
 
 def ocr_from_scanned_pdf(pdf_path):
     """Perform OCR on scanned PDF"""

@@ -1,6 +1,6 @@
 const { connections } = require('../server');
 
-const createTranscriptionModel = require('./Transcription');
+const createTranscriptionModel = require('./Transcription.js');
 const createTranscriptionFaxModel = require('./TranscriptionFax');
 
 // 创建模型实例，连接到对应数据库

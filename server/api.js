@@ -1,3 +1,4 @@
+
 /*
 |--------------------------------------------------------------------------
 | api.js -- server routes
@@ -19,10 +20,12 @@ const fs = require("fs");
 const Tesseract = require("tesseract.js");
 const axios = require("axios"); // add at the top
 const FormData = require("form-data");
-const sql = require("./db.js");
+const sql = require("./dbConnection.js");
 const handleOCRData = require("./ocr_data"); // 模块化处理OCR逻辑
 const handleTranscribeData = require("./controllers/transcribe_data");
 
+// ADD THIS: Import your fax processing function
+const handleNewFax = require("./controllers/handleNewFax");
 
 const upload = multer({ dest: "uploads/" });
 const auth = require("./auth");
@@ -161,7 +164,6 @@ router.post("/ocr", upload.single("file"), (req, res) => {
   });
 });
 
-
 router.post("/transcribe", upload.single("audio"), async (req, res) => {
   const filePath = req.file.path;
   if (!filePath) return res.status(400).json({ error: "No file" });
@@ -175,7 +177,133 @@ router.post("/transcribe", upload.single("audio"), async (req, res) => {
   }
 });
 
+// FIXED: Fax processing endpoint with proper error handling
+router.post("/fax-upload", upload.single("file"), async (req, res) => {
+  console.log("📥 Fax upload endpoint called");
+  
+  // Check if file was uploaded
+  if (!req.file) {
+    return res.status(400).json({ 
+      status: "error", 
+      message: "No file uploaded" 
+    });
+  }
 
+  const filePath = req.file.path;
+  const originalName = req.file.originalname;
+  
+  try {
+    console.log(`📄 Processing fax: ${originalName}`);
+    console.log(`📁 File path: ${filePath}`);
+    
+    // Call your handleNewFax function
+    const result = await handleNewFax(filePath);
+    
+    // Clean up uploaded file after processing
+    if (fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath);
+    }
+    
+    console.log("✅ Fax processed successfully");
+    res.status(200).json({ 
+      status: "success", 
+      message: "Fax processed successfully",
+      result: result,
+      fileName: originalName
+    });
+    
+  } catch (err) {
+    console.error("❌ Fax processing failed:", err.message);
+    
+    // Clean up uploaded file on error
+    if (fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath);
+    }
+    
+    res.status(500).json({ 
+      status: "error", 
+      message: err.message,
+      fileName: originalName
+    });
+  }
+});
+
+// NEW: Get fax processing history
+router.get("/fax-history", async (req, res) => {
+  try {
+    // Import your TranscriptionFax model
+    const { faxDb } = require("./dbConnection");
+    const createTranscriptionFaxModel = require("./models/TranscriptionFax");
+    const TranscriptionFax = createTranscriptionFaxModel(faxDb);
+    
+    const limit = parseInt(req.query.limit) || 20;
+    const faxes = await TranscriptionFax.find()
+      .sort({ createdAt: -1 })
+      .limit(limit)
+      .select('fileName severityScore severityLevel severityReason createdAt');
+    
+    res.json({
+      status: "success",
+      faxes: faxes,
+      total: faxes.length
+    });
+    
+  } catch (err) {
+    console.error("❌ Failed to get fax history:", err.message);
+    res.status(500).json({
+      status: "error",
+      message: err.message
+    });
+  }
+});
+
+// NEW: Get fax processing stats
+router.get("/fax-stats", async (req, res) => {
+  try {
+    const { faxDb } = require("./dbConnection");
+    const createTranscriptionFaxModel = require("./models/TranscriptionFax");
+    const TranscriptionFax = createTranscriptionFaxModel(faxDb);
+    
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    // Get various stats
+    const [
+      totalProcessed,
+      todayProcessed,
+      highSeverityToday,
+      averageSeverity
+    ] = await Promise.all([
+      TranscriptionFax.countDocuments(),
+      TranscriptionFax.countDocuments({ createdAt: { $gte: today } }),
+      TranscriptionFax.countDocuments({ 
+        createdAt: { $gte: today },
+        severityScore: { $gte: 7 }
+      }),
+      TranscriptionFax.aggregate([
+        { $group: { _id: null, avgSeverity: { $avg: "$severityScore" } } }
+      ])
+    ]);
+    
+    res.json({
+      status: "success",
+      stats: {
+        totalProcessed,
+        todayProcessed,
+        highSeverityToday,
+        averageSeverity: averageSeverity[0]?.avgSeverity || 0,
+        lastUpdated: new Date().toISOString()
+      }
+    });
+    
+  } catch (err) {
+    console.error("❌ Failed to get fax stats:", err.message);
+    res.status(500).json({
+      status: "error", 
+      message: err.message
+    });
+  }
+});
 
 // anything else falls to this "not found" case
 router.all("*", (req, res) => {

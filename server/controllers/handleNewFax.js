@@ -6,8 +6,8 @@ const sendTwilioAlert = require("../services/twilio");
 const assessSeverityWithDeepSeek = require("../services/assessSeverityWithDeepSeek");
 
 // 引入数据库连接
-const { connections } = require("../server"); // 你 server.js 最后导出的 connections
-const faxDb = connections.faxDb;
+
+const { faxDb } = require("../dbConnection"); // ✅ clean, lightweight  // 你 server.js 最后导出的 connections
 
 const TranscriptionFax = require("../models/TranscriptionFax")(faxDb);
 
@@ -113,7 +113,16 @@ async function handleNewFax(filePath) {
 
     console.log("✅ 已存入fax数据库：", path.basename(filePath));
     console.log("📄 Record ID:", transcriptionRecord._id);
-    return transcriptionRecord;
+    return {
+      success: true,
+      recordId: transcriptionRecord._id,
+      fileName: path.basename(filePath),
+      severityScore,
+      severityLevel,
+      severityReason,
+      summary: summaryText,
+      processedAt: new Date().toISOString()
+    };
 
   } catch (err) {
     console.error("❌ 处理文件失败：", filePath, err);
@@ -125,6 +134,8 @@ if (require.main === module) {
 handleNewFax(testFile)
   .then((result) => {
     console.log("✅ Test completed successfully!");
+    console.log(JSON.stringify(result, null, 2));
+
     return safeClose();
   })
   .then(() => {

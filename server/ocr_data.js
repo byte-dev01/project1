@@ -1,5 +1,5 @@
 const fs = require("fs");
-const sql = require("./db");
+const sql = require("./dbConnection");
 
 async function handleOCRData(output, filename, filePath, res) {
   const parsed = JSON.parse(output);

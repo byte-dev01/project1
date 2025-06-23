@@ -32,57 +32,7 @@ const auth = require("./auth");
 // socket stuff
 const socketManager = require("./server-socket");
 require('dotenv').config()
-// Server configuration below
-// TODO change connection URL after setting up your own database
-const mongoConnectionURL =
-"mongodb+srv://rachellipurdue2:FPD8clZuvOXwOUrm@cluster0.br34aun.mongodb.net/fax-database?retryWrites=true&w=majority&appName=Cluster0";
-// TODO change database name to the name you chose
-// Create separate connections for each database
-const faxDbConnection = mongoose.createConnection(mongoConnectionURL, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  dbName: "fax-database",
-});
 
-const chatDbConnection = mongoose.createConnection(mongoConnectionURL, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  dbName: "chat-database",
-});
-
-const patientDbConnection = mongoose.createConnection(mongoConnectionURL, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  dbName: "patient-database",
-});
-
-// Legacy connection for existing cat-database (if you still need it)
-const catDbConnection = mongoose.createConnection(mongoConnectionURL, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  dbName: "cat-database",
-});
-
-// Connection event listeners
-faxDbConnection.on('connected', () => console.log('✅ Connected to fax-database'));
-faxDbConnection.on('error', (err) => console.log('❌ Error connecting to fax-database:', err));
-
-chatDbConnection.on('connected', () => console.log('✅ Connected to chat-database'));
-chatDbConnection.on('error', (err) => console.log('❌ Error connecting to chat-database:', err));
-
-patientDbConnection.on('connected', () => console.log('✅ Connected to patient-database'));
-patientDbConnection.on('error', (err) => console.log('❌ Error connecting to patient-database:', err));
-
-catDbConnection.on('connected', () => console.log('✅ Connected to cat-database'));
-catDbConnection.on('error', (err) => console.log('❌ Error connecting to cat-database:', err));
-
-// Export connections for use in other files
-module.exports.connections = {
-  faxDb: faxDbConnection,
-  chatDb: chatDbConnection,
-  patientDb: patientDbConnection,
-  catDb: catDbConnection,
-};
 // create a new express server
 const app = express();
 app.use(validator.checkRoutes);

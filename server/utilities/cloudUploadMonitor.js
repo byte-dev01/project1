@@ -1,18 +1,51 @@
-// simpleFaxMonitor.js - Basic folder monitoring
+// cloudUploadMonitor.js - For uploading to cloud server (optional)
 const chokidar = require('chokidar');
 const path = require('path');
 const fs = require('fs');
-const handleNewFax = require('./controllers/handleNewFax');
+const FormData = require('form-data'); // ✅ FIXED: Import proper form-data package
+const axios = require('axios');
 
-// Configuration - you can change these paths
-const FAX_FOLDER = 'C:/FaxInbox';           // Where Brother L2750 saves faxes
-const PROCESSED_FOLDER = 'C:/FaxProcessed'; // Where successful files go
-const ERROR_FOLDER = 'C:/FaxError';         // Where failed files go
+// Configuration
+const FAX_FOLDER = 'C:/FaxInbox';
+const PROCESSED_FOLDER = 'C:/FaxProcessed';
+const ERROR_FOLDER = 'C:/FaxError';
+const CLOUD_SERVER_URL = 'http://localhost:3000'; // ✅ FIXED: http instead of https
 
-console.log('🚀 Simple Fax Monitor Starting...');
+console.log('🌐 Cloud Upload Monitor Starting...');
 console.log(`📁 Watching folder: ${FAX_FOLDER}`);
-console.log(`✅ Processed folder: ${PROCESSED_FOLDER}`);
-console.log(`❌ Error folder: ${ERROR_FOLDER}`);
+console.log(`☁️ Cloud server: ${CLOUD_SERVER_URL}`);
+
+// Upload file to cloud server
+async function uploadToCloud(filePath) {
+  const fileName = path.basename(filePath);
+  console.log(`☁️ Uploading to cloud: ${fileName}`);
+  
+  try {
+    // Create proper FormData
+    const formData = new FormData();
+    formData.append('file', fs.createReadStream(filePath));
+    
+    const response = await axios.post(`${CLOUD_SERVER_URL}/api/fax-upload`, formData, {
+      headers: formData.getHeaders(), // ✅ This works with form-data package
+      timeout: 60000, // 60 seconds timeout
+    });
+    
+    console.log(`✅ Cloud upload successful: ${fileName}`);
+    return response.data;
+    
+  } catch (error) {
+    if (error.response) {
+      console.error(`❌ Cloud server error (${error.response.status}):`, error.response.data);
+      throw new Error(`Cloud server error: ${error.response.status} ${error.response.data.message || ''}`);
+    } else if (error.request) {
+      console.error('❌ No response from cloud server');
+      throw new Error('Cloud server not responding - is it running?');
+    } else {
+      console.error('❌ Upload error:', error.message);
+      throw new Error(`Upload failed: ${error.message}`);
+    }
+  }
+}
 
 // Create folders if they don't exist
 function createFoldersIfNeeded() {
@@ -68,14 +101,14 @@ function moveToError(filePath, errorMessage) {
   }
 }
 
-// Process a single fax file
+// Process a single fax file via cloud
 async function processFaxFile(filePath) {
   const fileName = path.basename(filePath);
   console.log(`🔄 Processing: ${fileName}`);
   
   try {
-    // Use your existing handleNewFax function
-    const result = await handleNewFax(filePath);
+    // Upload to cloud for processing
+    const result = await uploadToCloud(filePath);
     
     // If successful, move to processed folder
     moveToProcessed(filePath);
@@ -97,19 +130,18 @@ createFoldersIfNeeded();
 
 // Set up file watcher with chokidar
 const watcher = chokidar.watch(FAX_FOLDER, {
-  ignored: /^\./, // Ignore hidden files (starting with .)
-  persistent: true, // Keep the process running
-  ignoreInitial: true, // Don't process files that are already there when starting
+  ignored: /^\./, 
+  persistent: true,
+  ignoreInitial: true,
   awaitWriteFinish: {
-    stabilityThreshold: 2000, // Wait 2 seconds after file stops changing
-    pollInterval: 100 // Check every 100ms
+    stabilityThreshold: 2000,
+    pollInterval: 100
   }
 });
 
 // Event handlers
 watcher
   .on('add', async (filePath) => {
-    // New file detected
     if (isFaxFile(filePath)) {
       console.log(`📥 New fax file detected: ${path.basename(filePath)}`);
       
@@ -122,21 +154,13 @@ watcher
       console.log(`⚠️ Unsupported file format: ${path.basename(filePath)}`);
     }
   })
-  .on('change', (filePath) => {
-    // File changed - usually not needed for fax files, but good to know
-    console.log(`📝 File changed: ${path.basename(filePath)}`);
-  })
-  .on('unlink', (filePath) => {
-    // File deleted
-    console.log(`🗑️ File deleted: ${path.basename(filePath)}`);
-  })
   .on('error', (error) => {
     console.error('👀 Watcher error:', error);
   })
   .on('ready', () => {
     console.log('👀 File watcher ready! Monitoring for new fax files...');
-    console.log('📝 Supported formats: .tif, .tiff, .pdf, .png, .jpg, .jpeg');
-    console.log('💡 To test: Copy a fax file to the watched folder');
+    console.log('☁️ Will upload to cloud server for processing');
+    console.log('💡 Make sure your server is running: node server.js');
   });
 
 // Graceful shutdown
@@ -148,9 +172,9 @@ process.on('SIGINT', () => {
   });
 });
 
-// Export for testing
 module.exports = {
   processFaxFile,
+  uploadToCloud,
   moveToProcessed,
   moveToError,
   isFaxFile

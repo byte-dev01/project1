@@ -71,6 +71,7 @@ class App extends Component {
             <Chatbook path="/chat/" userId={this.state.userId} />
             <Upload path="/upload/:userId" userId={this.state.userId} />
             <MedicalAudioTranscriber path="/recorder/:userId" userId={this.state.userId} />
+            <FaxDashboard path="/fax-dashboard/" userId={this.state.userId} /> {/* Add this route */}
 
             <NotFound default />
           </Router>

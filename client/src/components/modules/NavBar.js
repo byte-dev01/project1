@@ -41,8 +41,11 @@ class NavBar extends Component {
               Recorder
             </Link>
           )}
-
-
+          {this.props.userId && (
+            <Link to="/fax-dashboard/" className="NavBar-link NavBar-faxDashboard">
+              📠 Fax Dashboard
+            </Link>
+          )}
           {this.props.userId ? (
             <GoogleLogout
               clientId={GOOGLE_CLIENT_ID}

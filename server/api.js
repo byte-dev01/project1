@@ -178,10 +178,173 @@ router.post("/transcribe", upload.single("audio"), async (req, res) => {
 });
 
 // FIXED: Fax processing endpoint with proper error handling
+router.get("/fax-records", async (req, res) => {
+  try {
+    const { faxDb } = require("./dbConnection");
+    const createTranscriptionFaxModel = require("./models/TranscriptionFax");
+    const TranscriptionFax = createTranscriptionFaxModel(faxDb);
+    
+    const timeRange = req.query.timeRange || "24h";
+    
+    // 根据时间范围计算过滤条件
+    let dateFilter = {};
+    const now = new Date();
+    
+    switch(timeRange) {
+      case "1h":
+        dateFilter = { createdAt: { $gte: new Date(now - 60 * 60 * 1000) } };
+        break;
+      case "24h":
+        dateFilter = { createdAt: { $gte: new Date(now - 24 * 60 * 60 * 1000) } };
+        break;
+      case "7d":
+        dateFilter = { createdAt: { $gte: new Date(now - 7 * 24 * 60 * 60 * 1000) } };
+        break;
+      case "30d":
+        dateFilter = { createdAt: { $gte: new Date(now - 30 * 24 * 60 * 60 * 1000) } };
+        break;
+      default:
+        dateFilter = { createdAt: { $gte: new Date(now - 24 * 60 * 60 * 1000) } };
+    }
+    
+    console.log(`📊 Fetching fax records for timeRange: ${timeRange}`);
+    
+    // 从 MongoDB 获取真实数据
+    const faxData = await TranscriptionFax.find(dateFilter)
+      .sort({ createdAt: -1 })
+      .limit(1000)
+      .lean(); // 使用 lean() 提高性能
+    
+    console.log(`📋 Found ${faxData.length} fax records in database`);
+    
+    // 转换数据格式以匹配前端期望
+    const transformedData = faxData.map(fax => ({
+      _id: fax._id,
+      fileName: fax.fileName || "Unknown File",
+      processedAt: fax.createdAt,
+      severityLevel: fax.severityLevel || "轻度",
+      severityScore: fax.severityScore || 1,
+      severityReason: fax.severityReason || "No reason provided",
+      summary: fax.summary || "No summary available",
+      transcription: fax.transcription || "No transcription available"
+    }));
+
+    res.json({
+      status: "success",
+      faxData: transformedData,
+      totalRecords: transformedData.length,
+      timeRange: timeRange
+    });
+    
+  } catch (error) {
+    console.error("❌ Failed to fetch fax records:", error);
+    res.status(500).json({
+      status: "error",
+      message: error.message,
+      faxData: []
+    });
+  }
+});
+
+// NEW: Get fax processing history
+
+router.get("/fax-stats", async (req, res) => {
+  try {
+    const { faxDb } = require("./dbConnection");
+    const createTranscriptionFaxModel = require("./models/TranscriptionFax");
+    const TranscriptionFax = createTranscriptionFaxModel(faxDb);
+    
+    const timeRange = req.query.timeRange || "24h";
+    
+    // 计算日期过滤器
+    let dateFilter = {};
+    const now = new Date();
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    switch(timeRange) {
+      case "1h":
+        dateFilter = { createdAt: { $gte: new Date(now - 60 * 60 * 1000) } };
+        break;
+      case "24h":
+        dateFilter = { createdAt: { $gte: new Date(now - 24 * 60 * 60 * 1000) } };
+        break;
+      case "7d":
+        dateFilter = { createdAt: { $gte: new Date(now - 7 * 24 * 60 * 60 * 1000) } };
+        break;
+      case "30d":
+        dateFilter = { createdAt: { $gte: new Date(now - 30 * 24 * 60 * 60 * 1000) } };
+        break;
+      default:
+        dateFilter = { createdAt: { $gte: new Date(now - 24 * 60 * 60 * 1000) } };
+    }
+    
+    console.log(`📈 Calculating stats for timeRange: ${timeRange}`);
+    
+    // 并行计算各种统计数据
+    const [
+      totalProcessed,
+      rangeProcessed,
+      todayProcessed,
+      highSeverityCount,
+      severityDistribution
+    ] = await Promise.all([
+      TranscriptionFax.countDocuments(),
+      TranscriptionFax.countDocuments(dateFilter),
+      TranscriptionFax.countDocuments({ createdAt: { $gte: today } }),
+      TranscriptionFax.countDocuments({ 
+        ...dateFilter,
+        severityScore: { $gte: 7 }
+      }),
+      // 聚合严重程度分布
+      TranscriptionFax.aggregate([
+        { $match: dateFilter },
+        { 
+          $group: { 
+            _id: "$severityLevel", 
+            count: { $sum: 1 },
+            avgScore: { $avg: "$severityScore" }
+          } 
+        }
+      ])
+    ]);
+    
+    console.log(`📊 Stats calculated: ${rangeProcessed} records in range, ${highSeverityCount} high severity`);
+    
+    res.json({
+      status: "success",
+      stats: {
+        totalProcessed: totalProcessed,
+        todayProcessed: todayProcessed,
+        highSeverityCount: highSeverityCount,
+        averageProcessingTime: 2.3, // 可以从实际数据计算
+        systemStatus: "Running"
+      },
+      severityDistribution: severityDistribution,
+      timeRange: timeRange
+    });
+    
+  } catch (error) {
+    console.error("❌ Failed to get fax stats:", error);
+    res.status(500).json({
+      status: "error", 
+      message: error.message,
+      stats: {
+        totalProcessed: 0,
+        todayProcessed: 0,
+        highSeverityCount: 0,
+        averageProcessingTime: 0,
+        systemStatus: "Error"
+      },
+      severityDistribution: []
+    });
+  }
+});
+
+// 增强的 fax-upload 端点，添加 Socket 广播
 router.post("/fax-upload", upload.single("file"), async (req, res) => {
   console.log("📥 Fax upload endpoint called");
   
-  // Check if file was uploaded
   if (!req.file) {
     return res.status(400).json({ 
       status: "error", 
@@ -194,17 +357,27 @@ router.post("/fax-upload", upload.single("file"), async (req, res) => {
   
   try {
     console.log(`📄 Processing fax: ${originalName}`);
-    console.log(`📁 File path: ${filePath}`);
     
-    // Call your handleNewFax function
+    // 调用你的 handleNewFax 函数
     const result = await handleNewFax(filePath);
     
-    // Clean up uploaded file after processing
+    // 清理上传的文件
     if (fs.existsSync(filePath)) {
       fs.unlinkSync(filePath);
     }
     
-    console.log("✅ Fax processed successfully");
+    console.log("✅ Fax processed successfully, result:", result);
+    
+    // 🔥 通过 Socket.io 通知所有客户端数据已更新
+    socketManager.getIo().emit("dataChanged", {
+      action: "refresh",
+      timestamp: new Date(),
+      changeType: "insert",
+      message: `New fax processed: ${originalName}`
+    });
+    
+    console.log("📡 Socket notification sent to all connected clients");
+    
     res.status(200).json({ 
       status: "success", 
       message: "Fax processed successfully",
@@ -215,7 +388,6 @@ router.post("/fax-upload", upload.single("file"), async (req, res) => {
   } catch (err) {
     console.error("❌ Fax processing failed:", err.message);
     
-    // Clean up uploaded file on error
     if (fs.existsSync(filePath)) {
       fs.unlinkSync(filePath);
     }
@@ -228,81 +400,13 @@ router.post("/fax-upload", upload.single("file"), async (req, res) => {
   }
 });
 
-// NEW: Get fax processing history
-router.get("/fax-history", async (req, res) => {
-  try {
-    // Import your TranscriptionFax model
-    const { faxDb } = require("./dbConnection");
-    const createTranscriptionFaxModel = require("./models/TranscriptionFax");
-    const TranscriptionFax = createTranscriptionFaxModel(faxDb);
-    
-    const limit = parseInt(req.query.limit) || 20;
-    const faxes = await TranscriptionFax.find()
-      .sort({ createdAt: -1 })
-      .limit(limit)
-      .select('fileName severityScore severityLevel severityReason createdAt');
-    
-    res.json({
-      status: "success",
-      faxes: faxes,
-      total: faxes.length
-    });
-    
-  } catch (err) {
-    console.error("❌ Failed to get fax history:", err.message);
-    res.status(500).json({
-      status: "error",
-      message: err.message
-    });
-  }
-});
-
-// NEW: Get fax processing stats
-router.get("/fax-stats", async (req, res) => {
-  try {
-    const { faxDb } = require("./dbConnection");
-    const createTranscriptionFaxModel = require("./models/TranscriptionFax");
-    const TranscriptionFax = createTranscriptionFaxModel(faxDb);
-    
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    
-    // Get various stats
-    const [
-      totalProcessed,
-      todayProcessed,
-      highSeverityToday,
-      averageSeverity
-    ] = await Promise.all([
-      TranscriptionFax.countDocuments(),
-      TranscriptionFax.countDocuments({ createdAt: { $gte: today } }),
-      TranscriptionFax.countDocuments({ 
-        createdAt: { $gte: today },
-        severityScore: { $gte: 7 }
-      }),
-      TranscriptionFax.aggregate([
-        { $group: { _id: null, avgSeverity: { $avg: "$severityScore" } } }
-      ])
-    ]);
-    
-    res.json({
-      status: "success",
-      stats: {
-        totalProcessed,
-        todayProcessed,
-        highSeverityToday,
-        averageSeverity: averageSeverity[0]?.avgSeverity || 0,
-        lastUpdated: new Date().toISOString()
-      }
-    });
-    
-  } catch (err) {
-    console.error("❌ Failed to get fax stats:", err.message);
-    res.status(500).json({
-      status: "error", 
-      message: err.message
-    });
-  }
+// Demo endpoint for sending alerts
+router.post("/send-twilio-alert", (req, res) => {
+  console.log("📱 Demo alert sent:", req.body);
+  res.json({
+    status: "success",
+    message: "Demo alert sent successfully"
+  });
 });
 
 // anything else falls to this "not found" case

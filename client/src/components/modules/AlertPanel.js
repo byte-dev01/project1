@@ -208,9 +208,9 @@ class AlertPanel extends Component {
                 </button>
                 <button 
                   className="btn btn-cancel"
-                  onClick={this.submitAlert}
+                  onClick={() => this.setState({ showSendAlert: false })}
                 >
-                    Cancel
+                  Cancel
                 </button>
               </div>
             </div>
@@ -260,4 +260,4 @@ class AlertPanel extends Component {
   }
 }
 
-export default AlertPanel
+export default AlertPanel; // ← Fixed: Added semicolon here!

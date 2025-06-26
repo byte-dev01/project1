@@ -1,27 +1,39 @@
 import React, { Component } from "react";
+import {
+  BrowserRouter as Router,
+  Switch, 
+  Route,
+} from "react-router-dom";
+
 import NavBar from "./modules/NavBar.js";
-import { Router } from "@reach/router";
 import Feed from "./pages/Feed.js";
 import NotFound from "./pages/NotFound.js";
 import Profile from "./pages/Profile.js";
-import Upload from "./pages/Upload.js"
+import FaxDashboard from "./pages/FaxDashboard.js";
+console.log("🧪 FaxDashboard type:", typeof FaxDashboard);
+
+import Upload from "./pages/Upload.js";
 import Chatbook from "./pages/Chatbook.js";
 import MedicalAudioTranscriber from "./pages/Recorder.js";
 
+console.log("🔍 All component imports:", {
+  NavBar,
+  Feed,
+  NotFound,
+  Profile,
+  FaxDashboard,
+  Upload,
+  Chatbook,
+  MedicalAudioTranscriber
+});
 
 import { socket } from "../client-socket.js";
-
 import { get, post } from "../utilities";
 
-// to use styles, import the necessary CSS files
 import "../utilities.css";
 import "./App.css";
 
-/**
- * Define the "App" component as a class.
- */
 class App extends Component {
-  // makes props available in this component
   constructor(props) {
     super(props);
     this.state = {
@@ -32,7 +44,6 @@ class App extends Component {
   componentDidMount() {
     get("/api/whoami").then((user) => {
       if (user._id) {
-        // they are registed in the database, and currently logged in.
         this.setState({ userId: user._id });
       }
     });
@@ -52,31 +63,26 @@ class App extends Component {
     post("/api/logout");
   };
 
-  // required method: whatever is returned defines what
-  // shows up on screen
   render() {
     return (
-      // <> is like a <div>, but won't show
-      // up in the DOM tree
-      <>
+      <Router>
         <NavBar
           handleLogin={this.handleLogin}
           handleLogout={this.handleLogout}
           userId={this.state.userId}
         />
         <div className="App-container">
-          <Router>
-            <Feed path="/" userId={this.state.userId} />
-            <Profile path="/profile/:userId" />
-            <Chatbook path="/chat/" userId={this.state.userId} />
-            <Upload path="/upload/:userId" userId={this.state.userId} />
-            <MedicalAudioTranscriber path="/recorder/:userId" userId={this.state.userId} />
-            <FaxDashboard path="/fax-dashboard/" userId={this.state.userId} /> {/* Add this route */}
-
-            <NotFound default />
-          </Router>
+          <Switch> {/* ← Changed from Routes to Switch */}
+            <Route exact path="/" render={() => <Feed userId={this.state.userId} />} />
+            <Route path="/profile/:userId" component={Profile} />
+            <Route path="/chat" render={() => <Chatbook userId={this.state.userId} />} />
+            <Route path="/upload/:userId" render={() => <Upload userId={this.state.userId} />} />
+            <Route path="/recorder/:userId" render={() => <MedicalAudioTranscriber userId={this.state.userId} />} />
+            <Route path="/fax-dashboard" render={() => <FaxDashboard userId={this.state.userId} />} />
+            <Route component={NotFound} />
+          </Switch>
         </div>
-      </>
+      </Router>
     );
   }
 }

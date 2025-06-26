@@ -1,27 +1,34 @@
-const { OAuth2Client } = require("google-auth-library");
-const User = require("./models/user");
+// Simplified demo-only auth - no Google OAuth needed for now
+const User = require("./models/user"); // ← MUST be uncommented for database operations
 const socketManager = require("./server-socket");
-
-// create a new OAuth client used to verify google sign-in
-const CLIENT_ID = "121479668229-t5j82jrbi9oejh7c8avada226s75bopn.apps.googleusercontent.com";
-const client = new OAuth2Client(CLIENT_ID);
 
 // accepts a login token from the frontend, and verifies that it's legit
 function verify(token) {
-  return client
-    .verifyIdToken({
-      idToken: token,
-      audience: CLIENT_ID,
-    })
-    .then((ticket) => ticket.getPayload());
+  // Only handle demo token for now
+  if (token === "demo-token-12345") {
+    console.log("🎭 Demo token detected, skipping Google verification");
+    return Promise.resolve({
+      sub: "demo-user-12345",
+      name: "Demo User",
+      email: "demo@example.com"
+    });
+  }
+  
+  // Reject any non-demo tokens
+  console.log("❌ Non-demo token rejected:", token);
+  return Promise.reject(new Error("Only demo tokens are supported right now"));
 }
 
 // gets user from DB, or makes a new account if it doesn't exist yet
 function getOrCreateUser(user) {
   // the "sub" field means "subject", which is a unique identifier for each user
   return User.findOne({ googleid: user.sub }).then((existingUser) => {
-    if (existingUser) return existingUser;
+    if (existingUser) {
+      console.log(`✅ Found existing user: ${existingUser.name}`);
+      return existingUser;
+    }
 
+    console.log(`👤 Creating new user: ${user.name}`);
     const newUser = new User({
       name: user.name,
       googleid: user.sub,
@@ -32,24 +39,33 @@ function getOrCreateUser(user) {
 }
 
 function login(req, res) {
+  console.log(`🔑 Login attempt with token: ${req.body.token?.substring(0, 20)}...`);
+  
   verify(req.body.token)
-    .then((user) => getOrCreateUser(user))
+    .then((user) => {
+      console.log(`✅ Token verified for user: ${user.name}`);
+      return getOrCreateUser(user);
+    })
     .then((user) => {
       // persist user in the session
       req.session.user = user;
+      console.log(`🎉 User logged in successfully: ${user.name} (ID: ${user._id})`);
       res.send(user);
     })
     .catch((err) => {
-      console.log(`Failed to log in: ${err}`);
-      res.status(401).send({ err });
+      console.log(`❌ Failed to log in: ${err.message || err}`);
+      res.status(401).send({ err: err.message || err });
     });
 }
 
 function logout(req, res) {
-  const userSocket = socketManager.getSocketFromUserID(req.user._id);
-  if (userSocket) {
-    // delete user's socket if they logged out
-    socketManager.removeUser(req.user, userSocket);
+  if (req.user) {
+    const userSocket = socketManager.getSocketFromUserID(req.user._id);
+    if (userSocket) {
+      // delete user's socket if they logged out
+      socketManager.removeUser(req.user, userSocket);
+    }
+    console.log(`👋 User logged out: ${req.user.name}`);
   }
 
   req.session.user = null;

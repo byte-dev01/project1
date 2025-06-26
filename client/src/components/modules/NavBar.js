@@ -1,11 +1,8 @@
 import React, { Component } from "react";
-import { Link } from "@reach/router";
-import GoogleLogin, { GoogleLogout } from "react-google-login";
+import { Link } from "react-router-dom";
+// Temporarily removed: import GoogleLogin, { GoogleLogout } from "react-google-login";
 
 import "./NavBar.css";
-
-// This identifies your web application to Google's authentication service
-const GOOGLE_CLIENT_ID = "121479668229-t5j82jrbi9oejh7c8avada226s75bopn.apps.googleusercontent.com";
 
 /**
  * The navigation bar at the top of all pages. Takes no props.
@@ -14,6 +11,22 @@ class NavBar extends Component {
   constructor(props) {
     super(props);
   }
+
+  // Demo login function
+  handleDemoLogin = () => {
+    // Simulate the Google login response structure
+    const demoLoginResponse = {
+      profileObj: { 
+        name: "Demo User",
+        email: "demo@example.com" 
+      },
+      tokenObj: { 
+        id_token: "demo-token-12345" 
+      }
+    };
+    
+    this.props.handleLogin(demoLoginResponse);
+  };
 
   render() {
     return (
@@ -46,22 +59,38 @@ class NavBar extends Component {
               📠 Fax Dashboard
             </Link>
           )}
+          
+          {/* Demo Login/Logout Buttons */}
           {this.props.userId ? (
-            <GoogleLogout
-              clientId={GOOGLE_CLIENT_ID}
-              buttonText="Logout"
-              onLogoutSuccess={this.props.handleLogout}
-              onFailure={(err) => console.log(err)}
-              className="NavBar-link NavBar-login"
-            />
+            <button
+              onClick={this.props.handleLogout}
+              className="NavBar-link NavBar-login demo-auth-btn"
+              style={{
+                background: '#dc3545',
+                color: 'white',
+                border: 'none',
+                padding: '8px 16px',
+                borderRadius: '4px',
+                cursor: 'pointer'
+              }}
+            >
+              🚪 Logout (Demo)
+            </button>
           ) : (
-            <GoogleLogin
-              clientId={GOOGLE_CLIENT_ID}
-              buttonText="Login"
-              onSuccess={this.props.handleLogin}
-              onFailure={(err) => console.log(err)}
-              className="NavBar-link NavBar-login"
-            />
+            <button
+              onClick={this.handleDemoLogin}
+              className="NavBar-link NavBar-login demo-auth-btn"
+              style={{
+                background: '#007bff',
+                color: 'white',
+                border: 'none',
+                padding: '8px 16px',
+                borderRadius: '4px',
+                cursor: 'pointer'
+              }}
+            >
+              🔑 Login (Demo)
+            </button>
           )}
         </div>
       </nav>

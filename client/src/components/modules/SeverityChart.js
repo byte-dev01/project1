@@ -86,4 +86,4 @@ class SeverityChart extends Component {
   }
 }
 
-export default SeverityChart;
+export default SeverityChart; // ← Fixed: Added semicolon here!

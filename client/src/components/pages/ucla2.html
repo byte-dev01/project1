@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>myUCLAhealth - Home</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+            background-color: #f5f5f5;
+            color: #363636;
+            line-height: 1.6;
+        }
+
+        /* Header Styles */
+        .header {
+            background-color: #ffffff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .menu-button {
+            background: #2774AE;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .menu-button:hover {
+            background: #1e5a8a;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #2774AE;
+            text-decoration: none;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: #f0f0f0;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #2774AE;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        /* Main Content */
+        .main-container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+        }
+
+        /* Welcome Section */
+        .welcome-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .welcome-section h1 {
+            color: #2774AE;
+            margin-bottom: 1rem;
+        }
+
+        /* Shortcuts */
+        .shortcuts {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .shortcut-button {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 1.5rem 1rem;
+            text-align: center;
+            text-decoration: none;
+            color: #363636;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .shortcut-button:hover {
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+
+        .shortcut-icon {
+            width: 48px;
+            height: 48px;
+            background: #2774AE;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+        }
+
+        /* Feed Items */
+        .feed-item {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .feed-content {
+            flex: 1;
+        }
+
+        .feed-icon {
+            width: 40px;
+            height: 40px;
+            background: #f0f0f0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            color: #2774AE;
+        }
+
+        .feed-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .feed-title {
+            font-weight: bold;
+            color: #363636;
+        }
+
+        .feed-description {
+            color: #767676;
+            font-size: 0.9rem;
+        }
+
+        .feed-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: #2774AE;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 0.9rem;
+        }
+
+        .btn-primary:hover {
+            background: #1e5a8a;
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #2774AE;
+            border: 1px solid #2774AE;
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 0.9rem;
+        }
+
+        .btn-secondary:hover {
+            background: #f0f8ff;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            height: fit-content;
+        }
+
+        .care-team-header {
+            font-size: 1.2rem;
+            color: #2774AE;
+            margin-bottom: 1rem;
+            font-weight: bold;
+        }
+
+        .provider-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .provider-item:last-child {
+            border-bottom: none;
+        }
+
+        .provider-image {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #e0e0e0;
+            margin-right: 1rem;
+        }
+
+        .provider-info {
+            flex: 1;
+        }
+
+        .provider-name {
+            font-weight: bold;
+            color: #2774AE;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+
+        .provider-specialty {
+            font-size: 0.85rem;
+            color: #767676;
+        }
+
+        .provider-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .icon-button {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #f0f0f0;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #2774AE;
+        }
+
+        .icon-button:hover {
+            background: #e0e0e0;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-container {
+                grid-template-columns: 1fr;
+            }
+
+            .shortcuts {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .header-content {
+                padding: 1rem;
+            }
+
+            .feed-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .feed-actions {
+                margin-top: 1rem;
+                width: 100%;
+            }
+
+            .btn-primary, .btn-secondary {
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="nav-left">
+                <button class="menu-button">
+                    <span>☰</span>
+                    <span>Menu</span>
+                </button>
+                <a href="#" class="logo">myUCLAhealth</a>
+            </div>
+            <div class="header-right">
+                <button class="icon-button">🌐</button>
+                <div class="user-menu">
+                    <div class="user-avatar">R</div>
+                    <span>Rachel</span>
+                    <span>▼</span>
+                </div>
+                <button class="icon-button">↪</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <div class="main-content">
+            <!-- Welcome Section -->
+            <div class="welcome-section">
+                <h1>Welcome, Rachel!</h1>
+                
+                <!-- Shortcuts -->
+                <div class="shortcuts">
+                    <a href="#" class="shortcut-button">
+                        <div class="shortcut-icon">📋</div>
+                        <span>Visits/Clinical Notes</span>
+                    </a>
+                    <a href="#" class="shortcut-button">
+                        <div class="shortcut-icon">✉️</div>
+                        <span>My Messages</span>
+                    </a>
+                    <a href="#" class="shortcut-button">
+                        <div class="shortcut-icon">🧪</div>
+                        <span>Test Results</span>
+                    </a>
+                    <a href="#" class="shortcut-button">
+                        <div class="shortcut-icon">🔄</div>
+                        <span>Referrals</span>
+                    </a>
+                    <a href="#" class="shortcut-button">
+                        <div class="shortcut-icon">💰</div>
+                        <span>Billing Summary</span>
+                    </a>
+                    <a href="#" class="shortcut-button">
+                        <div class="shortcut-icon">📄</div>
+                        <span>Letters</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Feed Items -->
+            <div class="feed-container">
+                <!-- Test Result -->
+                <div class="feed-item">
+                    <div class="feed-content">
+                        <div class="feed-header">
+                            <div class="feed-icon">🧪</div>
+                            <div>
+                                <div class="feed-title">Updated FOLLICLE STIMULATING HORMONE results</div>
+                                <div class="feed-description">From Tuesday June 17, 2025</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="feed-actions">
+                        <a href="#" class="btn-primary">View results</a>
+                    </div>
+                </div>
+
+                <!-- Upcoming Visit -->
+                <div class="feed-item">
+                    <div class="feed-content">
+                        <div class="feed-header">
+                            <div class="feed-icon">📅</div>
+                            <div>
+                                <div class="feed-title">NEW - Monday June 30, 2025</div>
+                                <div class="feed-description">3:20 PM PDT with Maralee R. Kanin, MD at Gonda Diabetes Center</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="feed-actions">
+                        <a href="#" class="btn-primary">preCheck-in</a>
+                        <a href="#" class="btn-secondary">View details</a>
+                    </div>
+                </div>
+
+                <!-- Billing -->
+                <div class="feed-item">
+                    <div class="feed-content">
+                        <div class="feed-header">
+                            <div class="feed-icon">💵</div>
+                            <div>
+                                <div class="feed-title">Amount Due - You owe $63.00</div>
+                                <div class="feed-description">UCLA Health Physician Services - Last paid: $5.00 on 05/09/2025</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="feed-actions">
+                        <a href="#" class="btn-primary">Pay now</a>
+                        <a href="#" class="btn-secondary">View details</a>
+                    </div>
+                </div>
+
+                <!-- Email Verification -->
+                <div class="feed-item">
+                    <div class="feed-content">
+                        <div class="feed-header">
+                            <div class="feed-icon">⚠️</div>
+                            <div>
+                                <div class="feed-title">Email verification needed</div>
+                                <div class="feed-description">Your email address has not been verified. We need to verify rachelli.purdue2@gmail.com</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="feed-actions">
+                        <a href="#" class="btn-primary">Verify email</a>
+                        <a href="#" class="btn-secondary">Update contact info</a>
+                    </div>
+                </div>
+
+                <!-- Health Reminders -->
+                <div class="feed-item">
+                    <div class="feed-content">
+                        <div class="feed-header">
+                            <div class="feed-icon">❗</div>
+                            <div>
+                                <div class="feed-title">Health Reminder</div>
+                                <div class="feed-description">HPV Vaccines is overdue.</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="feed-actions">
+                        <a href="#" class="btn-primary">View details</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <h2 class="care-team-header">Care Team and Recent Providers</h2>
+            
+            <div class="provider-item">
+                <div class="provider-image"></div>
+                <div class="provider-info">
+                    <a href="#" class="provider-name">Clifford Pang, DO</a>
+                    <div class="provider-specialty">Primary Care Provider - Family Medicine</div>
+                </div>
+                <div class="provider-actions">
+                    <button class="icon-button" title="Schedule">📅</button>
+                    <button class="icon-button" title="Message">✉️</button>
+                </div>
+            </div>
+
+            <div class="provider-item">
+                <div class="provider-image"></div>
+                <div class="provider-info">
+                    <a href="#" class="provider-name">Mary C. Mayo, MD</a>
+                    <div class="provider-specialty">Neurology</div>
+                </div>
+                <div class="provider-actions">
+                    <button class="icon-button" title="Schedule">📅</button>
+                    <button class="icon-button" title="Message">✉️</button>
+                </div>
+            </div>
+
+            <div class="provider-item">
+                <div class="provider-image"></div>
+                <div class="provider-info">
+                    <a href="#" class="provider-name">Richard R. Cooke, II, MD</a>
+                    <div class="provider-specialty">Family Medicine</div>
+                </div>
+                <div class="provider-actions">
+                    <button class="icon-button" title="Schedule">📅</button>
+                    <button class="icon-button" title="Message">✉️</button>
+                </div>
+            </div>
+
+            <div class="provider-item">
+                <div class="provider-image"></div>
+                <div class="provider-info">
+                    <a href="#" class="provider-name">Vivek Bose, MD</a>
+                    <div class="provider-specialty">Medicine, Endocrinology, Diabetes Metabolism</div>
+                </div>
+                <div class="provider-actions">
+                    <button class="icon-button" title="Message">✉️</button>
+                </div>
+            </div>
+        </aside>
+    </div>
+</body>
+</html>

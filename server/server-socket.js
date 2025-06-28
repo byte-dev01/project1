@@ -1,12 +1,29 @@
 let io;
-
 const userToSocketMap = {}; // maps user ID to socket object
 const socketToUserMap = {}; // maps socket ID to user object
 
 const getAllConnectedUsers = () => Object.values(socketToUserMap);
 const getSocketFromUserID = (userid) => userToSocketMap[userid];
 const getUserFromSocketID = (socketid) => socketToUserMap[socketid];
-const getSocketFromSocketID = (socketid) => io.sockets.connected[socketid];
+
+// FIXED: Updated to work with newer Socket.io versions
+const getSocketFromSocketID = (socketid) => {
+  if (!io || !io.sockets) return null;
+  
+  // Try newer Socket.io API first
+  if (io.sockets.sockets && typeof io.sockets.sockets.get === 'function') {
+    return io.sockets.sockets.get(socketid);
+  }
+  
+  // Fallback for older versions
+  if (io.sockets.connected) {
+    return io.sockets.connected[socketid];
+  }
+  
+  // Manual search as last resort
+  const allSockets = Array.from(io.sockets.sockets.values());
+  return allSockets.find(socket => socket.id === socketid) || null;
+};
 
 const addUser = (user, socket) => {
   const oldSocket = userToSocketMap[user._id];

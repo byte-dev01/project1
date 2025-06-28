@@ -14,7 +14,9 @@ const express = require("express");
 const Story = require("./models/story");
 const Comment = require("./models/comment");
 const User = require("./models/user");
-const Message = require("./models/message");
+const { chatDb } = require("./dbConnection");
+const createMessageModel = require("./models/message");
+const Message = createMessageModel(chatDb);
 const multer = require("multer");
 const fs = require("fs");
 const Tesseract = require("tesseract.js");
@@ -23,6 +25,9 @@ const FormData = require("form-data");
 const sql = require("./dbConnection.js");
 const handleOCRData = require("./ocr_data"); // 模块化处理OCR逻辑
 const handleTranscribeData = require("./controllers/transcribe_data");
+const { eventDB } = require("./dbConnection");
+const createEventModel = require("./models/Event"); // We'll create this model
+const Event = createEventModel(eventDB);
 
 // ADD THIS: Import your fax processing function
 const handleNewFax = require("./controllers/handleNewFax");
@@ -408,6 +413,175 @@ router.post("/send-twilio-alert", (req, res) => {
     message: "Demo alert sent successfully"
   });
 });
+
+
+// 📅 CALENDAR API ROUTES
+// Add these routes to your existing router in api.js
+
+// Get all events
+router.get("/events", async (req, res) => {
+  try {
+    console.log("📅 Fetching all calendar events");
+    const events = await Event.find({}).sort({ date: 1, startTime: 1 });
+    console.log(`✅ Found ${events.length} events`);
+    res.json(events);
+  } catch (error) {
+    console.error("❌ Failed to fetch events:", error);
+    res.status(500).json({ error: "Failed to fetch events" });
+  }
+});
+
+// Get events for a specific date range (for week view)
+router.get("/events/range", async (req, res) => {
+  try {
+    const { start, end } = req.query;
+    
+    if (!start || !end) {
+      return res.status(400).json({ error: "Start and end dates are required" });
+    }
+    
+    console.log(`📅 Fetching events from ${start} to ${end}`);
+    
+    const events = await Event.find({
+      date: {
+        $gte: start,
+        $lte: end
+      }
+    }).sort({ date: 1, startTime: 1 });
+    
+    console.log(`✅ Found ${events.length} events in range`);
+    res.json(events);
+  } catch (error) {
+    console.error("❌ Failed to fetch events by range:", error);
+    res.status(500).json({ error: "Failed to fetch events" });
+  }
+});
+router.post("/events", async (req, res) => {
+  try {
+    const { id, title, date, startTime, endTime } = req.body;
+    
+    if (!title || !date || !startTime || !endTime) {
+      return res.status(400).json({ error: "All fields are required" });
+    }
+    
+    console.log(`📅 Creating new event: ${title} on ${date}`);
+    
+    const newEvent = new Event({
+      id: id || Date.now().toString(),
+      title,
+      date,
+      startTime,
+      endTime,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    });
+    
+    const savedEvent = await newEvent.save();
+    console.log(`✅ Event created successfully: ${savedEvent._id}`);
+    
+    // 🔥 Notify all clients via Socket.io that data changed
+    socketManager.getIo().emit("dataChanged", {
+      action: "refresh",
+      operationType: "insert",
+      timestamp: new Date(),
+      message: `New event created: ${title}`
+    });
+    
+    res.status(201).json(savedEvent);
+  } catch (error) {
+    console.error("❌ Failed to create event:", error);
+    res.status(500).json({ error: "Failed to create event" });
+  }
+});
+
+// Update an existing event
+router.put("/events/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { title, date, startTime, endTime } = req.body;
+    
+    if (!title || !date || !startTime || !endTime) {
+      return res.status(400).json({ error: "All fields are required" });
+    }
+    
+    console.log(`📅 Updating event: ${id}`);
+    
+    const updatedEvent = await Event.findOneAndUpdate(
+      { id: id }, // Find by your custom id field
+      {
+        title,
+        date,
+        startTime,
+        endTime,
+        updatedAt: new Date()
+      },
+      { new: true } // Return the updated document
+    );
+    
+    if (!updatedEvent) {
+      return res.status(404).json({ error: "Event not found" });
+    }
+    
+    console.log(`✅ Event updated successfully: ${updatedEvent._id}`);
+    
+    // 🔥 Notify all clients via Socket.io that data changed
+    socketManager.getIo().emit("dataChanged", {
+      action: "refresh",
+      operationType: "update",
+      timestamp: new Date(),
+      message: `Event updated: ${title}`
+    });
+    
+    res.json(updatedEvent);
+  } catch (error) {
+    console.error("❌ Failed to update event:", error);
+    res.status(500).json({ error: "Failed to update event" });
+  }
+});
+
+// Delete an event
+router.delete("/events/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    console.log(`📅 Deleting event: ${id}`);
+    
+    const deletedEvent = await Event.findOneAndDelete({ id: id });
+    
+    if (!deletedEvent) {
+      return res.status(404).json({ error: "Event not found" });
+    }
+    
+    console.log(`✅ Event deleted successfully: ${deletedEvent._id}`);
+    
+    // 🔥 Notify all clients via Socket.io that data changed
+    socketManager.getIo().emit("dataChanged", {
+      action: "refresh",
+      operationType: "delete",
+      timestamp: new Date(),
+      message: `Event deleted: ${deletedEvent.title}`
+    });
+    
+    res.json({ message: "Event deleted successfully" });
+  } catch (error) {
+    console.error("❌ Failed to delete event:", error);
+    res.status(500).json({ error: "Failed to delete event" });
+  }
+});
+
+// Health check for calendar API
+router.get("/calendar/health", (req, res) => {
+  res.json({ 
+    status: "OK", 
+    message: "Calendar API is running",
+    database: "eventDB connected"
+  });
+});
+
+
+
+
+
 
 // anything else falls to this "not found" case
 router.all("*", (req, res) => {

@@ -28,7 +28,7 @@ const path = require("path"); // provide utilities for working with file and dir
 
 const api = require("./api");
 const auth = require("./auth");
-const { faxDb } = require("./dbConnection");
+const { faxDb, catDb, chatDb, patientDb, eventDB } = require("./dbConnection");
 
 // socket stuff
 const socketManager = require("./server-socket");
@@ -86,42 +86,163 @@ app.use((err, req, res, next) => {
 // MongoDB Change Streams
 // =====================================
 
-const setupRealTimeDB = () => {
+// Corrected setupRealTimeDB function based on your actual Transcription model
+
+const setupRealTimeDB = async () => {
   try {
-    console.log(" Setting up MongoDB Change Streams...");
+    console.log("🔄 Setting up MongoDB Change Streams...");
     
-    const changeStream = faxDb.collection('transcriptions').watch();
+    // Wait for all connections to be ready
+    const connections = [faxDb, patientDb, eventDB, chatDb, catDb];
+    const connectionPromises = connections.map(conn => {
+      if (conn.readyState !== 1) {
+        return new Promise((resolve) => {
+          conn.once('connected', resolve);
+        });
+      }
+      return Promise.resolve();
+    });
     
-    changeStream.on('change', (change) => {
-      console.log(` Database changed: ${change.operationType}`);
+    await Promise.all(connectionPromises);
+    console.log("⏳ All database connections ready...");
+    
+    // 🔥 CORRECT: Watch 'transcriptions' collection in faxDb (from your handleNewFax function)
+    if (faxDb.readyState === 1 && faxDb.db) {
+      const faxTranscriptionChangeStream = faxDb.db.collection('transcriptions').watch( 
+        [], 
+        { fullDocument: 'updateLookup' }
+      );
       
-      socketManager.getIo().emit("dataChanged", {
-        action: "refresh",
-        timestamp: new Date(),
+      faxTranscriptionChangeStream.on('change', (change) => {
+        console.log(`📠 Fax transcription ${change.operationType}: ${change.fullDocument?.fileName || 'Unknown file'}`);
+        
+        // Log severity info for high-priority cases
+        if (change.fullDocument?.severityScore >= 7) {
+          console.log(`🚨 HIGH SEVERITY: ${change.fullDocument.severityScore}/10 - ${change.fullDocument.severityReason}`);
+        }
+        
+        const io = socketManager.getIo();
+        if (io) {
+          io.emit("dataChanged", {
+            action: "refresh",
+            operationType: change.operationType,
+            timestamp: new Date(),
+            collection: "transcriptions",
+            database: "faxDB",
+            fileName: change.fullDocument?.fileName,
+            severityScore: change.fullDocument?.severityScore,
+            severityLevel: change.fullDocument?.severityLevel,
+            isHighSeverity: change.fullDocument?.severityScore >= 7
+          });
+          console.log(`✅ Fax transcription notification sent to all clients (Severity: ${change.fullDocument?.severityScore || 'N/A'})`);
+        }
       });
       
-      console.log(" Refresh notification sent to all clients");
-    });
+      faxTranscriptionChangeStream.on('error', (error) => {
+        console.error("❌ Fax Transcription Change Stream error:", error);
+        setTimeout(() => {
+          console.log("🔁 Attempting to reconnect fax transcription stream...");
+          setupRealTimeDB();
+        }, 5000);
+      });
+      
+      console.log("✅ Fax transcriptions change stream initialized (watching 'transcriptions' in faxDb)");
+    }
     
-    changeStream.on('error', (error) => {
-      console.error(" Change Stream error:", error);
-    });
+    // 📅 Watch calendar events in eventDB
+    if (eventDB.readyState === 1 && eventDB.db) {
+      const eventChangeStream = eventDB.db.collection('events').watch(
+        [],
+        { fullDocument: 'updateLookup' }
+      );
+      
+      eventChangeStream.on('change', (change) => {
+        console.log(`📅 Calendar event ${change.operationType}: ${change.fullDocument?.title || 'Unknown event'}`);
+        const io = socketManager.getIo();
+        if (io) {
+          io.emit("dataChanged", {
+            action: "refresh",
+            operationType: change.operationType,
+            timestamp: new Date(),
+            collection: "events",
+            database: "eventDB",
+            eventTitle: change.fullDocument?.title,
+            eventDate: change.fullDocument?.date
+          });
+        }
+      });
+      
+      console.log("✅ Calendar events change stream initialized");
+    }
     
-    console.log("MongoDB Change Stream initialized");
+    // 💬 Watch chat messages in chatDb (if needed for real-time chat)
+    if (chatDb.readyState === 1 && chatDb.db) {
+      const chatChangeStream = chatDb.db.collection('messages').watch(
+        [],
+        { fullDocument: 'updateLookup' }
+      );
+      
+      chatChangeStream.on('change', (change) => {
+        console.log(`💬 Chat message ${change.operationType}`);
+        const io = socketManager.getIo();
+        if (io) {
+          io.emit("dataChanged", {
+            action: "refresh",
+            operationType: change.operationType,
+            timestamp: new Date(),
+            collection: "messages",
+            database: "chatDB"
+          });
+        }
+      });
+      
+      console.log("✅ Chat messages change stream initialized");
+    }
+    
+    console.log("✅ All MongoDB Change Streams initialized successfully");
     
   } catch (error) {
-    console.error("Failed to setup MongoDB Change Stream:", error);
+    console.error("❌ Failed to setup MongoDB Change Stream:", error);
+    console.log("⚠️ Continuing without real-time database updates");
+    
+    // Retry setup after delay
+    setTimeout(() => {
+      console.log("🔁 Retrying change stream setup...");
+      setupRealTimeDB();
+    }, 10000);
   }
 };
-
-
 // hardcode port to 3000 for now
 const port = 3000;
 const server = http.Server(app);
 socketManager.init(server);
 
-server.listen(port, () => {
-  console.log(`Server running on port: ${port}`);
-  setupRealTimeDB();
+server.listen(port, async () => {
+  console.log(`🚀 Server running on port: ${port}`);
+  
+  // 等待数据库连接建立
+  const waitForDatabaseConnections = () => {
+    const connections = [faxDb, catDb, chatDb, patientDb, eventDB];
+    const connectionPromises = connections.map(conn => {
+      if (conn.readyState === 1) {
+        return Promise.resolve();
+      }
+      return new Promise((resolve) => {
+        conn.once('connected', resolve);
+      });
+    });
+    
+    return Promise.all(connectionPromises);
+  };
 
+  // Wait for all database connections before setting up change streams
+  try {
+    await waitForDatabaseConnections();
+    console.log("✅ All database connections established");
+    
+    // Now setup change streams
+    await setupRealTimeDB();
+  } catch (error) {
+    console.error("❌ Error during startup:", error);
+  }
 });

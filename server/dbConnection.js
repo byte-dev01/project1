@@ -4,39 +4,48 @@ const mongoConnectionURL =
   process.env.MONGO_URI ||
   "mongodb+srv://rachellipurdue2:FPD8clZuvOXwOUrm@cluster0.br34aun.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
 
-const faxDb = mongoose.createConnection(mongoConnectionURL, {
+// Minimal connection options - just the essentials
+const baseOptions = {
   useNewUrlParser: true,
   useUnifiedTopology: true,
-  dbName: "fax-database",
-});
+};
 
-const chatDb = mongoose.createConnection(mongoConnectionURL, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  dbName: "chat-database",
-});
+// Helper function to reduce repetition
+const createConnection = (dbName) => {
+  const connection = mongoose.createConnection(mongoConnectionURL, {
+    ...baseOptions,
+    dbName: dbName,
+  });
 
-const patientDb = mongoose.createConnection(mongoConnectionURL, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  dbName: "patient-database",
-});
+  // Connection event handlers
+  connection.on("connected", () => {
+    console.log(`✅ [db] ${dbName} connected`);
+  });
 
-const catDb = mongoose.createConnection(mongoConnectionURL, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  dbName: "cat-database",
-});
+  connection.on("error", (err) => {
+    console.error(`❌ [db] ${dbName} connection error:`, err);
+  });
 
-// Log connection success
-faxDb.on("connected", () => console.log("✅ [db] fax-database connected"));
-chatDb.on("connected", () => console.log("✅ [db] chat-database connected"));
-patientDb.on("connected", () => console.log("✅ [db] patient-database connected"));
-catDb.on("connected", () => console.log("✅ [db] cat-database connected"));
+  connection.on("disconnected", () => {
+    console.warn(`⚠️ [db] ${dbName} disconnected`);
+  });
+
+  return connection;
+};
+
+// Create your connections
+const faxDb = createConnection("fax-database");
+const chatDb = createConnection("chat-database");
+const patientDb = createConnection("patient-database");
+const catDb = createConnection("cat-database");
+const eventDB = createConnection("event-database");
+
 
 module.exports = {
   faxDb,
   chatDb,
   patientDb,
   catDb,
+  eventDB,
+  mongoConnectionURL,
 };

@@ -6,7 +6,6 @@ import {
   Link
 } from "react-router-dom";
 
-import NavBar from "./modules/NavBar.js";
 import Feed from "./pages/Feed.js";
 import NotFound from "./pages/NotFound.js";
 import Profile from "./pages/Profile.js";
@@ -14,6 +13,8 @@ import FaxDashboard from "./pages/FaxDashboard.js";
 import Upload from "./pages/Upload.js";
 import Chatbook from "./pages/Chatbook.js";
 import MedicalAudioTranscriber from "./pages/Recorder.js";
+import Calendar from "./pages/Calendar.js";
+import CalendarFeedLink from "./pages/CalendarFeedLink.js";
 
 import { socket } from "../client-socket.js";
 import { get, post } from "../utilities";
@@ -51,6 +52,21 @@ class App extends Component {
     post("/api/logout");
   };
 
+  // Demo login function (从 NavBar 移过来)
+  handleDemoLogin = () => {
+    const demoLoginResponse = {
+      profileObj: { 
+        name: "Demo User",
+        email: "demo@example.com" 
+      },
+      tokenObj: { 
+        id_token: "demo-token-12345" 
+      }
+    };
+    
+    this.handleLogin(demoLoginResponse);
+  };
+
   render() {
     return (
       <Router>
@@ -67,11 +83,40 @@ class App extends Component {
             <div className="header-right">
               <button className="icon-button" title="Select language">🌐</button>
               <div className="user-menu">
-              <NavBar
-              handleLogin={this.handleLogin}
-              handleLogout={this.handleLogout}
-              userId={this.state.userId}
-              />
+                {/* 只显示登录/登出按钮，不导入整个 NavBar */}
+                {this.state.userId ? (
+                  <button
+                    onClick={this.handleLogout}
+                    className="demo-auth-btn"
+                    style={{
+                      background: '#dc3545',
+                      color: 'white',
+                      border: 'none',
+                      padding: '8px 16px',
+                      borderRadius: '4px',
+                      cursor: 'pointer',
+                      fontSize: '14px'
+                    }}
+                  >
+                    🚪 Logout (Demo)
+                  </button>
+                ) : (
+                  <button
+                    onClick={this.handleDemoLogin}
+                    className="demo-auth-btn"
+                    style={{
+                      background: '#007bff',
+                      color: 'white',
+                      border: 'none',
+                      padding: '8px 16px',
+                      borderRadius: '4px',
+                      cursor: 'pointer',
+                      fontSize: '14px'
+                    }}
+                  >
+                    🔑 Login (Demo)
+                  </button>
+                )}
                 <span style={{fontSize: '0.7rem', marginLeft: '0.25rem'}}>▼</span>
               </div>
               <button className="icon-button" title="Log out">↪</button>
@@ -91,14 +136,14 @@ class App extends Component {
                   <div className="main-content">
                     {/* Welcome Section */}
                     <div className="welcome-section">
-                      <h1>Welcome, Rachel!</h1>
+                      <h1>Welcome, {this.state.userId ? "Rachel" : "Guest"}!</h1>
                       {/* Shortcuts */}
                       <div className="shortcuts">
-                        <Link to="/recorder" className="shortcut-button">
+                        <Link to={`/recorder/${this.state.userId || 'guest'}`} className="shortcut-button">
                           <div className="shortcut-icon">🎤</div>
                           <span>Clinical Notes</span>
                         </Link>
-                        <Link to="upload" className="shortcut-button">
+                        <Link to={`/upload/${this.state.userId || 'guest'}`} className="shortcut-button">
                           <div className="shortcut-icon">🔍</div>
                           <span>OCR</span>
                         </Link>
@@ -147,8 +192,7 @@ class App extends Component {
                         <div className="feed-content">
                           <div className="feed-icon">📅</div>
                           <div className="feed-header">
-                            <div className="feed-title">NEW - Monday June 30, 2025</div>
-                            <div className="feed-description">3:20 PM PDT with Maralee R. Kanin, MD at Gonda (Goldschmied) Diabetes Center</div>
+                            <CalendarFeedLink />  {/* 这里会渲染标题和描述，并且可点击跳转 */}
                           </div>
                         </div>
                         <div className="feed-actions">
@@ -287,12 +331,14 @@ class App extends Component {
               )} 
             />
             
-            {/* Add back all your other routes */}
+            {/* 修复路由配置 */}
             <Route path="/profile/:userId" component={Profile} />
             <Route path="/chat" render={() => <Chatbook userId={this.state.userId} />} />
             <Route path="/upload/:userId" render={() => <Upload userId={this.state.userId} />} />
             <Route path="/recorder/:userId" render={() => <MedicalAudioTranscriber userId={this.state.userId} />} />
             <Route path="/fax-dashboard" render={() => <FaxDashboard userId={this.state.userId} />} />
+            <Route path="/calendar" render={() => <Calendar />} />
+
             <Route component={NotFound} />
           </Switch>
         </div>
@@ -301,4 +347,4 @@ class App extends Component {
   }
 }
 
-export default App
+export default App;

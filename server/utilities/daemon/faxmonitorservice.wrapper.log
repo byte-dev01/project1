@@ -1,2 +1,8 @@
 2025-06-23 15:41:43 - Starting C:\Program Files\nodejs\node.exe  --harmony --max_old_space_size=4096 C:\Users\rache\AppData\Roaming\npm\node_modules\node-windows\lib\wrapper.js --file C:\Users\rache\catbook-react\server\utilities\multiWorkerFaxMonitor.js --scriptoptions= --log "FaxMonitorService wrapper" --grow 0.25 --wait 1 --maxrestarts 3 --abortonerror n --stopparentfirst undefined
 2025-06-23 15:41:43 - Started 21472
+2025-07-01 06:20:20 - Starting C:\Program Files\nodejs\node.exe  --harmony --max_old_space_size=4096 C:\Users\rache\AppData\Roaming\npm\node_modules\node-windows\lib\wrapper.js --file C:\Users\rache\catbook-react\server\utilities\multiWorkerFaxMonitor.js --scriptoptions= --log "FaxMonitorService wrapper" --grow 0.25 --wait 1 --maxrestarts 3 --abortonerror n --stopparentfirst undefined
+2025-07-01 06:20:20 - Started 5924
+2025-07-01 13:00:45 - Starting C:\Program Files\nodejs\node.exe  --harmony --max_old_space_size=4096 C:\Users\rache\AppData\Roaming\npm\node_modules\node-windows\lib\wrapper.js --file C:\Users\rache\catbook-react\server\utilities\multiWorkerFaxMonitor.js --scriptoptions= --log "FaxMonitorService wrapper" --grow 0.25 --wait 1 --maxrestarts 3 --abortonerror n --stopparentfirst undefined
+2025-07-01 13:00:45 - Started 6192
+2025-07-01 13:07:00 - Starting C:\Program Files\nodejs\node.exe  --harmony --max_old_space_size=4096 C:\Users\rache\AppData\Roaming\npm\node_modules\node-windows\lib\wrapper.js --file C:\Users\rache\catbook-react\server\utilities\multiWorkerFaxMonitor.js --scriptoptions= --log "FaxMonitorService wrapper" --grow 0.25 --wait 1 --maxrestarts 3 --abortonerror n --stopparentfirst undefined
+2025-07-01 13:07:00 - Started 6340

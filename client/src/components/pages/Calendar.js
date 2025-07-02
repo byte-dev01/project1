@@ -1,7 +1,6 @@
 // Create this as: client/src/components/Calendar.js
-
 import React, { useState, useEffect } from 'react';
-import './Calendar.css'; // We'll create this CSS file
+import './Calendar.css';
 
 const Calendar = () => {
   // State management
@@ -15,9 +14,13 @@ const Calendar = () => {
     title: '',
     date: '',
     startTime: '09:00',
-    endTime: '10:00'
+    endTime: '10:00',
+    description: '',
+    location: ''
   });
   const [editingEventId, setEditingEventId] = useState(null);
+  const [viewType, setViewType] = useState('week');
+  const [showViewDropdown, setShowViewDropdown] = useState(false);
 
   // API base URL
   const API_BASE_URL = '/api';
@@ -42,36 +45,27 @@ const Calendar = () => {
            date.getFullYear() === today.getFullYear();
   }
 
+  function isSameMonth(date1, date2) {
+    return date1.getMonth() === date2.getMonth() && 
+           date1.getFullYear() === date2.getFullYear();
+  }
+
   // Load events from API
   const loadEvents = async () => {
     try {
-      console.log('🔄 Loading events from API...');
       const response = await fetch(`${API_BASE_URL}/events`);
-      
       if (response.ok) {
         const eventsData = await response.json();
-        console.log(`📅 Loaded ${eventsData.length} events successfully`);
         setEvents(eventsData);
-      } else {
-        console.error('❌ Failed to load events. Status:', response.status);
-        const errorText = await response.text();
-        console.error('❌ Error response:', errorText);
       }
     } catch (error) {
-      console.error('❌ Failed to load events:', error);
+      console.error('Failed to load events:', error);
     }
-  };
-
-  // Add manual refresh function for debugging
-  const refreshEvents = async () => {
-    console.log('🔄 Manual refresh triggered');
-    await loadEvents();
   };
 
   // Save event to database
   const saveEvent = async (eventData) => {
     try {
-      console.log('💾 Saving event:', eventData);
       const response = await fetch(`${API_BASE_URL}/events`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -80,20 +74,11 @@ const Calendar = () => {
       
       if (response.ok) {
         const savedEvent = await response.json();
-        console.log('✅ Event saved successfully:', savedEvent);
-        setEvents(prev => {
-          const newEvents = [...prev, savedEvent];
-          console.log('📅 Updated events state:', newEvents);
-          return newEvents;
-        });
+        setEvents(prev => [...prev, savedEvent]);
         return savedEvent;
-      } else {
-        console.error('❌ Failed to save event. Status:', response.status);
-        const errorText = await response.text();
-        console.error('❌ Error response:', errorText);
       }
     } catch (error) {
-      console.error('❌ Failed to save event:', error);
+      console.error('Failed to save event:', error);
     }
   };
 
@@ -133,16 +118,8 @@ const Calendar = () => {
 
   // Initialize
   useEffect(() => {
-    console.log('🚀 Calendar component mounted, loading events...');
     loadEvents();
   }, []);
-
-  // Debug: Log when events state changes (only once to avoid loops)
-  useEffect(() => {
-    if (events.length > 0) {
-      console.log('📅 Events loaded successfully:', events.length, 'events');
-    }
-  }, [events.length]); // Only trigger when length changes
 
   // Generate week dates
   const getWeekDates = () => {
@@ -155,18 +132,58 @@ const Calendar = () => {
     return weekDates;
   };
 
-  // Handle form submission
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  // Generate mini calendar days
+  const getMiniCalendarDays = () => {
+    const firstDay = new Date(miniCalendarDate.getFullYear(), miniCalendarDate.getMonth(), 1);
+    const lastDay = new Date(miniCalendarDate.getFullYear(), miniCalendarDate.getMonth() + 1, 0);
+    const daysInMonth = lastDay.getDate();
+    const startingDayOfWeek = firstDay.getDay();
     
+    const days = [];
+    
+    // Previous month days
+    const prevMonthLastDay = new Date(miniCalendarDate.getFullYear(), miniCalendarDate.getMonth(), 0).getDate();
+    for (let i = startingDayOfWeek - 1; i >= 0; i--) {
+      days.push({
+        date: prevMonthLastDay - i,
+        isCurrentMonth: false,
+        fullDate: new Date(miniCalendarDate.getFullYear(), miniCalendarDate.getMonth() - 1, prevMonthLastDay - i)
+      });
+    }
+    
+    // Current month days
+    for (let i = 1; i <= daysInMonth; i++) {
+      days.push({
+        date: i,
+        isCurrentMonth: true,
+        fullDate: new Date(miniCalendarDate.getFullYear(), miniCalendarDate.getMonth(), i)
+      });
+    }
+    
+    // Next month days
+    const remainingDays = 42 - days.length;
+    for (let i = 1; i <= remainingDays; i++) {
+      days.push({
+        date: i,
+        isCurrentMonth: false,
+        fullDate: new Date(miniCalendarDate.getFullYear(), miniCalendarDate.getMonth() + 1, i)
+      });
+    }
+    
+    return days;
+  };
+
+  // Handle form submission
+  const handleSubmit = async () => {
     if (!eventForm.title || !eventForm.date || !eventForm.startTime || !eventForm.endTime) {
-      alert('Please fill in all fields');
+      alert('Please fill in all required fields');
       return;
     }
 
     const eventData = {
       id: editingEventId || Date.now().toString(),
-      ...eventForm
+      ...eventForm,
+      updatedAt: new Date()
     };
 
     if (editingEventId) {
@@ -184,7 +201,9 @@ const Calendar = () => {
       title: '',
       date,
       startTime: `${hour.toString().padStart(2, '0')}:00`,
-      endTime: `${(hour + 1).toString().padStart(2, '0')}:00`
+      endTime: `${(hour + 1).toString().padStart(2, '0')}:00`,
+      description: '',
+      location: ''
     });
     setSelectedDate(date);
     setSelectedHour(hour);
@@ -198,7 +217,9 @@ const Calendar = () => {
       title: event.title,
       date: event.date,
       startTime: event.startTime,
-      endTime: event.endTime
+      endTime: event.endTime,
+      description: event.description || '',
+      location: event.location || ''
     });
     setEditingEventId(event.id);
     setShowModal(true);
@@ -211,7 +232,9 @@ const Calendar = () => {
       title: '',
       date: '',
       startTime: '09:00',
-      endTime: '10:00'
+      endTime: '10:00',
+      description: '',
+      location: ''
     });
     setEditingEventId(null);
   };
@@ -223,6 +246,12 @@ const Calendar = () => {
     setCurrentWeekStart(newDate);
   };
 
+  const navigateMiniCalendar = (direction) => {
+    const newDate = new Date(miniCalendarDate);
+    newDate.setMonth(newDate.getMonth() + direction);
+    setMiniCalendarDate(newDate);
+  };
+
   const goToToday = () => {
     setCurrentWeekStart(getStartOfWeek(new Date()));
     setMiniCalendarDate(new Date());
@@ -230,31 +259,36 @@ const Calendar = () => {
 
   // Render time slots
   const renderTimeSlots = () => {
-    const weekDates = getWeekDates();
     const slots = [];
-
+    
     for (let hour = 0; hour < 24; hour++) {
-      const timeLabel = hour === 0 ? '12 AM' : 
-                       hour < 12 ? `${hour} AM` : 
-                       hour === 12 ? '12 PM' : `${hour - 12} PM`;
-
       slots.push(
-        <React.Fragment key={hour}>
-          <div className="time-slot">
-            <div className="time-label">{timeLabel}</div>
+        <div key={hour} className="gcal-time-slot">
+          <div className="gcal-time-label">
+            {hour === 0 ? '12 AM' : hour < 12 ? `${hour} AM` : hour === 12 ? '12 PM' : `${hour - 12} PM`}
           </div>
-          {weekDates.map((date, dayIndex) => (
-            <div
-              key={`${hour}-${dayIndex}`}
-              className="day-column"
-              onClick={() => openEventModal(formatDate(date), hour)}
-            />
-          ))}
-        </React.Fragment>
+        </div>
       );
     }
-
+    
     return slots;
+  };
+
+  // Render day columns
+  const renderDayColumns = () => {
+    const weekDates = getWeekDates();
+    
+    return weekDates.map((date, index) => (
+      <div key={index} className="gcal-day-column">
+        {Array.from({ length: 24 }, (_, hour) => (
+          <div
+            key={hour}
+            className="gcal-hour-cell"
+            onClick={() => openEventModal(formatDate(date), hour)}
+          />
+        ))}
+      </div>
+    ));
   };
 
   // Render events
@@ -263,198 +297,234 @@ const Calendar = () => {
     const weekStart = formatDate(weekDates[0]);
     const weekEnd = formatDate(weekDates[6]);
     
-    const eventsInWeek = events.filter(event => event.date >= weekStart && event.date <= weekEnd);
-    
-    const renderedEvents = eventsInWeek.map((event, index) => {
+    return events
+      .filter(event => event.date >= weekStart && event.date <= weekEnd)
+      .map((event) => {
         const dayIndex = weekDates.findIndex(date => formatDate(date) === event.date);
-        
-        if (dayIndex === -1) {
-          return null;
-        }
+        if (dayIndex === -1) return null;
 
         const startHour = parseInt(event.startTime.split(':')[0]);
         const startMinutes = parseInt(event.startTime.split(':')[1]);
         const endHour = parseInt(event.endTime.split(':')[0]);
         const endMinutes = parseInt(event.endTime.split(':')[1]);
         
-        const startPosition = startHour * 48 + (startMinutes / 60) * 48;
-        const duration = (endHour - startHour) * 48 + ((endMinutes - startMinutes) / 60) * 48;
-        
-        // 简化的位置计算
-        const columnWidth = `calc((100% - 60px) / 7)`;
-        const leftPosition = `calc(60px + ${dayIndex} * (100% - 60px) / 7)`;
-        
-        // Debug positioning
-        console.log(`📍 Event "${event.title}" positioning:`, {
-          dayIndex,
-          leftPosition,
-          columnWidth,
-          date: event.date
-        });
-        
-        const eventStyle = {
-          position: 'absolute',
-          top: `${startPosition}px`,
-          height: `${Math.max(duration, 20)}px`,
-          left: leftPosition,
-          width: columnWidth,
-          zIndex: 1000,
-          backgroundColor: '#039be5',
-          color: 'white',
-          padding: '4px 8px',
-          borderRadius: '4px',
-          fontSize: '12px',
-          cursor: 'pointer',
-          overflow: 'hidden',
-          whiteSpace: 'nowrap',
-          textOverflow: 'ellipsis',
-          boxShadow: '0 1px 2px rgba(0,0,0,0.3)',
-          border: '1px solid #0288d1',
-          // 临时添加红色背景以便调试
-          backgroundColor: '#ff0000'
-        };
+        const top = (startHour + startMinutes / 60) * 48;
+        const height = ((endHour + endMinutes / 60) - (startHour + startMinutes / 60)) * 48;
+        const left = dayIndex * (100 / 7);
         
         return (
           <div
-            key={event.id || event._id || index}
-            style={eventStyle}
+            key={event.id}
+            className="gcal-event"
+            style={{
+              top: `${top}px`,
+              height: `${Math.max(height, 20)}px`,
+              left: `${left}%`,
+              width: `${100 / 7}%`
+            }}
             onClick={(e) => {
               e.stopPropagation();
-              console.log('📅 Event clicked:', event.title);
               editEvent(event);
             }}
-            title={`${event.title} (${event.startTime} - ${event.endTime})`}
           >
-            {event.title}
+            <div className="gcal-event-title">{event.title}</div>
+            {event.location && <div className="gcal-event-location">{event.location}</div>}
           </div>
         );
-      }).filter(Boolean);
-      
-    // Only log once when there are events to render
-    if (eventsInWeek.length > 0 && renderedEvents.length !== eventsInWeek.length) {
-      console.log(`🎨 Rendered ${renderedEvents.length} out of ${eventsInWeek.length} events`);
-    }
-    
-    return renderedEvents;
+      });
   };
 
   const weekDates = getWeekDates();
 
   return (
-    <div className="calendar-wrapper">
+    <div className="gcal-wrapper">
       {/* Header */}
-      <div className="calendar-header-bar">
-        <div className="calendar-logo-section">
-          <div className="calendar-logo">
-            <svg viewBox="0 0 40 40">
-              <rect width="40" height="40" rx="8" fill="#4285f4"/>
-              <text x="20" y="28" fontSize="18" fill="white" textAnchor="middle" fontWeight="500">
-                {new Date().getDate()}
-              </text>
+      <header className="gcal-header">
+        <div className="gcal-header-left">
+          <button className="gcal-menu-btn">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z" fill="currentColor"/>
             </svg>
-          </div>
-          <span className="calendar-logo-text">Calendar</span>
-        </div>
-
-        <div className="calendar-date-navigation">
-          <button className="calendar-today-button" onClick={goToToday}>
-            Today
           </button>
-          <button className="calendar-today-button" onClick={refreshEvents} style={{marginLeft: '10px', background: '#28a745'}}>
-            🔄 Refresh
-          </button>
-          <div className="calendar-nav-arrows">
-            <button className="calendar-nav-arrow" onClick={() => navigateWeek(-1)}>
-              ←
-            </button>
-            <button className="calendar-nav-arrow" onClick={() => navigateWeek(1)}>
-              →
-            </button>
+          
+          <div className="gcal-logo">
+            <img src="https://ssl.gstatic.com/calendar/images/dynamiclogo_2020q4/calendar_27_2x.png" alt="Calendar" />
+            <span className="gcal-logo-text">Calendar</span>
           </div>
-          <div className="calendar-current-date">
-            {weekDates[0].toLocaleDateString(undefined, { month: 'long', year: 'numeric' })}
-          </div>
-          <div style={{marginLeft: '20px', fontSize: '14px', color: '#666'}}>
-            Events: {events.length}
+          
+          <div className="gcal-today-nav">
+            <button className="gcal-today-btn" onClick={goToToday}>
+              Today
+            </button>
+            
+            <div className="gcal-nav-arrows">
+              <button onClick={() => navigateWeek(-1)}>
+                <svg width="24" height="24" viewBox="0 0 24 24">
+                  <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12l4.58-4.59z" fill="currentColor"/>
+                </svg>
+              </button>
+              <button onClick={() => navigateWeek(1)}>
+                <svg width="24" height="24" viewBox="0 0 24 24">
+                  <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6-6-6z" fill="currentColor"/>
+                </svg>
+              </button>
+            </div>
+            
+            <div className="gcal-current-period">
+              {weekDates[0].toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
+            </div>
           </div>
         </div>
-      </div>
+        
+        <div className="gcal-header-right">
+          <div className="gcal-view-switcher">
+            <button 
+              className="gcal-view-btn"
+              onClick={() => setShowViewDropdown(!showViewDropdown)}
+            >
+              Week
+              <svg width="18" height="18" viewBox="0 0 24 24">
+                <path d="M7 10l5 5 5-5z" fill="currentColor"/>
+              </svg>
+            </button>
+            
+            {showViewDropdown && (
+              <div className="gcal-view-dropdown">
+                <div className="gcal-view-option">Day</div>
+                <div className="gcal-view-option gcal-view-active">Week</div>
+                <div className="gcal-view-option">Month</div>
+                <div className="gcal-view-option">Year</div>
+                <div className="gcal-view-option">Schedule</div>
+                <div className="gcal-view-option">4 days</div>
+              </div>
+            )}
+          </div>
+          
+          <button className="gcal-settings-btn">
+            <svg width="24" height="24" viewBox="0 0 24 24">
+              <path d="M13.85 22.25h-3.7c-.74 0-1.36-.54-1.45-1.27l-.27-1.89c-.27-.14-.53-.29-.79-.46l-1.8.72c-.7.26-1.47-.03-1.81-.65L2.2 15.53c-.35-.66-.2-1.44.36-1.88l1.53-1.19c-.01-.15-.02-.3-.02-.46 0-.15.01-.31.02-.46l-1.52-1.19c-.59-.45-.74-1.26-.37-1.88l1.85-3.19c.34-.62 1.11-.9 1.79-.63l1.81.73c.26-.17.52-.32.78-.46l.27-1.91c.09-.7.71-1.25 1.44-1.25h3.7c.74 0 1.36.54 1.45 1.27l.27 1.89c.27.14.53.29.79.46l1.8-.72c.71-.26 1.48.03 1.82.65l1.84 3.18c.36.66.2 1.44-.36 1.88l-1.52 1.19c.01.15.02.3.02.46s-.01.31-.02.46l1.52 1.19c.56.45.72 1.23.37 1.86l-1.86 3.22c-.34.62-1.11.9-1.8.63l-1.8-.72c-.26.17-.52.32-.78.46l-.27 1.91c-.1.68-.72 1.22-1.46 1.22zm-3.23-2h2.76l.37-2.55.53-.22c.44-.18.88-.44 1.34-.78l.45-.34 2.38.96 1.38-2.4-2.03-1.58.07-.56c.03-.26.06-.51.06-.78s-.03-.53-.06-.78l-.07-.56 2.03-1.58-1.39-2.4-2.39.96-.45-.35c-.42-.32-.87-.58-1.33-.77l-.52-.22-.37-2.55h-2.76l-.37 2.55-.53.21c-.44.19-.88.44-1.34.79l-.45.33-2.38-.95-1.39 2.39 2.03 1.58-.07.56a7 7 0 0 0-.06.79c0 .26.02.53.06.78l.07.56-2.03 1.58 1.38 2.4 2.39-.96.45.35c.43.33.86.58 1.33.77l.53.22.38 2.55z" fill="currentColor"/>
+              <circle cx="12" cy="12" r="3.5" fill="currentColor"/>
+            </svg>
+          </button>
+        </div>
+      </header>
 
       {/* Main Content */}
-      <div className="calendar-main-container">
+      <div className="gcal-main">
         {/* Sidebar */}
-        <div className="calendar-sidebar">
+        <div className="gcal-sidebar">
+          {/* Create Button */}
           <button 
-            className="calendar-create-button"
-            onClick={() => openEventModal(formatDate(new Date()), 9)}
+            className="gcal-create-btn"
+            onClick={() => openEventModal(formatDate(new Date()))}
           >
-            <span>+ Create</span>
+            <svg width="36" height="36" viewBox="0 0 36 36">
+              <path fill="#fff" d="M16 16V8h4v8h8v4h-8v8h-4v-8H8v-4h8z"/>
+            </svg>
+            <span>Create</span>
           </button>
+
+          {/* Mini Calendar */}
+          <div className="gcal-mini-calendar">
+            <div className="gcal-mini-calendar-header">
+              <span>{miniCalendarDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</span>
+              <div className="gcal-mini-calendar-nav">
+                <button onClick={() => navigateMiniCalendar(-1)}>
+                  <svg width="20" height="20" viewBox="0 0 24 24">
+                    <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12l4.58-4.59z" fill="currentColor"/>
+                  </svg>
+                </button>
+                <button onClick={() => navigateMiniCalendar(1)}>
+                  <svg width="20" height="20" viewBox="0 0 24 24">
+                    <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6-6-6z" fill="currentColor"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+            
+            <div className="gcal-mini-calendar-days">
+              <div className="gcal-mini-calendar-weekdays">
+                {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((day, i) => (
+                  <div key={i} className="gcal-mini-calendar-weekday">{day}</div>
+                ))}
+              </div>
+              <div className="gcal-mini-calendar-dates">
+                {getMiniCalendarDays().map((day, i) => (
+                  <div
+                    key={i}
+                    className={`gcal-mini-calendar-date ${!day.isCurrentMonth ? 'gcal-other-month' : ''} ${isToday(day.fullDate) ? 'gcal-today' : ''}`}
+                    onClick={() => {
+                      setCurrentWeekStart(getStartOfWeek(day.fullDate));
+                    }}
+                  >
+                    {day.date}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Calendar List */}
+          <div className="gcal-calendar-list">
+            <div className="gcal-calendar-section">
+              <h3>My calendars</h3>
+              <div className="gcal-calendar-item">
+                <input type="checkbox" defaultChecked />
+                <span className="gcal-calendar-color" style={{ backgroundColor: '#039be5' }}></span>
+                <span className="gcal-calendar-name">Rachel Li</span>
+              </div>
+              <div className="gcal-calendar-item">
+                <input type="checkbox" defaultChecked />
+                <span className="gcal-calendar-color" style={{ backgroundColor: '#33b679' }}></span>
+                <span className="gcal-calendar-name">Birthdays</span>
+              </div>
+              <div className="gcal-calendar-item">
+                <input type="checkbox" defaultChecked />
+                <span className="gcal-calendar-color" style={{ backgroundColor: '#4285f4' }}></span>
+                <span className="gcal-calendar-name">Tasks</span>
+              </div>
+            </div>
+            
+            <div className="gcal-calendar-section">
+              <h3>Other calendars</h3>
+              <div className="gcal-calendar-item">
+                <input type="checkbox" defaultChecked />
+                <span className="gcal-calendar-color" style={{ backgroundColor: '#0b8043' }}></span>
+                <span className="gcal-calendar-name">Holidays in United States</span>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Calendar View */}
-        <div className="calendar-container">
+        <div className="gcal-calendar-view">
           {/* Week Header */}
-          <div className="calendar-week-header">
-            <div className="calendar-timezone-header">GMT-08</div>
-            {weekDates.map(date => (
-              <div key={date.toISOString()} className={`calendar-day-header ${isToday(date) ? 'today' : ''}`}>
-                <div className="calendar-day-name">
-                  {date.toLocaleDateString(undefined, { weekday: 'short' }).toUpperCase()}
+          <div className="gcal-week-header">
+            <div className="gcal-timezone">GMT-07</div>
+            {weekDates.map((date, i) => (
+              <div key={i} className={`gcal-day-header ${isToday(date) ? 'gcal-today' : ''}`}>
+                <div className="gcal-day-name">
+                  {date.toLocaleDateString('en-US', { weekday: 'short' }).toUpperCase()}
                 </div>
-                <div className="calendar-day-number">{date.getDate()}</div>
+                <div className={`gcal-day-number ${isToday(date) ? 'gcal-today-number' : ''}`}>
+                  {date.getDate()}
+                </div>
               </div>
             ))}
           </div>
 
-          {/* Calendar Body */}
-          <div className="calendar-body">
-            <div className="calendar-time-grid">
-              {renderTimeSlots()}
-              {renderEvents()}
-              
-              {/* Test red block for visibility */}
-              <div style={{
-                position: 'absolute',
-                top: '100px',
-                left: '200px',
-                width: '100px',
-                height: '30px',
-                backgroundColor: 'red',
-                color: 'white',
-                zIndex: 2000,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: '12px'
-              }}>
-                TEST BLOCK
+          {/* Time Grid */}
+          <div className="gcal-time-grid-container">
+            <div className="gcal-time-grid">
+              <div className="gcal-time-column">
+                {renderTimeSlots()}
               </div>
-              
-              {/* Temporary debug overlay */}
-              {events.length > 0 && (
-                <div style={{
-                  position: 'absolute',
-                  top: '10px',
-                  right: '10px',
-                  background: 'rgba(0,0,0,0.8)',
-                  color: 'white',
-                  padding: '10px',
-                  borderRadius: '4px',
-                  zIndex: 2000,
-                  fontSize: '12px'
-                }}>
-                  📅 Debug Info:<br/>
-                  Total Events: {events.length}<br/>
-                  Week Range: {formatDate(getWeekDates()[0])} to {formatDate(getWeekDates()[6])}<br/>
-                  Events in Week: {events.filter(event => {
-                    const weekDates = getWeekDates();
-                    const weekStart = formatDate(weekDates[0]);
-                    const weekEnd = formatDate(weekDates[6]);
-                    return event.date >= weekStart && event.date <= weekEnd;
-                  }).length}
+              <div className="gcal-days-container">
+                {renderDayColumns()}
+                <div className="gcal-events-container">
+                  {renderEvents()}
                 </div>
-              )}
+              </div>
             </div>
           </div>
         </div>
@@ -462,60 +532,99 @@ const Calendar = () => {
 
       {/* Event Modal */}
       {showModal && (
-        <div className="calendar-modal-overlay" onClick={closeModal}>
-          <div className="calendar-event-modal" onClick={(e) => e.stopPropagation()}>
-            <div className="calendar-modal-header">
-              {editingEventId ? 'Edit Event' : 'Add Event'}
+        <div className="gcal-modal-overlay" onClick={closeModal}>
+          <div className="gcal-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="gcal-modal-header">
+              <h2>{editingEventId ? 'Edit event' : 'Create event'}</h2>
+              <button className="gcal-modal-close" onClick={closeModal}>
+                <svg width="24" height="24" viewBox="0 0 24 24">
+                  <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" fill="currentColor"/>
+                </svg>
+              </button>
             </div>
-            <form onSubmit={handleSubmit}>
-              <div className="calendar-form-group">
-                <label className="calendar-form-label">Event Title</label>
+            
+            <div className="gcal-modal-form">
+              <div className="gcal-form-group">
                 <input
                   type="text"
-                  className="calendar-form-input"
+                  className="gcal-form-input gcal-title-input"
                   value={eventForm.title}
                   onChange={(e) => setEventForm({...eventForm, title: e.target.value})}
-                  placeholder="Event title"
+                  placeholder="Add title"
                   required
+                  autoFocus
                 />
               </div>
-              <div className="calendar-form-group">
-                <label className="calendar-form-label">Date</label>
-                <input
-                  type="date"
-                  className="calendar-form-input"
-                  value={eventForm.date}
-                  onChange={(e) => setEventForm({...eventForm, date: e.target.value})}
-                  required
-                />
-              </div>
-              <div className="calendar-form-group">
-                <label className="calendar-form-label">Time</label>
-                <div className="calendar-time-inputs">
+              
+              <div className="gcal-form-row">
+                <div className="gcal-form-icon">
+                  <svg width="24" height="24" viewBox="0 0 24 24">
+                    <path d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z" fill="#5f6368"/>
+                  </svg>
+                </div>
+                <div className="gcal-form-inputs">
                   <input
-                    type="time"
-                    className="calendar-form-input"
-                    value={eventForm.startTime}
-                    onChange={(e) => setEventForm({...eventForm, startTime: e.target.value})}
+                    type="date"
+                    className="gcal-form-input"
+                    value={eventForm.date}
+                    onChange={(e) => setEventForm({...eventForm, date: e.target.value})}
+                    required
                   />
-                  <input
-                    type="time"
-                    className="calendar-form-input"
-                    value={eventForm.endTime}
-                    onChange={(e) => setEventForm({...eventForm, endTime: e.target.value})}
-                  />
+                  <div className="gcal-time-inputs">
+                    <input
+                      type="time"
+                      className="gcal-form-input"
+                      value={eventForm.startTime}
+                      onChange={(e) => setEventForm({...eventForm, startTime: e.target.value})}
+                    />
+                    <span>–</span>
+                    <input
+                      type="time"
+                      className="gcal-form-input"
+                      value={eventForm.endTime}
+                      onChange={(e) => setEventForm({...eventForm, endTime: e.target.value})}
+                    />
+                  </div>
                 </div>
               </div>
-              <div className="calendar-modal-buttons">
-                <button type="button" className="calendar-btn calendar-btn-secondary" onClick={closeModal}>
-                  Cancel
-                </button>
+              
+              <div className="gcal-form-row">
+                <div className="gcal-form-icon">
+                  <svg width="24" height="24" viewBox="0 0 24 24">
+                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" fill="#5f6368"/>
+                  </svg>
+                </div>
+                <input
+                  type="text"
+                  className="gcal-form-input"
+                  value={eventForm.location}
+                  onChange={(e) => setEventForm({...eventForm, location: e.target.value})}
+                  placeholder="Add location"
+                />
+              </div>
+              
+              <div className="gcal-form-row">
+                <div className="gcal-form-icon">
+                  <svg width="24" height="24" viewBox="0 0 24 24">
+                    <path d="M14 17H4v2h10v-2zm6-8H4v2h16V9zM4 15h16v-2H4v2zM4 5v2h16V5H4z" fill="#5f6368"/>
+                  </svg>
+                </div>
+                <textarea
+                  className="gcal-form-input gcal-form-textarea"
+                  value={eventForm.description}
+                  onChange={(e) => setEventForm({...eventForm, description: e.target.value})}
+                  placeholder="Add description"
+                  rows={3}
+                />
+              </div>
+              
+              <div className="gcal-modal-actions">
                 {editingEventId && (
                   <button 
                     type="button" 
-                    className="calendar-btn calendar-btn-delete"
+                    className="gcal-btn gcal-btn-delete"
                     onClick={() => {
-                      if (confirm('Are you sure you want to delete this event?')) {
+                      if (confirm('Delete this event?')) {
                         deleteEvent(editingEventId);
                         closeModal();
                       }
@@ -524,11 +633,20 @@ const Calendar = () => {
                     Delete
                   </button>
                 )}
-                <button type="submit" className="calendar-btn calendar-btn-primary">
-                  Save Event
-                </button>
+                <div className="gcal-modal-actions-right">
+                  <button type="button" className="gcal-btn gcal-btn-cancel" onClick={closeModal}>
+                    Cancel
+                  </button>
+                  <button 
+                    type="button" 
+                    className="gcal-btn gcal-btn-save"
+                    onClick={handleSubmit}
+                  >
+                    Save
+                  </button>
+                </div>
               </div>
-            </form>
+            </div>
           </div>
         </div>
       )}
@@ -537,4 +655,3 @@ const Calendar = () => {
 };
 
 export default Calendar;
-

@@ -143,6 +143,7 @@ class App extends Component {
                           <div className="shortcut-icon">🎤</div>
                           <span>Clinical Notes</span>
                         </Link>
+                        
                         <Link to={`/upload/${this.state.userId || 'guest'}`} className="shortcut-button">
                           <div className="shortcut-icon">🔍</div>
                           <span>OCR</span>
@@ -178,7 +179,7 @@ class App extends Component {
                         <div className="feed-content">
                           <div className="feed-icon">🧪</div>
                           <div className="feed-header">
-                            <div className="feed-title">Updated FOLLICLE STIMULATING HORMONE results</div>
+                            <div className="feed-title">Updated Results</div>
                             <div className="feed-description">From Tuesday June 17, 2025</div>
                           </div>
                         </div>
@@ -250,7 +251,7 @@ class App extends Component {
                         <div className="feed-content">
                           <div className="feed-icon">❗</div>
                           <div className="feed-header">
-                            <div className="feed-title">HPV Vaccines is overdue</div>
+                            <div className="feed-title">Physical Screen Overdue</div>
                             <div className="feed-description">Important preventive care reminder</div>
                           </div>
                         </div>
@@ -259,18 +260,37 @@ class App extends Component {
                         </div>
                       </div>
 
-                      <div className="feed-item">
-                        <div className="feed-content">
-                          <div className="feed-icon">❗</div>
-                          <div className="feed-header">
-                            <div className="feed-title">Cervical Cancer Screening: Pap Smear is overdue</div>
-                            <div className="feed-description">Important preventive care reminder</div>
+            {/* New Message Alert */}
+            <div className="feed-item">
+              <div className="feed-content">
+                <div className="feed-icon">✉️</div>
+                <div className="feed-header">
+                  <div className="feed-title">New message from Dr. Lars Hanson</div>
+                  <div className="feed-description">Regarding your recent lab results • Received 2 hours ago</div>
+                </div>
+              </div>
+              <div className="feed-actions">
+                <button className="btn-primary">Read message</button>
+              </div>
+            </div>
+
+            {/* Prescription Reminder */}
+                        <div className="feed-item">
+                          <div className="feed-content">
+                            <div className="feed-icon">💊</div>
+                            <div className="feed-header">
+                              <div className="feed-title">Prescription Ready for Pickup</div>
+                              <div className="feed-description">Your medication is ready at UCLA Pharmacy • Expires in 7 days</div>
+                            </div>
+                          </div>
+                          <div className="feed-actions">
+                            <button className="btn-primary">View details</button>
+                            <button className="btn-secondary">Find pharmacy</button>
                           </div>
                         </div>
-                        <div className="feed-actions">
-                          <a href="#" className="btn-primary">View details</a>
-                        </div>
-                      </div>
+
+
+                        
                     </div>
                   </div>
 
@@ -281,46 +301,11 @@ class App extends Component {
                     <div className="provider-item">
                       <img className="provider-image" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23dbdbdb'/%3E%3C/svg%3E" alt="" />
                       <div className="provider-info">
-                        <a href="#" className="provider-name">Clifford Pang, DO</a>
+                        <a href="#" className="provider-name">Lars Hanson, MD</a>
                         <div className="provider-specialty"><span className="provider-role">Primary Care Provider</span><br />Family Medicine</div>
                       </div>
                       <div className="provider-actions">
                         <button className="icon-button" title="Schedule an appointment">📅</button>
-                        <button className="icon-button" title="Send a message">✉️</button>
-                      </div>
-                    </div>
-
-                    <div className="provider-item">
-                      <img className="provider-image" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23dbdbdb'/%3E%3C/svg%3E" alt="" />
-                      <div className="provider-info">
-                        <a href="#" className="provider-name">Mary C. Mayo, MD</a>
-                        <div className="provider-specialty">Neurology</div>
-                      </div>
-                      <div className="provider-actions">
-                        <button className="icon-button" title="Schedule an appointment">📅</button>
-                        <button className="icon-button" title="Send a message">✉️</button>
-                      </div>
-                    </div>
-
-                    <div className="provider-item">
-                      <img className="provider-image" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23dbdbdb'/%3E%3C/svg%3E" alt="" />
-                      <div className="provider-info">
-                        <a href="#" className="provider-name">Richard R. Cooke, II, MD</a>
-                        <div className="provider-specialty">Family Medicine</div>
-                      </div>
-                      <div className="provider-actions">
-                        <button className="icon-button" title="Schedule an appointment">📅</button>
-                        <button className="icon-button" title="Send a message">✉️</button>
-                      </div>
-                    </div>
-
-                    <div className="provider-item">
-                      <img className="provider-image" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23dbdbdb'/%3E%3C/svg%3E" alt="" />
-                      <div className="provider-info">
-                        <a href="#" className="provider-name">Vivek Bose, MD</a>
-                        <div className="provider-specialty">Medicine, Endocrinology, Diabetes Metabolism</div>
-                      </div>
-                      <div className="provider-actions">
                         <button className="icon-button" title="Send a message">✉️</button>
                       </div>
                     </div>

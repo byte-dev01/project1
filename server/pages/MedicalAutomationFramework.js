@@ -1,8 +1,9 @@
 const { chromium } = require('playwright-extra');
-const stealth = require('puppeteer-extra-plugin-stealth')();
+const stealth = require('playwright-extra-plugin-stealth')();
 // 使用stealth插件
 chromium.use(stealth);
 const crypto = require('crypto');
+const fs = require('fs/promises');
 
 class MedicalAutomationFramework {
     constructor(config = {}) {
@@ -19,9 +20,73 @@ class MedicalAutomationFramework {
         this.sessionMetrics = {
             startTime: Date.now(),
             actions: 0,
-            avgResponseTime: 0
+            dailyCount: 0,
+            hourlyCount: 0,
+            lastRequest: null,
+            sessionId: crypto.randomUUID()
         };
+        
+        this.auditLog = [];
+        this.rateLimiter = new Map(); // Track request timing
     }
+        async checkRateLimits() {
+        const now = Date.now();
+        const oneHour = 60 * 60 * 1000;
+        const oneDay = 24 * oneHour;
+        
+        // Clean old entries
+        for (const [timestamp, count] of this.rateLimiter.entries()) {
+            if (now - timestamp > oneDay) {
+                this.rateLimiter.delete(timestamp);
+            }
+        }
+        
+        // Count recent requests
+        const hourlyRequests = Array.from(this.rateLimiter.entries())
+            .filter(([timestamp]) => now - timestamp < oneHour)
+            .reduce((sum, [, count]) => sum + count, 0);
+            
+        const dailyRequests = Array.from(this.rateLimiter.values())
+            .reduce((sum, count) => sum + count, 0);
+            
+        if (hourlyRequests >= this.config.hourlyLimit) {
+            const waitTime = oneHour - (now - Math.max(...Array.from(this.rateLimiter.keys())));
+            throw new Error(`Rate limit exceeded. Wait ${Math.ceil(waitTime / 60000)} minutes.`);
+        }
+        
+        if (dailyRequests >= this.config.dailyLimit) {
+            throw new Error('Daily request limit reached. Try again tomorrow.');
+        }
+        
+        // Record this request
+        const hourKey = Math.floor(now / oneHour) * oneHour;
+        this.rateLimiter.set(hourKey, (this.rateLimiter.get(hourKey) || 0) + 1);
+        
+        return true;
+    }
+
+    // Enhanced audit logging
+    async logAction(action, details = {}) {
+        const logEntry = {
+            timestamp: new Date().toISOString(),
+            sessionId: this.sessionMetrics.sessionId,
+            action,
+            userAgent: await this.getCurrentUserAgent(),
+            clinicId: this.config.clinicInfo.id,
+            userId: this.config.clinicInfo.userId,
+            ...details
+        };
+        
+        this.auditLog.push(logEntry);
+        
+        if (this.config.auditMode) {
+            await fs.appendFile(
+                `audit_log_${new Date().toISOString().split('T')[0]}.json`,
+                JSON.stringify(logEntry) + '\n'
+            );
+        }
+    }
+
 
     // 高斯分布延迟（更自然）
     async gaussianDelay(mean = 1500, stdDev = 500) {
@@ -58,7 +123,7 @@ class MedicalAutomationFramework {
             await new Promise(resolve => setTimeout(resolve, 10 + Math.random() * 20));
         }
     }
-
+    
     // 智能输入（包含错误和修正）
     async intelligentType(page, selector, text) {
         const element = await page.$(selector);
@@ -222,6 +287,9 @@ class MedicalAutomationFramework {
         });
     }
 
+    
+    
+    
     // 智能表单处理
     async handleForm(page, formData) {
         for (const [fieldName, value] of Object.entries(formData)) {
@@ -264,10 +332,30 @@ class MedicalRecordsAutomation extends MedicalAutomationFramework {
         
         try {
             // 导航到登录页
-            await page.goto('https://example.com/login', {
-                waitUntil: 'domcontentloaded'
-            });
-            
+
+            test('test', async ({ page }) => {
+            await page.goto('https://cms.officeally.com/');
+            await page.getByRole('button', { name: 'Log in' }).click();
+            await page.getByRole('button', { name: 'Log in' }).click();
+            await page.getByRole('button', { name: 'Log in' }).click();
+            const page1Promise = page.waitForEvent('popup');
+            await page.getByRole('link', { name: 'Office Ally Practice Mate Medium-Sized Logo in Shades of Blue Practice Mate Log' }).click();
+            const page1 = await page1Promise;
+            await page1.getByRole('textbox', { name: 'Username' }).press('CapsLock');
+            await page1.getByRole('textbox', { name: 'Username' }).fill('R');
+            await page1.getByRole('textbox', { name: 'Username' }).press('CapsLock');
+            await page1.getByRole('textbox', { name: 'Username' }).press('CapsLock');
+            await page1.getByRole('textbox', { name: 'Username' }).fill('RLI032');
+            await page1.getByRole('textbox', { name: 'Password' }).click();
+            await page1.getByRole('textbox', { name: 'Password' }).press('CapsLock');
+            await page1.getByRole('textbox', { name: 'Password' }).fill('');
+            await page1.getByRole('textbox', { name: 'Password' }).press('CapsLock');
+            await page1.getByRole('textbox', { name: 'Password' }).fill('P');
+            await page1.getByRole('textbox', { name: 'Password' }).press('CapsLock');
+            await page1.getByRole('textbox', { name: 'Password' }).fill('Password01!');
+            await page1.getByRole('button', { name: 'Continue' }).click();
+            await page1.getByRole('link', { name: '<<LOGOUT' }).click();
+            });            
             await this.smartWait(page);
             
             // 智能填写表单

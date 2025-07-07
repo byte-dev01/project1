@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UCLA Health - Find Immediate Care</title>
+    
+    <!-- Leaflet CSS for Map -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <style id="immediate-care-styles">
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.5;
+        }
+
+        /* Header Styles */
+        .header {
+            background: linear-gradient(135deg, #003366 0%, #0066cc 100%);
+            color: white;
+            padding: 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .emergency-banner {
+            background: #fff3cd;
+            border-bottom: 2px solid #ffc107;
+            padding: 12px 20px;
+            text-align: center;
+            font-weight: 500;
+            color: #856404;
+        }
+
+        .emergency-banner .alert {
+            color: #dc3545;
+            font-weight: 700;
+        }
+
+        /* Main Container */
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Search Controls */
+        .search-controls {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .search-bar {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .location-dropdown {
+            position: relative;
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .dropdown-button {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            background: white;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+            transition: border-color 0.2s;
+        }
+
+        .dropdown-button:hover {
+            border-color: #0066cc;
+        }
+
+        .dropdown-content {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            margin-top: 5px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            z-index: 1000;
+            display: none;
+        }
+
+        .dropdown-content.show {
+            display: block;
+        }
+
+        .dropdown-option {
+            padding: 12px 15px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .dropdown-option:hover {
+            background: #f8f9fa;
+        }
+
+        .dropdown-option.selected {
+            background: #e7f1ff;
+            color: #0066cc;
+        }
+
+        .search-input-container {
+            flex: 1;
+            min-width: 200px;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 10px 40px 10px 15px;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.2s;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #0066cc;
+        }
+
+        .search-button {
+            position: absolute;
+            right: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #0066cc;
+            border: none;
+            border-radius: 4px;
+            padding: 6px 12px;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .search-button:hover {
+            background: #0052a3;
+        }
+
+        /* Content Layout */
+        .content-layout {
+            display: grid;
+            grid-template-columns: 400px 1fr;
+            gap: 20px;
+            height: 700px;
+        }
+
+        /* Location List */
+        .location-list-container {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .list-header {
+            background: #f8f9fa;
+            padding: 15px 20px;
+            border-bottom: 1px solid #dee2e6;
+            font-weight: 600;
+            color: #003366;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .location-count {
+            font-size: 14px;
+            font-weight: 400;
+            color: #666;
+        }
+
+        .location-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px;
+        }
+
+        .location-card {
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            gap: 15px;
+        }
+
+        .location-card:hover {
+            border-color: #0066cc;
+            box-shadow: 0 2px 8px rgba(0,102,204,0.15);
+        }
+
+        .location-card.selected {
+            border-color: #0066cc;
+            background: #f8f9ff;
+        }
+
+        .location-marker {
+            width: 40px;
+            height: 40px;
+            background: #f0f0f0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .location-info {
+            flex: 1;
+        }
+
+        .location-name {
+            font-weight: 600;
+            color: #003366;
+            margin-bottom: 5px;
+        }
+
+        .location-details {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        .location-status {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 8px;
+            font-size: 13px;
+        }
+
+        .status-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .status-indicator.open {
+            background: #28a745;
+        }
+
+        .status-indicator.closed {
+            background: #dc3545;
+        }
+
+        .wait-time {
+            background: #e7f1ff;
+            color: #0066cc;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            margin-top: 5px;
+            display: inline-block;
+        }
+
+        /* Map Container */
+        .map-container {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            overflow: hidden;
+            position: relative;
+        }
+
+        #map {
+            width: 100%;
+            height: 100%;
+        }
+
+        .map-controls {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .map-button {
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            padding: 8px 12px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.2s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .map-button:hover {
+            background: #f8f9fa;
+            border-color: #0066cc;
+        }
+
+        /* Location Details Popup */
+        .location-popup {
+            max-width: 300px;
+        }
+
+        .popup-header {
+            font-weight: 600;
+            color: #003366;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .popup-content {
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .popup-row {
+            margin-bottom: 8px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .popup-label {
+            font-weight: 500;
+            color: #666;
+            min-width: 80px;
+        }
+
+        .popup-actions {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #e9ecef;
+            display: flex;
+            gap: 10px;
+        }
+
+        .popup-button {
+            flex: 1;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .popup-button.primary {
+            background: #0066cc;
+            color: white;
+        }
+
+        .popup-button.primary:hover {
+            background: #0052a3;
+        }
+
+        .popup-button.secondary {
+            background: white;
+            color: #0066cc;
+            border: 1px solid #0066cc;
+        }
+
+        .popup-button.secondary:hover {
+            background: #f8f9ff;
+        }
+
+        /* Loading State */
+        .loading-spinner {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 200px;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #0066cc;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .content-layout {
+                grid-template-columns: 1fr;
+                height: auto;
+            }
+
+            .location-list-container {
+                height: 400px;
+            }
+
+            .map-container {
+                height: 400px;
+            }
+
+            .search-bar {
+                flex-direction: column;
+            }
+
+            .location-dropdown,
+            .search-input-container {
+                width: 100%;
+                min-width: unset;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">UCLA Health - Find Immediate Care</div>
+            <button class="map-button" onclick="goBack()">← Back</button>
+        </div>
+    </header>
+
+    <!-- Emergency Banner -->
+    <div class="emergency-banner">
+        If this is a medical emergency, <span class="alert">call 911</span> or go to the nearest emergency room. 
+        Last patient check-in 30 minutes before closing.
+    </div>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Search Controls -->
+        <div class="search-controls">
+            <div class="search-bar">
+                <div class="location-dropdown">
+                    <button class="dropdown-button" onclick="toggleDropdown()">
+                        <span id="dropdownText">Showing all locations</span>
+                        <span>▼</span>
+                    </button>
+                    <div class="dropdown-content" id="dropdownContent">
+                        <div class="dropdown-option selected" onclick="selectOption('all')">All locations</div>
+                        <div class="dropdown-option" onclick="selectOption('near')">Locations near me</div>
+                        <div class="dropdown-option" onclick="selectOption('open')">Open now</div>
+                    </div>
+                </div>
+                <div class="search-input-container">
+                    <input type="text" class="search-input" id="zipSearch" placeholder="Enter ZIP code">
+                    <button class="search-button" onclick="searchByZip()">Search</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Content Layout -->
+        <div class="content-layout">
+            <!-- Location List -->
+            <div class="location-list-container">
+                <div class="list-header">
+                    <span>Immediate Care Locations</span>
+                    <span class="location-count" id="locationCount">12 locations</span>
+                </div>
+                <div class="location-list" id="locationList">
+                    <!-- Locations will be populated by JavaScript -->
+                </div>
+            </div>
+
+            <!-- Map -->
+            <div class="map-container">
+                <div id="map"></div>
+                <div class="map-controls">
+                    <button class="map-button" onclick="resetMap()">Reset View</button>
+                    <button class="map-button" onclick="getCurrentLocation()">📍 My Location</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <script id="immediate-care-script">
+        // Location Data
+        const locations = [
+            {
+                id: 1,
+                name: "UCLA Health Century City Immediate Care",
+                address: "1800 Century Park E, Los Angeles, CA 90067",
+                phone: "(310) 286-0122",
+                hours: { mon: "8:00 AM - 8:00 PM", tue: "8:00 AM - 8:00 PM", wed: "8:00 AM - 8:00 PM", thu: "8:00 AM - 8:00 PM", fri: "8:00 AM - 8:00 PM", sat: "9:00 AM - 5:00 PM", sun: "9:00 AM - 5:00 PM" },
+                coordinates: [34.0606, -118.4163],
+                waitTime: 25,
+                isOpen: true
+            },
+            {
+                id: 2,
+                name: "UCLA Health Culver City Immediate Care",
+                address: "6000 Sepulveda Blvd, Culver City, CA 90230",
+                phone: "(310) 398-4500",
+                hours: { mon: "8:00 AM - 8:00 PM", tue: "8:00 AM - 8:00 PM", wed: "8:00 AM - 8:00 PM", thu: "8:00 AM - 8:00 PM", fri: "8:00 AM - 8:00 PM", sat: "9:00 AM - 5:00 PM", sun: "9:00 AM - 5:00 PM" },
+                coordinates: [34.0024, -118.3966],
+                waitTime: 45,
+                isOpen: true
+            },
+            {
+                id: 3,
+                name: "UCLA Health Malibu Immediate Care",
+                address: "23815 Stuart Ranch Rd, Malibu, CA 90265",
+                phone: "(310) 456-7551",
+                hours: { mon: "8:00 AM - 6:00 PM", tue: "8:00 AM - 6:00 PM", wed: "8:00 AM - 6:00 PM", thu: "8:00 AM - 6:00 PM", fri: "8:00 AM - 6:00 PM", sat: "Closed", sun: "Closed" },
+                coordinates: [34.0354, -118.6853],
+                waitTime: 0,
+                isOpen: false
+            },
+            {
+                id: 4,
+                name: "UCLA Health Marina Del Rey Immediate Care",
+                address: "4650 Lincoln Blvd, Marina Del Rey, CA 90292",
+                phone: "(310) 823-8911",
+                hours: { mon: "8:00 AM - 8:00 PM", tue: "8:00 AM - 8:00 PM", wed: "8:00 AM - 8:00 PM", thu: "8:00 AM - 8:00 PM", fri: "8:00 AM - 8:00 PM", sat: "9:00 AM - 5:00 PM", sun: "9:00 AM - 5:00 PM" },
+                coordinates: [33.9785, -118.4369],
+                waitTime: 30,
+                isOpen: true
+            },
+            {
+                id: 5,
+                name: "UCLA Health Redondo Beach Immediate Care",
+                address: "514 N Prospect Ave, Redondo Beach, CA 90277",
+                phone: "(310) 517-4700",
+                hours: { mon: "8:00 AM - 8:00 PM", tue: "8:00 AM - 8:00 PM", wed: "8:00 AM - 8:00 PM", thu: "8:00 AM - 8:00 PM", fri: "8:00 AM - 8:00 PM", sat: "9:00 AM - 5:00 PM", sun: "9:00 AM - 5:00 PM" },
+                coordinates: [33.8703, -118.3759],
+                waitTime: 15,
+                isOpen: true
+            },
+            {
+                id: 6,
+                name: "UCLA Health Santa Clarita Immediate Care",
+                address: "23838 Valencia Blvd, Valencia, CA 91355",
+                phone: "(661) 799-8100",
+                hours: { mon: "8:00 AM - 8:00 PM", tue: "8:00 AM - 8:00 PM", wed: "8:00 AM - 8:00 PM", thu: "8:00 AM - 8:00 PM", fri: "8:00 AM - 8:00 PM", sat: "9:00 AM - 5:00 PM", sun: "9:00 AM - 5:00 PM" },
+                coordinates: [34.4149, -118.5558],
+                waitTime: 20,
+                isOpen: true
+            },
+            {
+                id: 7,
+                name: "UCLA Health Santa Monica 16th Street Immediate Care",
+                address: "1245 16th St, Santa Monica, CA 90404",
+                phone: "(310) 319-4500",
+                hours: { mon: "8:00 AM - 8:00 PM", tue: "8:00 AM - 8:00 PM", wed: "8:00 AM - 8:00 PM", thu: "8:00 AM - 8:00 PM", fri: "8:00 AM - 8:00 PM", sat: "9:00 AM - 5:00 PM", sun: "9:00 AM - 5:00 PM" },
+                coordinates: [34.0295, -118.4889],
+                waitTime: 35,
+                isOpen: true
+            },
+            {
+                id: 8,
+                name: "UCLA Health Santa Monica Wilshire Immediate Care",
+                address: "2424 Wilshire Blvd, Santa Monica, CA 90403",
+                phone: "(310) 828-0811",
+                hours: { mon: "8:00 AM - 8:00 PM", tue: "8:00 AM - 8:00 PM", wed: "8:00 AM - 8:00 PM", thu: "8:00 AM - 8:00 PM", fri: "8:00 AM - 8:00 PM", sat: "9:00 AM - 5:00 PM", sun: "9:00 AM - 5:00 PM" },
+                coordinates: [34.0372, -118.4819],
+                waitTime: 40,
+                isOpen: true
+            },
+            {
+                id: 9,
+                name: "UCLA Health Thousand Oaks Immediate Care",
+                address: "401 Rolling Oaks Dr, Thousand Oaks, CA 91361",
+                phone: "(805) 418-2100",
+                hours: { mon: "8:00 AM - 8:00 PM", tue: "8:00 AM - 8:00 PM", wed: "8:00 AM - 8:00 PM", thu: "8:00 AM - 8:00 PM", fri: "8:00 AM - 8:00 PM", sat: "9:00 AM - 5:00 PM", sun: "9:00 AM - 5:00 PM" },
+                coordinates: [34.1705, -118.8376],
+                waitTime: 0,
+                isOpen: false
+            },
+            {
+                id: 10,
+                name: "UCLA Health Toluca Lake Immediate Care",
+                address: "4323 Riverside Dr, Burbank, CA 91505",
+                phone: "(818) 843-8600",
+                hours: { mon: "8:00 AM - 8:00 PM", tue: "8:00 AM - 8:00 PM", wed: "8:00 AM - 8:00 PM", thu: "8:00 AM - 8:00 PM", fri: "8:00 AM - 8:00 PM", sat: "9:00 AM - 5:00 PM", sun: "9:00 AM - 5:00 PM" },
+                coordinates: [34.1578, -118.3487],
+                waitTime: 0,
+                isOpen: false
+            },
+            {
+                id: 11,
+                name: "UCLA Health Westwood Immediate Care",
+                address: "10833 Le Conte Ave, Los Angeles, CA 90095",
+                phone: "(310) 208-3444",
+                hours: { mon: "7:00 AM - 9:00 PM", tue: "7:00 AM - 9:00 PM", wed: "7:00 AM - 9:00 PM", thu: "7:00 AM - 9:00 PM", fri: "7:00 AM - 9:00 PM", sat: "8:00 AM - 6:00 PM", sun: "8:00 AM - 6:00 PM" },
+                coordinates: [34.0665, -118.4455],
+                waitTime: 50,
+                isOpen: true
+            },
+            {
+                id: 12,
+                name: "UCLA Health Woodland Hills Immediate Care",
+                address: "5400 Balboa Blvd, Encino, CA 91316",
+                phone: "(818) 616-5100",
+                hours: { mon: "8:00 AM - 8:00 PM", tue: "8:00 AM - 8:00 PM", wed: "8:00 AM - 8:00 PM", thu: "8:00 AM - 8:00 PM", fri: "8:00 AM - 8:00 PM", sat: "9:00 AM - 5:00 PM", sun: "9:00 AM - 5:00 PM" },
+                coordinates: [34.1683, -118.5018],
+                waitTime: 0,
+                isOpen: false
+            }
+        ];
+
+        // Global variables
+        let map;
+        let markers = [];
+        let selectedLocationId = null;
+        let currentFilter = 'all';
+        let userLocation = null;
+
+        // Initialize map
+        function initMap() {
+            map = L.map('map').setView([34.05, -118.45], 10);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+
+            // Add markers for all locations
+            locations.forEach(location => {
+                addMarker(location);
+            });
+        }
+
+        // Add marker to map
+        function addMarker(location) {
+            const icon = L.divIcon({
+                className: 'custom-marker',
+                html: `<div style="background: ${location.isOpen ? '#0066cc' : '#6c757d'}; color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; box-shadow: 0 2px 5px rgba(0,0,0,0.3);">
+                    ${location.id}
+                </div>`,
+                iconSize: [30, 30],
+                iconAnchor: [15, 15]
+            });
+
+            const marker = L.marker(location.coordinates, { icon })
+                .addTo(map)
+                .bindPopup(createPopupContent(location));
+
+            marker.on('click', () => {
+                selectLocation(location.id);
+            });
+
+            markers.push({ id: location.id, marker });
+        }
+
+        // Create popup content
+        function createPopupContent(location) {
+            return `
+                <div class="location-popup">
+                    <div class="popup-header">${location.name}</div>
+                    <div class="popup-content">
+                        <div class="popup-row">
+                            <span class="popup-label">Address:</span>
+                            <span>${location.address}</span>
+                        </div>
+                        <div class="popup-row">
+                            <span class="popup-label">Phone:</span>
+                            <span>${location.phone}</span>
+                        </div>
+                        <div class="popup-row">
+                            <span class="popup-label">Status:</span>
+                            <span style="color: ${location.isOpen ? '#28a745' : '#dc3545'}">
+                                ${location.isOpen ? 'Open' : 'Closed'}
+                            </span>
+                        </div>
+                        ${location.isOpen && location.waitTime ? `
+                            <div class="popup-row">
+                                <span class="popup-label">Wait time:</span>
+                                <span>${location.waitTime} min</span>
+                            </div>
+                        ` : ''}
+                    </div>
+                    <div class="popup-actions">
+                        <button class="popup-button primary" onclick="getDirections(${location.coordinates[0]}, ${location.coordinates[1]})">
+                            Get Directions
+                        </button>
+                        <button class="popup-button secondary" onclick="callLocation('${location.phone}')">
+                            Call
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Render location list
+        function renderLocationList(filteredLocations = locations) {
+            const listContainer = document.getElementById('locationList');
+            listContainer.innerHTML = '';
+
+            filteredLocations.forEach(location => {
+                const card = document.createElement('div');
+                card.className = `location-card ${selectedLocationId === location.id ? 'selected' : ''}`;
+                card.onclick = () => selectLocation(location.id);
+
+                card.innerHTML = `
+                    <div class="location-marker">${location.id}</div>
+                    <div class="location-info">
+                        <div class="location-name">${location.name}</div>
+                        <div class="location-details">
+                            ${location.address}<br>
+                            ${location.phone}
+                        </div>
+                        <div class="location-status">
+                            <span class="status-indicator ${location.isOpen ? 'open' : 'closed'}"></span>
+                            <span>${location.isOpen ? 'Open' : 'Closed for today'}</span>
+                        </div>
+                        ${location.isOpen && location.waitTime ? `
+                            <div class="wait-time">Wait time: ~${location.waitTime} min</div>
+                        ` : ''}
+                    </div>
+                `;
+
+                listContainer.appendChild(card);
+            });
+
+            // Update count
+            document.getElementById('locationCount').textContent = `${filteredLocations.length} location${filteredLocations.length !== 1 ? 's' : ''}`;
+        }
+
+        // Select location
+        function selectLocation(locationId) {
+            selectedLocationId = locationId;
+            renderLocationList();
+
+            const location = locations.find(loc => loc.id === locationId);
+            if (location) {
+                map.setView(location.coordinates, 14);
+                const marker = markers.find(m => m.id === locationId);
+                if (marker) {
+                    marker.marker.openPopup();
+                }
+            }
+        }
+
+        // Filter functions
+        function toggleDropdown() {
+            const dropdown = document.getElementById('dropdownContent');
+            dropdown.classList.toggle('show');
+        }
+
+        function selectOption(option) {
+            currentFilter = option;
+            const dropdownText = document.getElementById('dropdownText');
+            const options = document.querySelectorAll('.dropdown-option');
+            
+            options.forEach(opt => opt.classList.remove('selected'));
+            event.target.classList.add('selected');
+
+            switch(option) {
+                case 'all':
+                    dropdownText.textContent = 'Showing all locations';
+                    renderLocationList();
+                    break;
+                case 'near':
+                    dropdownText.textContent = 'Locations near me';
+                    if (userLocation) {
+                        filterByDistance();
+                    } else {
+                        getCurrentLocation();
+                    }
+                    break;
+                case 'open':
+                    dropdownText.textContent = 'Open now';
+                    const openLocations = locations.filter(loc => loc.isOpen);
+                    renderLocationList(openLocations);
+                    break;
+            }
+
+            toggleDropdown();
+        }
+
+        // Get current location
+        function getCurrentLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        userLocation = [position.coords.latitude, position.coords.longitude];
+                        
+                        // Add user marker
+                        L.marker(userLocation, {
+                            icon: L.divIcon({
+                                className: 'user-location',
+                                html: '<div style="background: #28a745; width: 12px; height: 12px; border-radius: 50%; border: 3px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.3);"></div>',
+                                iconSize: [18, 18],
+                                iconAnchor: [9, 9]
+                            })
+                        }).addTo(map).bindPopup('Your Location');
+
+                        map.setView(userLocation, 12);
+                        
+                        if (currentFilter === 'near') {
+                            filterByDistance();
+                        }
+                    },
+                    (error) => {
+                        alert('Unable to get your location. Please try entering a ZIP code.');
+                    }
+                );
+            } else {
+                alert('Geolocation is not supported by your browser.');
+            }
+        }
+
+        // Filter by distance
+        function filterByDistance() {
+            if (!userLocation) return;
+
+            const locationsWithDistance = locations.map(location => {
+                const distance = calculateDistance(
+                    userLocation[0], userLocation[1],
+                    location.coordinates[0], location.coordinates[1]
+                );
+                return { ...location, distance };
+            });
+
+            locationsWithDistance.sort((a, b) => a.distance - b.distance);
+            renderLocationList(locationsWithDistance.slice(0, 5)); // Show top 5 nearest
+        }
+
+        // Calculate distance between two points
+        function calculateDistance(lat1, lon1, lat2, lon2) {
+            const R = 3959; // Earth's radius in miles
+            const dLat = toRad(lat2 - lat1);
+            const dLon = toRad(lon2 - lon1);
+            const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                      Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+                      Math.sin(dLon/2) * Math.sin(dLon/2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            return R * c;
+        }
+
+        function toRad(deg) {
+            return deg * (Math.PI/180);
+        }
+
+        // Search by ZIP
+        function searchByZip() {
+            const zip = document.getElementById('zipSearch').value;
+            if (!zip) return;
+
+            // This would normally use a geocoding API
+            // For demo, we'll just show a message
+            alert(`Searching for locations near ZIP: ${zip}`);
+        }
+
+        // Reset map view
+        function resetMap() {
+            map.setView([34.05, -118.45], 10);
+            selectedLocationId = null;
+            renderLocationList();
+        }
+
+        // Helper functions
+        function getDirections(lat, lng) {
+            window.open(`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`, '_blank');
+        }
+
+        function callLocation(phone) {
+            window.location.href = `tel:${phone.replace(/[^\d]/g, '')}`;
+        }
+
+        function goBack() {
+            window.history.back();
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.location-dropdown')) {
+                document.getElementById('dropdownContent').classList.remove('show');
+            }
+        });
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', () => {
+            initMap();
+            renderLocationList();
+        });
+    </script>
+</body>
+</html>

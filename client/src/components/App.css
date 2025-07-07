@@ -41,7 +41,7 @@
 
         /* Header Styles */
         .header {
-            background-color: var(--bg-primary);
+            background: linear-gradient(135deg, #003366 0%, #0066cc 100%);
             box-shadow: var(--shadow-medium);
             position: sticky;
             top: 0;
@@ -463,3 +463,31 @@
             color: #008dc0;
             text-decoration: underline;
         }
+        .menu-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: transparent;
+  border: none;
+  color: white;
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+  border-radius: 4px;
+}
+
+.menu-button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.menu-button span:first-child {
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+/* Prevent body scroll when menu is open */
+body.menu-open {
+  overflow: hidden;
+}

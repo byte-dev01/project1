@@ -1,8 +1,8 @@
 require("dotenv").config()
 const fs = require("fs");
 const axios = require("axios");
-const patientDb = require("../dbConnection");
-const Transcription = require("../models/Transcription"); // adjust path as needed
+const { patientDb } = require("../dbConnection");  // 添加这一行
+const Transcription = require("../models/Transcription")(patientDb);  // 修改这一行
 
 // Add your DeepSeek function directly here
 async function summarizeWithDeepSeek(text) {

@@ -81,6 +81,69 @@ app.use((err, req, res, next) => {
     message: err.message,
   });
 });
+const providerQueues = {
+  'dr-hanson': [],
+  'dr-chen': [],
+  'dr-patel': []
+};
+
+// Add patient to queue
+app.post('/api/queue', (req, res) => {
+  const { providerId, patientId } = req.body;
+  
+  if (!providerQueues[providerId]) {
+    providerQueues[providerId] = [];
+  }
+  
+  // Check if patient already in queue
+  const existingIndex = providerQueues[providerId].findIndex(p => p.patientId === patientId);
+  
+  if (existingIndex === -1) {
+    providerQueues[providerId].push({
+      patientId,
+      joinedAt: new Date(),
+      providerId
+    });
+  }
+  
+  const position = providerQueues[providerId].findIndex(p => p.patientId === patientId) + 1;
+  
+  res.json({ position, providerId });
+});
+
+// Get queue position
+app.get('/api/queue/position', (req, res) => {
+  const { patientId } = req.query;
+  
+  for (const [providerId, queue] of Object.entries(providerQueues)) {
+    const position = queue.findIndex(p => p.patientId === patientId) + 1;
+    if (position > 0) {
+      return res.json({ position, providerId });
+    }
+  }
+  
+  res.json({ position: null });
+});
+
+// Remove patient from queue (when visit starts)
+app.post('/api/queue/remove', (req, res) => {
+  const { patientId, providerId } = req.body;
+  
+  if (providerQueues[providerId]) {
+    providerQueues[providerId] = providerQueues[providerId].filter(
+      p => p.patientId !== patientId
+    );
+  }
+  
+  res.json({ success: true });
+});
+
+// Save patient data
+app.post('/api/patient-immediatecare', (req, res) => {
+  // Save to database
+  console.log('Patient data received:', req.body);
+  res.json({ success: true });
+});
 
 // =====================================
 // MongoDB Change Streams

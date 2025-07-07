@@ -12,9 +12,10 @@ import Profile from "./pages/Profile.js";
 import FaxDashboard from "./pages/FaxDashboard.js";
 import Upload from "./pages/Upload.js";
 import Chatbook from "./pages/Chatbook.js";
-import MedicalAudioTranscriber from "./pages/Recorder.js";
+import MedicalAudioTranscriber from "./pages/Recorder3.js";
 import Calendar from "./pages/Calendar.js";
 import CalendarFeedLink from "./pages/CalendarFeedLink.js";
+import Menu from "./modules/Menu.js";  // Import the Menu component
 
 import { socket } from "../client-socket.js";
 import { get, post } from "../utilities";
@@ -27,6 +28,7 @@ class App extends Component {
     super(props);
     this.state = {
       userId: undefined,
+      isMenuOpen: false,  // Add menu state
     };
   }
 
@@ -52,7 +54,7 @@ class App extends Component {
     post("/api/logout");
   };
 
-  // Demo login function (从 NavBar 移过来)
+  // Demo login function
   handleDemoLogin = () => {
     const demoLoginResponse = {
       profileObj: { 
@@ -67,14 +69,26 @@ class App extends Component {
     this.handleLogin(demoLoginResponse);
   };
 
+  // Menu toggle functions
+  toggleMenu = () => {
+    this.setState({ isMenuOpen: !this.state.isMenuOpen });
+  };
+
+  closeMenu = () => {
+    this.setState({ isMenuOpen: false });
+  };
+
   render() {
     return (
       <Router>
+        {/* Menu Component */}
+        <Menu isOpen={this.state.isMenuOpen} onClose={this.closeMenu} />
+        
         {/* UCLA Header */}
         <header className="header">
           <div className="header-content">
             <div className="nav-left">
-              <button className="menu-button">
+              <button className="menu-button" onClick={this.toggleMenu}>
                 <span>☰</span>
                 <span>Menu</span>
               </button>
@@ -83,7 +97,6 @@ class App extends Component {
             <div className="header-right">
               <button className="icon-button" title="Select language">🌐</button>
               <div className="user-menu">
-                {/* 只显示登录/登出按钮，不导入整个 NavBar */}
                 {this.state.userId ? (
                   <button
                     onClick={this.handleLogout}
@@ -193,7 +206,7 @@ class App extends Component {
                         <div className="feed-content">
                           <div className="feed-icon">📅</div>
                           <div className="feed-header">
-                            <CalendarFeedLink />  {/* 这里会渲染标题和描述，并且可点击跳转 */}
+                            <CalendarFeedLink />
                           </div>
                         </div>
                         <div className="feed-actions">
@@ -260,37 +273,34 @@ class App extends Component {
                         </div>
                       </div>
 
-            {/* New Message Alert */}
-            <div className="feed-item">
-              <div className="feed-content">
-                <div className="feed-icon">✉️</div>
-                <div className="feed-header">
-                  <div className="feed-title">New message from Dr. Lars Hanson</div>
-                  <div className="feed-description">Regarding your recent lab results • Received 2 hours ago</div>
-                </div>
-              </div>
-              <div className="feed-actions">
-                <button className="btn-primary">Read message</button>
-              </div>
-            </div>
-
-            {/* Prescription Reminder */}
-                        <div className="feed-item">
-                          <div className="feed-content">
-                            <div className="feed-icon">💊</div>
-                            <div className="feed-header">
-                              <div className="feed-title">Prescription Ready for Pickup</div>
-                              <div className="feed-description">Your medication is ready at UCLA Pharmacy • Expires in 7 days</div>
-                            </div>
-                          </div>
-                          <div className="feed-actions">
-                            <button className="btn-primary">View details</button>
-                            <button className="btn-secondary">Find pharmacy</button>
+                      {/* New Message Alert */}
+                      <div className="feed-item">
+                        <div className="feed-content">
+                          <div className="feed-icon">✉️</div>
+                          <div className="feed-header">
+                            <div className="feed-title">New message from Dr. Lars Hanson</div>
+                            <div className="feed-description">Regarding your recent lab results • Received 2 hours ago</div>
                           </div>
                         </div>
+                        <div className="feed-actions">
+                          <button className="btn-primary">Read message</button>
+                        </div>
+                      </div>
 
-
-                        
+                      {/* Prescription Reminder */}
+                      <div className="feed-item">
+                        <div className="feed-content">
+                          <div className="feed-icon">💊</div>
+                          <div className="feed-header">
+                            <div className="feed-title">Prescription Ready for Pickup</div>
+                            <div className="feed-description">Your medication is ready at UCLA Pharmacy • Expires in 7 days</div>
+                          </div>
+                        </div>
+                        <div className="feed-actions">
+                          <button className="btn-primary">View details</button>
+                          <button className="btn-secondary">Find pharmacy</button>
+                        </div>
+                      </div>
                     </div>
                   </div>
 
@@ -316,7 +326,7 @@ class App extends Component {
               )} 
             />
             
-            {/* 修复路由配置 */}
+            {/* Routes */}
             <Route path="/profile/:userId" component={Profile} />
             <Route path="/chat" render={() => <Chatbook userId={this.state.userId} />} />
             <Route path="/upload/:userId" render={() => <Upload userId={this.state.userId} />} />

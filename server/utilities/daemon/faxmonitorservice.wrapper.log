@@ -6,3 +6,35 @@
 2025-07-01 13:00:45 - Started 6192
 2025-07-01 13:07:00 - Starting C:\Program Files\nodejs\node.exe  --harmony --max_old_space_size=4096 C:\Users\rache\AppData\Roaming\npm\node_modules\node-windows\lib\wrapper.js --file C:\Users\rache\catbook-react\server\utilities\multiWorkerFaxMonitor.js --scriptoptions= --log "FaxMonitorService wrapper" --grow 0.25 --wait 1 --maxrestarts 3 --abortonerror n --stopparentfirst undefined
 2025-07-01 13:07:00 - Started 6340
+2025-07-09 06:22:31 - Stopping faxmonitorservice.exe
+2025-07-09 06:22:31 - ProcessKill 6340
+2025-07-09 06:22:31 - Shutdown exception
+Message:A system shutdown is in progress.
+
+Stacktrace:   at System.Runtime.InteropServices.Marshal.ThrowExceptionForHRInternal(Int32 errorCode, IntPtr errorInfo)
+   at System.Management.ManagementScope.InitializeGuts(Object o)
+   at System.Management.ManagementScope.Initialize()
+   at System.Management.ManagementObjectSearcher.Initialize()
+   at System.Management.ManagementObjectSearcher.Get()
+   at winsw.WrapperService.GetChildPids(Int32 pid)
+   at winsw.WrapperService.StopProcessAndChildren(Int32 pid)
+   at winsw.WrapperService.StopIt()
+   at winsw.WrapperService.OnShutdown()
+2025-07-09 06:23:00 - Starting C:\Program Files\nodejs\node.exe  --harmony --max_old_space_size=4096 C:\Users\rache\AppData\Roaming\npm\node_modules\node-windows\lib\wrapper.js --file C:\Users\rache\catbook-react\server\utilities\multiWorkerFaxMonitor.js --scriptoptions= --log "FaxMonitorService wrapper" --grow 0.25 --wait 1 --maxrestarts 3 --abortonerror n --stopparentfirst undefined
+2025-07-09 06:23:00 - Started 5896
+2025-07-09 06:24:37 - Stopping faxmonitorservice.exe
+2025-07-09 06:24:37 - ProcessKill 5896
+2025-07-09 06:24:37 - Shutdown exception
+Message:Class not registered
+
+Stacktrace:   at System.Runtime.InteropServices.Marshal.ThrowExceptionForHRInternal(Int32 errorCode, IntPtr errorInfo)
+   at System.Management.ManagementScope.InitializeGuts(Object o)
+   at System.Management.ManagementScope.Initialize()
+   at System.Management.ManagementObjectSearcher.Initialize()
+   at System.Management.ManagementObjectSearcher.Get()
+   at winsw.WrapperService.GetChildPids(Int32 pid)
+   at winsw.WrapperService.StopProcessAndChildren(Int32 pid)
+   at winsw.WrapperService.StopIt()
+   at winsw.WrapperService.OnShutdown()
+2025-07-09 06:25:02 - Starting C:\Program Files\nodejs\node.exe  --harmony --max_old_space_size=4096 C:\Users\rache\AppData\Roaming\npm\node_modules\node-windows\lib\wrapper.js --file C:\Users\rache\catbook-react\server\utilities\multiWorkerFaxMonitor.js --scriptoptions= --log "FaxMonitorService wrapper" --grow 0.25 --wait 1 --maxrestarts 3 --abortonerror n --stopparentfirst undefined
+2025-07-09 06:25:02 - Started 6072

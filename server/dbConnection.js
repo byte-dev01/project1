@@ -1,8 +1,7 @@
 const mongoose = require("mongoose");
 
 const mongoConnectionURL =
-  process.env.MONGO_URI ||
-  "mongodb+srv://rachellipurdue2:FPD8clZuvOXwOUrm@cluster0.br34aun.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+  process.env.MONGO_SRV;
 
 // Minimal connection options - just the essentials
 const baseOptions = {
@@ -45,7 +44,7 @@ module.exports = {
   faxDb,
   chatDb,
   patientDb,
-  catDb,
+  catDb, //userDB
   eventDB,
   mongoConnectionURL,
 };

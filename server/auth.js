@@ -1,94 +1,64 @@
-// Simplified demo-only auth - no Google OAuth needed for now
-const User = require("./models/user"); // ← MUST be uncommented for database operations
+const User = require("./app/models/user.model");
 const socketManager = require("./server-socket");
+const jwt = require("jsonwebtoken");
+const config = require("./app/config/auth.config");
 
-// accepts a login token from the frontend, and verifies that it's legit
-function verify(token) {
-  // Only handle demo token for now
-  if (token === "demo-token-12345") {
-    console.log("🎭 Demo token detected, skipping Google verification");
-    return Promise.resolve({
-      sub: "demo-user-12345",
-      name: "Demo User",
-      email: "demo@example.com"
+// Populate current user from JWT token or session
+function populateCurrentUser(req, res, next) {
+  // Check for JWT token first
+  const token = req.headers["x-access-token"] || req.headers.authorization?.split(' ')[1];
+  
+  if (token) {
+    jwt.verify(token, config.secret, async (err, decoded) => {
+      if (!err && decoded) {
+        try {
+          const user = await User.findById(decoded.id)
+            .populate("roles", "-__v")
+            .populate("clinicId", "name");
+          
+          if (user && user.isActive) {
+            req.user = user;
+            req.userId = user._id;
+          }
+        } catch (error) {
+          console.error("Error populating user:", error);
+        }
+      }
+      next();
     });
+  } else if (req.session.user) {
+    // Fall back to session
+    req.user = req.session.user;
+    req.userId = req.session.user._id;
+    next();
+  } else {
+    next();
   }
-  
-  // Reject any non-demo tokens
-  console.log("❌ Non-demo token rejected:", token);
-  return Promise.reject(new Error("Only demo tokens are supported right now"));
 }
 
-// gets user from DB, or makes a new account if it doesn't exist yet
-function getOrCreateUser(user) {
-  // the "sub" field means "subject", which is a unique identifier for each user
-  return User.findOne({ googleid: user.sub }).then((existingUser) => {
-    if (existingUser) {
-      console.log(`✅ Found existing user: ${existingUser.name}`);
-      return existingUser;
-    }
-
-    console.log(`👤 Creating new user: ${user.name}`);
-    const newUser = new User({
-      name: user.name,
-      googleid: user.sub,
-    });
-
-    return newUser.save();
-  });
-}
-
-function login(req, res) {
-  console.log(`🔑 Login attempt with token: ${req.body.token?.substring(0, 20)}...`);
-  
-  verify(req.body.token)
-    .then((user) => {
-      console.log(`✅ Token verified for user: ${user.name}`);
-      return getOrCreateUser(user);
-    })
-    .then((user) => {
-      // persist user in the session
-      req.session.user = user;
-      console.log(`🎉 User logged in successfully: ${user.name} (ID: ${user._id})`);
-      res.send(user);
-    })
-    .catch((err) => {
-      console.log(`❌ Failed to log in: ${err.message || err}`);
-      res.status(401).send({ err: err.message || err });
-    });
+function ensureLoggedIn(req, res, next) {
+  if (!req.user) {
+    return res.status(401).send({ err: "Not logged in" });
+  }
+  next();
 }
 
 function logout(req, res) {
   if (req.user) {
     const userSocket = socketManager.getSocketFromUserID(req.user._id);
     if (userSocket) {
-      // delete user's socket if they logged out
       socketManager.removeUser(req.user, userSocket);
     }
-    console.log(`👋 User logged out: ${req.user.name}`);
   }
-
   req.session.user = null;
-  res.send({});
-}
-
-function populateCurrentUser(req, res, next) {
-  // simply populate "req.user" for convenience
-  req.user = req.session.user;
-  next();
-}
-
-function ensureLoggedIn(req, res, next) {
-  if (!req.user) {
-    return res.status(401).send({ err: "not logged in" });
-  }
-
-  next();
+  res.send({ success: true });
 }
 
 module.exports = {
-  login,
-  logout,
   populateCurrentUser,
   ensureLoggedIn,
+  logout
 };
+
+
+

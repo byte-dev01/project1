@@ -13,8 +13,10 @@ const express = require("express");
 // import models so we can interact with the database
 const Story = require("./models/story");
 const Comment = require("./models/comment");
-const User = require("./models/user");
+const User = require("./app/models/user.model");
 const { chatDb } = require("./dbConnection");
+const authDb = require("./app/models");
+
 const createMessageModel = require("./models/message");
 const Message = createMessageModel(chatDb);
 const multer = require("multer");
@@ -29,6 +31,56 @@ const { eventDB } = require("./dbConnection");
 const createEventModel = require("./models/Event"); // We'll create this model
 const Event = createEventModel(eventDB);
 
+
+const router = express.Router();
+
+
+
+// this is the signup section
+// Update your auth signin to validate clinic
+router.get("/clinics", async (req, res) => {
+  try {
+    const clinics = await authDb.clinic.find({ isActive: true })
+      .select('name address phone email');
+    res.json(clinics);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching clinics" });
+  }
+});
+
+// Update your auth signin to validate clinic
+router.post("/auth/signin", async (req, res) => {
+  try {
+    const { username, password, clinicId } = req.body;
+    
+    // Validate clinic exists
+    const clinic = await authDb.clinic.findById(clinicId);
+    if (!clinic || !clinic.isActive) {
+      return res.status(400).json({ 
+        success: false,
+        message: "Invalid clinic selection" 
+      });
+    }
+    
+    // Continue with existing signin logic...
+    // Make sure to include clinicId and clinicName in the response
+  } catch (error) {
+    console.log('error in handling clinics')
+  }
+});
+
+
+
+
+
+
+
+
+
+
+
+// above is the signup section
+
 // ADD THIS: Import your fax processing function
 const handleNewFax = require("./controllers/handleNewFax");
 
@@ -36,7 +88,6 @@ const upload = multer({ dest: "uploads/" });
 const auth = require("./auth");
 
 // api endpoints: all these paths will be prefixed with "/api/"
-const router = express.Router();
 
 const socketManager = require("./server-socket");
 
@@ -72,7 +123,6 @@ router.post("/comment", auth.ensureLoggedIn, (req, res) => {
   newComment.save().then((comment) => res.send(comment));
 });
 
-router.post("/login", auth.login);
 router.post("/logout", auth.logout);
 router.get("/whoami", (req, res) => {
   if (!req.user) {

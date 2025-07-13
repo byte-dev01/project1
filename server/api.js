@@ -139,6 +139,8 @@ router.get("/user", (req, res) => {
   });
 });
 
+
+
 router.post("/initsocket", (req, res) => {
   // do nothing if user not logged in
   if (req.user) socketManager.addUser(req.user, socketManager.getSocketFromSocketID(req.body.socketid));

@@ -5,19 +5,14 @@ import Menu from "../modules/Menu";
 import CalendarFeedLink from "./CalendarFeedLink";
 import "./Dashboard.css";
 import Feed from "./pages/Feed.js";
-import NotFound from "./pages/NotFound.js";
-import Profile from "./pages/Profile.js";
-import FaxDashboard from "./pages/FaxDashboard.js";
-import Upload from "./pages/Upload.js";
-import Chatbook from "./pages/Chatbook.js";
-import MedicalAudioTranscriber from "./pages/Recorder3.js";
-import Calendar from "./pages/Calendar.js";
-import CalendarFeedLink from "./pages/CalendarFeedLink.js";
-import Menu from "./modules/Menu.js";
+import NotFound from "../modules/NotFound.js";
+import Profile from "./Profile.js";
+import FaxDashboard from "./FaxDashboard.js";
+import Upload from "./Upload.js";
+import Chatbook from "./Chatbook.js";
+import MedicalAudioTranscriber from "./Recorder3.js";
+import Calendar from "./Calendar.js";
 
-import { socket } from "../client-socket.js";
-import { get, post } from "../utilities";
-import { ProtectedRoute } from '../modules/ProtectedRoute';
 
 class Dashboard extends Component {
   constructor(props) {
@@ -71,8 +66,8 @@ class Dashboard extends Component {
           <div className="header-content">
             <div className="nav-left">
               <button className="menu-button" onClick={this.toggleMenu}>
-                <span>☰</span>
-                <span>Menu</span>
+                <div>☰</div>
+                <div>Menu</div>
               </button>
               <a href="/" className="logo">
                 HealthBridge
@@ -281,7 +276,7 @@ class Dashboard extends Component {
           <div className="feed-header">
             <div className="feed-title">Amount Due</div>
             <div className="feed-description">
-              You owe $63.00 • {clinicName || "HealthBridge"} • Last paid: $5.00 on 05/09/2025
+              You owe $00.00 • {clinicName || "HealthBridge"} • Last paid: $0.00 on 06/01/2025
             </div>
           </div>
         </div>

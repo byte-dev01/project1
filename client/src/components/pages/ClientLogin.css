@@ -1,0 +1,92 @@
+.clinic-login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f4f6f8;
+  padding: 20px;
+}
+
+.clinic-login-box {
+  background-color: #fff;
+  padding: 40px;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  max-width: 600px;
+  width: 100%;
+  text-align: center;
+}
+
+.clinic-login-box h1 {
+  margin-bottom: 10px;
+  font-size: 28px;
+  color: #333;
+}
+
+.clinic-login-box h2 {
+  margin-bottom: 30px;
+  font-size: 20px;
+  color: #666;
+}
+
+.clinic-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.clinic-option {
+  display: flex;
+  align-items: flex-start;
+  border: 2px solid #ddd;
+  border-radius: 10px;
+  padding: 16px;
+  cursor: pointer;
+  transition: border-color 0.3s;
+  background-color: #fafafa;
+}
+
+.clinic-option:hover,
+.clinic-option input:checked + .clinic-info {
+  border-color: #007BFF;
+}
+
+.clinic-option input {
+  margin-right: 16px;
+  transform: scale(1.2);
+  margin-top: 6px;
+}
+
+.clinic-info h3 {
+  margin: 0;
+  font-size: 18px;
+  color: #222;
+}
+
+.clinic-info p {
+  margin: 4px 0 0;
+  color: #555;
+  font-size: 14px;
+}
+
+.continue-button {
+  background-color: #007BFF;
+  color: white;
+  padding: 12px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  width: 100%;
+  transition: background-color 0.2s;
+}
+
+.continue-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.continue-button:not(:disabled):hover {
+  background-color: #0056b3;
+}

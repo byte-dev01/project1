@@ -1,272 +1,84 @@
-// App.js - Clean routing and authentication management
-import React, { Component } from "react";
-import {
-  BrowserRouter as Router,
-  Switch, 
-  Route,
-  Redirect
-} from "react-router-dom";
+import React from "react";
+import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
+import { AuthProvider, ProtectedRoute } from './contexts/AuthContext';
+import { AppProvider } from './contexts/AppContext';
+import { UIProvider } from './contexts/UIContext';
 
 // Pages
 import LoginPage from "./pages/LoginPage";
-import Dashboard from "./pages/Dashboard";
+import ClinicLogin from "./pages/ClinicLogin"; 
+import Dashboard from "./pages/GeneralDashboard";
 import FaxDashboard from "./pages/FaxDashboard";
 import Upload from "./pages/Upload";
 import Chatbook from "./pages/Chatbook";
 import MedicalAudioTranscriber from "./pages/Recorder3";
 import Profile from "./pages/Profile";
-import NotFound from "./pages/NotFound";
-
-import { socket } from "../client-socket.js";
-import { get, post } from "../utilities";
+import NotFound from "./modules/NotFound";
+import Unauthorized from "./modules/Unauthorized";
+import Calendar from "./pages/Calendar";
 
 import "../utilities.css";
 import "./App.css";
 
-// Protected Route Component
-const ProtectedRoute = ({ component: Component, isAuthenticated, ...rest }) => (
-  <Route
-    {...rest}
-    render={props =>
-      isAuthenticated ? (
-        <Component {...props} />
-      ) : (
-        <Redirect to="/login" />
-      )
-    }
-  />
-);
-
-class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isAuthenticated: false,
-      isLoading: true,
-      userId: null,
-      userName: "",
-      userRoles: [],
-      clinicId: null,
-      clinicName: ""
-    };
-  }
-
-  componentDidMount() {
-    this.checkAuthentication();
-  }
-
-  checkAuthentication = async () => {
-    try {
-      // First check for token in localStorage
-      const token = localStorage.getItem('accessToken');
-      
-      if (token) {
-        // Verify token with backend
-        const response = await fetch('/api/auth/verify', {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'x-access-token': token
-          }
-        });
-
-        const data = await response.json();
-
-        if (data.success && data.user) {
-          this.setState({
-            isAuthenticated: true,
-            userId: data.user.id,
-            userName: data.user.name,
-            userRoles: data.user.roles || [],
-            clinicId: data.user.clinicId,
-            clinicName: data.user.clinicName,
-            isLoading: false
-          });
-
-          // Initialize socket
-          post("/api/initsocket", { socketid: socket.id });
-        } else {
-          // Token invalid
-          this.clearAuthentication();
-        }
-      } else {
-        // No token, check session
-        const user = await get("/api/whoami");
-        
-        if (user._id) {
-          this.setState({
-            isAuthenticated: true,
-            userId: user._id,
-            userName: user.name || user.username || "User",
-            userRoles: user.roles || [],
-            clinicId: user.clinicId,
-            clinicName: user.clinicName,
-            isLoading: false
-          });
-          
-          post("/api/initsocket", { socketid: socket.id });
-        } else {
-          this.setState({ isLoading: false });
-        }
-      }
-    } catch (error) {
-      console.error("Auth check failed:", error);
-      this.clearAuthentication();
-    }
-  };
-
-  handleLogin = (loginData) => {
-    // Store token
-    if (loginData.accessToken) {
-      localStorage.setItem('accessToken', loginData.accessToken);
-    }
-
-    // Update state
-    this.setState({
-      isAuthenticated: true,
-      userId: loginData.user.id,
-      userName: loginData.user.name,
-      userRoles: loginData.user.roles || [],
-      clinicId: loginData.clinic?._id || loginData.user.clinicId,
-      clinicName: loginData.clinic?.name || loginData.user.clinicName
-    });
-
-    // Initialize socket
-    post("/api/initsocket", { socketid: socket.id });
-  };
-
-  handleLogout = async () => {
-    try {
-      await post("/api/logout");
-    } catch (error) {
-      console.error("Logout error:", error);
-    }
-    
-    this.clearAuthentication();
-  };
-
-  clearAuthentication = () => {
-    localStorage.removeItem('accessToken');
-    
-    this.setState({
-      isAuthenticated: false,
-      userId: null,
-      userName: "",
-      userRoles: [],
-      clinicId: null,
-      clinicName: "",
-      isLoading: false
-    });
-  };
-
-  render() {
-    // Show loading screen while checking auth
-    if (this.state.isLoading) {
-      return (
-        <div className="loading-container">
-          <div className="spinner"></div>
-          <p>Loading...</p>
-        </div>
-      );
-    }
-
-    return (
-      <Router>
-        <Switch>
-          {/* Login Route */}
-          <Route 
-            path="/login" 
-            render={() => 
-              this.state.isAuthenticated ? (
-                <Redirect to="/" />
-              ) : (
-                <LoginPage onLogin={this.handleLogin} />
-              )
-            }
-          />
-
-          {/* Dashboard/Home Route */}
-          <ProtectedRoute
-            exact
-            path="/"
-            isAuthenticated={this.state.isAuthenticated}
-            component={() => (
-              <Dashboard
-                userId={this.state.userId}
-                userName={this.state.userName}
-                userRoles={this.state.userRoles}
-                clinicId={this.state.clinicId}
-                clinicName={this.state.clinicName}
-                onLogout={this.handleLogout}
-              />
-            )}
-          />
-
-          {/* Protected Routes */}
-          <ProtectedRoute
-            path="/profile/:userId"
-            isAuthenticated={this.state.isAuthenticated}
-            component={Profile}
-          />
-
-          <ProtectedRoute
-            path="/chat"
-            isAuthenticated={this.state.isAuthenticated}
-            component={() => (
-              <Chatbook 
-                userId={this.state.userId} 
-                clinicName={this.state.clinicName} 
-              />
-            )}
-          />
-
-          <ProtectedRoute
-            path="/upload/:userId"
-            isAuthenticated={this.state.isAuthenticated}
-            component={() => (
-              <Upload 
-                userId={this.state.userId} 
-                clinicName={this.state.clinicName} 
-              />
-            )}
-          />
-
-          <ProtectedRoute
-            path="/recorder/:userId"
-            isAuthenticated={this.state.isAuthenticated}
-            component={() => (
-              <MedicalAudioTranscriber 
-                userId={this.state.userId} 
-                clinicName={this.state.clinicName} 
-              />
-            )}
-          />
-
-          <ProtectedRoute
-            path="/fax-dashboard"
-            isAuthenticated={this.state.isAuthenticated}
-            component={() => (
-              <FaxDashboard 
-                userId={this.state.userId} 
-                clinicName={this.state.clinicName} 
-              />
-            )}
-          />
-
-          {/* 404 or redirect to login */}
-          <Route 
-            render={() => 
-              this.state.isAuthenticated ? <NotFound /> : <Redirect to="/login" />
-            }
-          />
-        </Switch>
-      </Router>
-    );
-  }
+function App() {
+  return (
+    <Router>
+      <AuthProvider>
+        <AppProvider>
+          <UIProvider>
+            <div className="App-container">
+              <Switch>
+                {/* Public Routes */}
+                <Route exact path="/" render={() => <Redirect to="/dashboard" />} />
+                <Route path="/login" component={LoginPage} />
+                <Route path="/clinic-select" component={ClinicLogin} />
+                <Route path="/unauthorized" component={Unauthorized} />
+                
+                {/* Protected Routes - General Access (any authenticated user) */}
+                <ProtectedRoute path="/dashboard/:userId" component={Dashboard} />
+                <ProtectedRoute path="/profile/:userId" component={Profile} />
+                <ProtectedRoute path="/chat" component={Chatbook} />
+                <ProtectedRoute path="/calendar" component={Calendar} />
+                
+                {/* Protected Routes - Staff Level and Above */}
+                <ProtectedRoute 
+                  path="/upload/:userId" 
+                  component={Upload}
+                  roles={['staff', 'doctor', 'moderator', 'admin']}
+                />
+                
+                {/* Protected Routes - Doctor Level and Above */}
+                <ProtectedRoute 
+                  path="/recorder/:userId" 
+                  component={MedicalAudioTranscriber}
+                  roles={['doctor', 'admin']}
+                />
+                
+                <ProtectedRoute 
+                  path="/fax-dashboard" 
+                  component={FaxDashboard}
+                  roles={['doctor', 'admin']}
+                />
+                
+                {/* Admin Only Routes */}
+                <ProtectedRoute 
+                  path="/admin" 
+                  component={() => <div>Admin Dashboard (To be implemented)</div>}
+                  roles={['admin']}
+                />
+                
+                {/* 404 - Must be last */}
+                <Route component={NotFound} />
+              </Switch>
+            </div>
+          </UIProvider>
+        </AppProvider>
+      </AuthProvider>
+    </Router>
+  );
 }
 
 export default App;
-
-
 /*import React, { Component } from "react";
 import {
   BrowserRouter as Router,
@@ -518,7 +330,7 @@ class App extends Component {
         //{/* Main content area }
         <div className="App-container">
           <Switch>
-            {/* Home/Dashboard Route }
+          //  {/* Home/Dashboard Route }
             <Route 
               exact 
               path="/" 

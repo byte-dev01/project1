@@ -3,6 +3,8 @@ import React, { createContext, useContext, useState, useEffect, useCallback } fr
 import { useHistory } from 'react-router-dom';
 import { socket } from '../../client-socket';
 import { get, post } from '../../utilities';
+import axios from 'axios';
+import { Route, Redirect  } from 'react-router-dom';
 
 const AuthContext = createContext({});
 
@@ -95,7 +97,7 @@ export const AuthProvider = ({ children }) => {
           });
 
           // Initialize socket
-         // await post("/api/initsocket", { socketid: socket.id });
+         await post("/api/initsocket", { socketid: socket.id });
         } else {
           // Token invalid
           clearAuth();
@@ -168,7 +170,7 @@ export const AuthProvider = ({ children }) => {
         });
 
         // Initialize socket
-        //await post("/api/initsocket", { socketid: socket.id });
+        await post("/api/initsocket", { socketid: socket.id });
 
         // Redirect based on role
         const redirectPath = getRedirectPath(data.roles);

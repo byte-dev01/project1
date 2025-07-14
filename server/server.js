@@ -197,7 +197,7 @@ app.use((req, res, next) => {
 // CORS configuration
 const corsOptions = {
   origin: function (origin, callback) {
-    const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(',') || ['http://localhost:3000'];
+    const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(',') || ['http://localhost:5000'];
     
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
@@ -329,7 +329,7 @@ async function initializeDatabase() {
     
     if (count === 0) {
       // Create all 5 roles
-      const roles = ["user", "staff", "moderator", "doctor", "admin"];
+      const roles = ["user", "clinic_admin", "staff", "moderator", "doctor", "admin"];
       
       for (const roleName of roles) {
         const role = new Role({ name: roleName });
@@ -666,7 +666,7 @@ app.get("*", (req, res) => {
 
 server.listen(port, async () => {
   console.log(`🚀 Server running on port: ${port}`);
-  console.log(`🔐 Auth system ready with 5 roles: user, staff, moderator, doctor, admin`);
+  console.log(`🔐 Auth system ready with 6 roles: user, clinic_admin, staff, moderator, doctor, admin`);
 
   // 等待数据库连接建立
   const waitForDatabaseConnections = () => {

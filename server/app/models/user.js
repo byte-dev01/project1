@@ -26,8 +26,8 @@ const UserSchema = new mongoose.Schema({
   // 角色和权限
   role: {
     type: String,
-    enum: ['patient', 'doctor', 'nurse', 'admin', 'client_admin', 'moderator'],
-    default: 'patient'
+    enum: ['user', 'doctor', 'admin', 'client_admin', 'moderator', 'staff'],
+    default: 'user'
   },
   permissions: [{
     type: String

@@ -45,17 +45,24 @@ const removeUser = (user, socket) => {
 };
 
 module.exports = {
-  init: (http) => {
-    io = require("socket.io")(http);
+init: (http) => {
+  io = require("socket.io")(http, {
+    cors: {
+      origin: ["http://localhost:3000", "http://localhost:5000"], // ✅ Allow both ports
+      methods: ["GET", "POST"],
+      credentials: true
+    }
+  });
 
-    io.on("connection", (socket) => {
-      console.log(`socket has connected ${socket.id}`);
-      socket.on("disconnect", (reason) => {
-        const user = getUserFromSocketID(socket.id);
-        removeUser(user, socket);
-      });
+  io.on("connection", (socket) => {
+    console.log(`🟢 Socket connected: ${socket.id}`);
+    socket.on("disconnect", (reason) => {
+      const user = getUserFromSocketID(socket.id);
+      removeUser(user, socket);
+      console.log(`🔴 Socket disconnected: ${socket.id}`);
     });
-  },
+  });
+},
 
   addUser: addUser,
   removeUser: removeUser,

@@ -7,7 +7,8 @@ db.mongoose = mongoose;
 
 db.user = require("./user.model");
 db.role = require("./role.model");
+db.clinic = require("./clinic.model");
 
-db.ROLES = ['patient', 'doctor', 'nurse', 'admin', 'clinic_admin', 'moderator'];
+db.ROLES = ['user', 'doctor', 'staff', 'admin', 'clinic_admin', 'moderator'];
 
 module.exports = db;

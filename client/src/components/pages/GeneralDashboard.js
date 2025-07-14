@@ -3,8 +3,8 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import Menu from "../modules/Menu";
 import CalendarFeedLink from "./CalendarFeedLink";
-import "./Dashboard.css";
-import Feed from "./pages/Feed.js";
+import "./GeneralDashboard.css";
+import Feed from "./Feed.js";
 import NotFound from "../modules/NotFound.js";
 import Profile from "./Profile.js";
 import FaxDashboard from "./FaxDashboard.js";
@@ -155,7 +155,7 @@ class Dashboard extends Component {
     }
 
     // Doctors can use clinical notes
-    if (this.hasRole('doctor') || this.hasRole('admin')) {
+    if (this.hasRole('doctor') || this.hasRole('admin')|| this.hasRole('moderator')) {
       shortcuts.push(
         <Link to={`/recorder/${userId}`} key="recorder" className="shortcut-button">
           <div className="shortcut-icon">🎤</div>

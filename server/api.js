@@ -49,11 +49,17 @@ router.get("/clinics", async (req, res) => {
 });
 
 // Update your auth signin to validate clinic
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+
+// Complete signin route - replace your existing incomplete one
 router.post("/auth/signin", async (req, res) => {
   try {
     const { username, password, clinicId } = req.body;
     
-    // Validate clinic exists
+    console.log("Signin attempt:", { username, clinicId });
+    
+    // Validate clinic exists first
     const clinic = await authDb.clinic.findById(clinicId);
     if (!clinic || !clinic.isActive) {
       return res.status(400).json({ 
@@ -62,21 +68,72 @@ router.post("/auth/signin", async (req, res) => {
       });
     }
     
-    // Continue with existing signin logic...
-    // Make sure to include clinicId and clinicName in the response
+    // Find user by username or email
+    const user = await authDb.user.findOne({
+      $or: [
+        { username: username },
+        { email: username }
+      ]
+    }).populate("roles", "-__v");
+    
+    if (!user) {
+      return res.status(404).json({ 
+        success: false,
+        message: "User not found" 
+      });
+    }
+    
+    // Check password
+    const passwordIsValid = bcrypt.compareSync(password, user.password);
+    if (!passwordIsValid) {
+      return res.status(401).json({
+        success: false,
+        accessToken: null,
+        message: "Invalid Password!"
+      });
+    }
+    
+    // Generate JWT token
+    const token = jwt.sign(
+      { 
+        id: user.id,
+        username: user.username,
+        email: user.email
+      },
+      process.env.JWT_SECRET || "tomatosaucew/sugar",
+      { expiresIn: 86400 } // 24 hours
+    );
+    
+    // Get user roles
+    const authorities = [];
+    for (let i = 0; i < user.roles.length; i++) {
+      authorities.push("ROLE_" + user.roles[i].name.toUpperCase());
+    }
+    
+    // Successful response
+    const response = {
+      success: true,
+      id: user._id,
+      username: user.username,
+      email: user.email,
+      roles: authorities,
+      accessToken: token,
+      clinicId: clinicId,
+      clinicName: clinic.name
+    };
+    
+    console.log("✅ Signin successful for user:", user.username);
+    
+    res.status(200).json(response);
+    
   } catch (error) {
-    console.log('error in handling clinics')
+    console.error("❌ Signin error:", error);
+    res.status(500).json({ 
+      success: false,
+      message: error.message || "Internal server error during signin"
+    });
   }
 });
-
-
-
-
-
-
-
-
-
 
 
 // above is the signup section

@@ -2,6 +2,7 @@ const { verifySignUp } = require("../middleware");
 const controller = require("../controllers/auth.controller");
 const { body, validationResult } = require('express-validator');
 
+const authJwt = require("../middleware/authJwt");
 // Input validation middleware
 const validateSignup = [
   body('username')
@@ -63,20 +64,64 @@ module.exports = function(app) {
     next();
   });
 
+  // ✅ CRITICAL: This is the missing route causing your 404 error
+  app.get("/api/auth/verify", authJwt.verifyToken, (req, res) => {
+    console.log("✅ Token verification successful for user:", req.user.username);
+    res.status(200).json({
+      success: true,
+      message: "Token is valid",
+      user: req.user
+    });
+  });
+
+  // Signin route
+  app.post(
+    "/api/auth/signin",
+    controller.signin
+  );
+
+  // Signup route
   app.post(
     "/api/auth/signup",
     [
-      ...validateSignup, // Add input validation FIRST
       verifySignUp.checkDuplicateUsernameOrEmail,
       verifySignUp.checkRolesExisted
     ],
     controller.signup
   );
 
-  app.post(
-    "/api/auth/signin", 
-    validateSignin, // Add validation to signin too
-    controller.signin
+  // Signout route
+  app.post("/api/auth/signout", controller.signout);
+
+  // Test route to verify auth system is working
+  app.get("/api/auth/test", (req, res) => {
+    res.status(200).json({ 
+      message: "Auth routes are working!",
+      timestamp: new Date().toISOString()
+    });
+  });
+
+  // Protected test route
+  app.get("/api/auth/user", authJwt.verifyToken, (req, res) => {
+    res.status(200).json({
+      message: "User content.",
+      user: req.user
+    });
+  });
+
+  // Admin test route
+  app.get("/api/auth/admin", 
+    [authJwt.verifyToken, authJwt.isAdmin], 
+    (req, res) => {
+      res.status(200).json({ message: "Admin Board." });
+    }
+  );
+
+  // Moderator test route
+  app.get("/api/auth/mod",
+    [authJwt.verifyToken, authJwt.isModerator],
+    (req, res) => {
+      res.status(200).json({ message: "Moderator Board." });
+    }
   );
 };
-

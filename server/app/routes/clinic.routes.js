@@ -1,4 +1,6 @@
 const Clinic = require("../models/clinic.model"); // 确保你有这个模型
+const clinics = require("../controllers/clinic.controller");
+const { authJwt } = require("../middleware");
 
 module.exports = function(app) {
   app.get("/api/clinic/init", async (req, res) => {
@@ -27,13 +29,9 @@ module.exports = function(app) {
       console.error("❌ Error initializing clinic:", err);
       return res.status(500).json({ message: "Server error", error: err.message });
     }
-  });
-};
-/*
-module.exports = function(app) {
-  const clinics = require("../controllers/clinic.controller");
-  const { authJwt } = require("../middleware");
 
+
+  });
   app.get("/api/clinics", clinics.findAll);
   app.get("/api/clinics/:id", clinics.findOne);
   
@@ -47,4 +45,9 @@ module.exports = function(app) {
     [authJwt.verifyToken, authJwt.isAdmin], 
     clinics.update
   );
+
+
+};
+/*
+module.exports = function(app) {
 };*/

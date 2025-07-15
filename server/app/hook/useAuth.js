@@ -98,10 +98,9 @@ export const AuthProvider = ({ children }) => {
       // 根据角色重定向
       const redirectPath = {
         doctor: '/doctor/dashboard',
-        patient: '/patient/dashboard',
         admin: '/admin/dashboard',
         client_admin: '/organization/dashboard',
-        nurse: '/nurse/dashboard',
+        staff: '/staff/dashboard',
         mod: '/mod/dashboard'
       }[user.role] || '/dashboard';
       

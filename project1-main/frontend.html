@@ -1,0 +1,117 @@
+<meta charset="UTF-8">
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>OCR文件上传系统</title>
+</head>
+<body>
+  <div id="app"></div>
+  <script src="main.js"></script>
+</body>
+</html>
+<template>
+  <div id="app">
+    <h1>OCR文件上传系统</h1>
+    <input type="file" @change="handleFileUpload" multiple />
+    <button @click="uploadFiles">上传文件</button>
+    <div v-if="uploading">
+      <p>上传中... 请稍等</p>
+      <progress :value="uploadProgress" max="100"></progress>
+    </div>
+
+    <div v-if="ocrResults.length > 0">
+      <h2>OCR处理结果</h2>
+      <ul>
+        <li v-for="(result, index) in ocrResults" :key="index">
+          <h3>文件{{ index + 1 }}:</h3>
+          <p>{{ result }}</p>
+        </li>
+      </ul>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      selectedFiles: [], // 用户选择的文件
+      uploading: false, // 是否正在上传
+      uploadProgress: 0, // 上传进度
+      ocrResults: [] // 存储OCR结果
+    };
+  },
+  methods: {
+    // 处理文件选择
+    handleFileUpload(event) {
+      const files = event.target.files;
+      if (files.length > 50) {
+        alert("最多只能上传50个文件");
+        return;
+      }
+      this.selectedFiles = files;
+    },
+
+    // 上传文件
+    async uploadFiles() {
+      if (this.selectedFiles.length === 0) {
+        alert("请先选择文件");
+        return;
+      }
+
+      const formData = new FormData();
+      for (let file of this.selectedFiles) {
+        formData.append("files", file);
+      }
+
+      this.uploading = true;
+      this.uploadProgress = 0;
+
+      try {
+        const response = await fetch("http://localhost:3000/upload", {
+          method: "POST",
+          body: formData
+        });
+
+        if (response.ok) {
+          // 假设返回的数据是OCR的文本结果
+          const data = await response.json();
+          this.ocrResults = data.results; // 显示OCR结果
+        } else {
+          alert("文件上传失败");
+        }
+      } catch (error) {
+        console.error("上传失败", error);
+        alert("上传出现错误");
+      } finally {
+        this.uploading = false;
+      }
+    }
+  }
+};
+</script>
+
+<style scoped>
+/* 你可以在这里写一些样式 */
+#app {
+  text-align: center;
+  padding: 20px;
+}
+
+progress {
+  width: 100%;
+  height: 20px;
+}
+
+h1 {
+  font-size: 2rem;
+}
+
+button {
+  margin-top: 10px;
+  padding: 10px;
+  font-size: 1rem;
+}
+</style>

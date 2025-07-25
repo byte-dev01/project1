@@ -1,0 +1,1755 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My CS-Link - Schedule an Appointment</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f8f9fa;
+            line-height: 1.5;
+            color: #333;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #0066cc, #004499);
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .header-nav {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        .nav-link:hover {
+            background-color: rgba(255,255,255,0.1);
+        }
+
+        /* Main Container */
+        .main-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .progress-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            margin-bottom: 1rem;
+        }
+
+        .progress-line {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #e9ecef;
+            z-index: 1;
+        }
+
+        .progress-line-active {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            height: 2px;
+            background: #0066cc;
+            width: 20%;
+            z-index: 2;
+            transition: width 0.3s ease;
+        }
+
+        .progress-step {
+            position: relative;
+            z-index: 3;
+            text-align: center;
+        }
+
+        .step-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            margin: 0 auto 0.5rem;
+            border: 2px solid #e9ecef;
+            background: white;
+            color: #6c757d;
+        }
+
+        .step-circle.active {
+            background: #0066cc;
+            border-color: #0066cc;
+            color: white;
+        }
+
+        .step-circle.completed {
+            background: #28a745;
+            border-color: #28a745;
+            color: white;
+        }
+
+        .step-label {
+            font-size: 0.875rem;
+            color: #6c757d;
+            font-weight: 500;
+        }
+
+        .step-label.active {
+            color: #0066cc;
+            font-weight: 600;
+        }
+
+        /* Step Containers */
+        .step-container {
+            display: none;
+        }
+
+        .step-container.active {
+            display: block;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        /* Content Container */
+        .content-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        @media (min-width: 768px) {
+            .content-container {
+                grid-template-columns: 2fr 1fr;
+            }
+        }
+
+        .main-content {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            overflow: hidden;
+        }
+
+        .content-header {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .content-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .content-subtitle {
+            color: #6c757d;
+            font-size: 1rem;
+        }
+
+        .content-body {
+            padding: 2rem;
+        }
+
+        /* Provider Cards */
+        .provider-section {
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 1rem;
+        }
+
+        .provider-grid {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .provider-card {
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .provider-card:hover {
+            border-color: #0066cc;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,102,204,0.1);
+        }
+
+        .provider-card.selected {
+            border-color: #0066cc;
+            background-color: #f0f8ff;
+        }
+
+        .provider-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #0066cc, #004499);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 1.25rem;
+            flex-shrink: 0;
+        }
+
+        .provider-info {
+            flex: 1;
+        }
+
+        .provider-name {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.25rem;
+        }
+
+        .provider-specialty {
+            color: #6c757d;
+            font-size: 0.875rem;
+        }
+
+        .provider-arrow {
+            color: #6c757d;
+            font-size: 1.25rem;
+        }
+
+        /* Care Options */
+        .care-options {
+            margin-top: 2rem;
+        }
+
+        .separator {
+            text-align: center;
+            margin: 2rem 0;
+            position: relative;
+        }
+
+        .separator::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: #e9ecef;
+        }
+
+        .separator-text {
+            background: white;
+            padding: 0 1rem;
+            color: #6c757d;
+            font-weight: 500;
+            position: relative;
+        }
+
+        .care-grid {
+            display: grid;
+            gap: 1rem;
+        }
+
+        @media (min-width: 768px) {
+            .care-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .care-card {
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+        }
+
+        .care-card:hover {
+            border-color: #0066cc;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,102,204,0.1);
+        }
+
+        .care-card.selected {
+            border-color: #28a745;
+            background-color: #f0fff0;
+        }
+
+        .care-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #28a745, #1e7e34);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .care-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .care-description {
+            color: #6c757d;
+            font-size: 0.875rem;
+            line-height: 1.4;
+        }
+
+        /* Time Slots Section */
+        .filters-container {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .date-picker-container {
+            margin-bottom: 1.5rem;
+        }
+
+        .date-picker-container label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+
+        .date-input-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+
+        .date-input {
+            padding: 0.75rem;
+            border: 1px solid #e9ecef;
+            border-radius: 6px;
+            font-size: 1rem;
+            width: 200px;
+        }
+
+        .calendar-button {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.25rem;
+        }
+
+        .time-preference-widget {
+            margin-top: 1.5rem;
+        }
+
+        .time-preference-widget h4 {
+            color: #6c757d;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .toggle-buttons {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .toggle-button {
+            padding: 0.5rem 1rem;
+            border: 2px solid #e9ecef;
+            background: white;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .toggle-button:hover {
+            border-color: #0066cc;
+        }
+
+        .toggle-button.active {
+            background: #0066cc;
+            color: white;
+            border-color: #0066cc;
+        }
+
+        .day-time-table {
+            display: grid;
+            gap: 0.75rem;
+        }
+
+        .day-of-week {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .day-string {
+            width: 50px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .range-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .time-range {
+            position: relative;
+        }
+
+        .button-check {
+            padding: 0.25rem 0.75rem;
+            border: 1px solid #e9ecef;
+            background: white;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            transition: all 0.2s;
+        }
+
+        .button-check:hover {
+            border-color: #0066cc;
+        }
+
+        input[type="checkbox"]:checked + .button-check {
+            background: #0066cc;
+            color: white;
+            border-color: #0066cc;
+        }
+
+        input[type="checkbox"],
+        input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+        }
+
+        /* Slot Display */
+        .slots-container {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .day {
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .day:last-child {
+            border-bottom: none;
+        }
+
+        .day-header {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 1rem;
+        }
+
+        .provider-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .slots-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 0.5rem;
+        }
+
+        .slot {
+            padding: 0.75rem 1rem;
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 6px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .slot:hover {
+            border-color: #0066cc;
+            background: #f0f8ff;
+            transform: translateY(-1px);
+        }
+
+        .slot.selected {
+            background: #0066cc;
+            color: white;
+            border-color: #0066cc;
+        }
+
+        .clearlabel {
+            position: absolute;
+            left: -9999px;
+        }
+
+        /* Verification Step */
+        .verification-content {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .demographics-card {
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .edit-button {
+            padding: 0.5rem 1rem;
+            background: transparent;
+            border: 2px solid #e9ecef;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s;
+        }
+
+        .edit-button:hover {
+            border-color: #0066cc;
+            color: #0066cc;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .info-item {
+            padding: 0.5rem 0;
+        }
+
+        .info-label {
+            color: #6c757d;
+            font-size: 0.875rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .info-value {
+            color: #333;
+            font-weight: 500;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .sidebar-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .sidebar-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .sidebar-icon {
+            color: #0066cc;
+            font-size: 1.25rem;
+        }
+
+        .appointment-summary {
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .summary-item:last-child {
+            border-bottom: none;
+        }
+
+        .summary-label {
+            color: #6c757d;
+            font-size: 0.875rem;
+        }
+
+        .summary-value {
+            font-weight: 600;
+            color: #333;
+        }
+
+        /* Help Section */
+        .help-section {
+            background: #e8f4f8;
+            border-left: 4px solid #0066cc;
+            padding: 1rem;
+            border-radius: 0 6px 6px 0;
+        }
+
+        .help-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .help-text {
+            color: #6c757d;
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+        }
+
+        .help-phone {
+            color: #0066cc;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        /* Navigation Buttons */
+        .navigation-buttons {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem;
+            background: #f8f9fa;
+            border-top: 1px solid #e9ecef;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: #0066cc;
+            color: white;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: #0052a3;
+            transform: translateY(-1px);
+        }
+
+        .btn-primary:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #6c757d;
+            border: 2px solid #e9ecef;
+        }
+
+        .btn-secondary:hover {
+            background: #f8f9fa;
+            border-color: #0066cc;
+            color: #0066cc;
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+            transform: translateY(-1px);
+        }
+
+        /* Footer */
+        .footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-link {
+            color: #ccc;
+            text-decoration: none;
+        }
+
+        .footer-link:hover {
+            color: white;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 767px) {
+            .header-nav {
+                display: none;
+            }
+            
+            .slots-section {
+                grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            }
+            
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .navigation-buttons {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        /* Animation for cards */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .provider-card,
+        .care-card {
+            animation: fadeInUp 0.3s ease-out;
+        }
+
+        .provider-card:nth-child(2) { animation-delay: 0.1s; }
+        .care-card:nth-child(2) { animation-delay: 0.1s; }
+        .care-card:nth-child(3) { animation-delay: 0.2s; }
+        .care-card:nth-child(4) { animation-delay: 0.3s; }
+
+        /* Loading state */
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: #6c757d;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #0066cc;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Alert Banner */
+        .alert-banner {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 6px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            color: #856404;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-container">
+            <div class="logo">My CS-Link</div>
+            <nav class="header-nav">
+                <a href="#" class="nav-link">Home</a>
+                <a href="#" class="nav-link">Messages</a>
+                <a href="#" class="nav-link">Test Results</a>
+                <a href="#" class="nav-link">Visits</a>
+                <a href="#" class="nav-link">Account</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Progress Bar -->
+        <div class="progress-container">
+            <div class="progress-bar">
+                <div class="progress-line"></div>
+                <div class="progress-line-active" id="progress-line"></div>
+                
+                <div class="progress-step">
+                    <div class="step-circle active" id="step-1-circle">1</div>
+                    <div class="step-label active" id="step-1-label">Providers</div>
+                </div>
+                
+                <div class="progress-step">
+                    <div class="step-circle" id="step-2-circle">2</div>
+                    <div class="step-label" id="step-2-label">Reason for visit</div>
+                </div>
+                
+                <div class="progress-step">
+                    <div class="step-circle" id="step-3-circle">3</div>
+                    <div class="step-label" id="step-3-label">Locations</div>
+                </div>
+                
+                <div class="progress-step">
+                    <div class="step-circle" id="step-4-circle">4</div>
+                    <div class="step-label" id="step-4-label">Time</div>
+                </div>
+                
+                <div class="progress-step">
+                    <div class="step-circle" id="step-5-circle">5</div>
+                    <div class="step-label" id="step-5-label">Verify and schedule</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Content Container -->
+        <div class="content-container">
+            <!-- Main Content Area -->
+            <div class="main-content-area">
+                <!-- Step 1: Provider Selection -->
+                <div class="step-container active" id="step-1">
+                    <div class="main-content">
+                        <div class="content-header">
+                            <h1 class="content-title">Schedule an Appointment</h1>
+                            <p class="content-subtitle">Choose your provider or select from other care options</p>
+                        </div>
+                        
+                        <div class="content-body">
+                            <!-- Provider Section -->
+                            <div class="provider-section">
+                                <h2 class="section-title">Schedule with your provider</h2>
+                                
+                                <div class="provider-grid">
+                                    <div class="provider-card" onclick="selectProvider('ribaudo', this)">
+                                        <div class="provider-avatar">JR</div>
+                                        <div class="provider-info">
+                                            <div class="provider-name">Janice Ribaudo, MD</div>
+                                            <div class="provider-specialty">Primary Care Provider</div>
+                                        </div>
+                                        <div class="provider-arrow">→</div>
+                                    </div>
+                                    
+                                    <div class="provider-card" onclick="selectProvider('tsang', this)">
+                                        <div class="provider-avatar">AT</div>
+                                        <div class="provider-info">
+                                            <div class="provider-name">Aloyisus Tsang, MD</div>
+                                            <div class="provider-specialty">Internal Medicine</div>
+                                        </div>
+                                        <div class="provider-arrow">→</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Separator -->
+                            <div class="separator">
+                                <div class="separator-text">OR</div>
+                            </div>
+
+                            <!-- Other Care Options -->
+                            <div class="care-options">
+                                <h2 class="section-title">Other care options</h2>
+                                
+                                <div class="care-grid">
+                                    <div class="care-card" onclick="selectCareOption('connect', this)">
+                                        <div class="care-icon">🏥</div>
+                                        <div class="care-title">24/7 Care with Cedars-Sinai Connect</div>
+                                        <div class="care-description">Download the Cedars-Sinai Connect app to book a virtual visit as soon as today for ages 3+.</div>
+                                    </div>
+                                    
+                                    <div class="care-card" onclick="selectCareOption('urgent', this)">
+                                        <div class="care-icon">⚡</div>
+                                        <div class="care-title">Find Urgent Care Now</div>
+                                        <div class="care-description">Get immediate care for non-emergency conditions at one of our urgent care locations.</div>
+                                    </div>
+                                    
+                                    <div class="care-card" onclick="selectCareOption('primary', this)">
+                                        <div class="care-icon">👨‍⚕️</div>
+                                        <div class="care-title">Primary Care</div>
+                                        <div class="care-description">Schedule with your existing adult Primary Care provider for routine check-ups and ongoing care.</div>
+                                    </div>
+                                    
+                                    <div class="care-card" onclick="selectCareOption('lab', this)">
+                                        <div class="care-icon">🔬</div>
+                                        <div class="care-title">Lab Visit</div>
+                                        <div class="care-description">Schedule a lab appointment for blood work, testing, and other diagnostic services.</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 2: Reason for Visit (Placeholder) -->
+                <div class="step-container" id="step-2">
+                    <div class="main-content">
+                        <div class="content-header">
+                            <h1 class="content-title">Reason for Visit</h1>
+                            <p class="content-subtitle">What brings you in today?</p>
+                        </div>
+                        
+                        <div class="content-body">
+                            <div class="provider-section">
+                                <h2 class="section-title">Common reasons for visit</h2>
+                                
+                                <div class="provider-grid">
+                                    <div class="provider-card" onclick="selectReason('checkup', this)">
+                                        <div class="provider-info">
+                                            <div class="provider-name">Annual Check-up</div>
+                                            <div class="provider-specialty">Routine physical examination</div>
+                                        </div>
+                                        <div class="provider-arrow">→</div>
+                                    </div>
+                                    
+                                    <div class="provider-card" onclick="selectReason('followup', this)">
+                                        <div class="provider-info">
+                                            <div class="provider-name">Follow-up Visit</div>
+                                            <div class="provider-specialty">Review test results or ongoing care</div>
+                                        </div>
+                                        <div class="provider-arrow">→</div>
+                                    </div>
+                                    
+                                    <div class="provider-card" onclick="selectReason('newconcern', this)">
+                                        <div class="provider-info">
+                                            <div class="provider-name">New Health Concern</div>
+                                            <div class="provider-specialty">Discuss new symptoms or issues</div>
+                                        </div>
+                                        <div class="provider-arrow">→</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 3: Location Selection (Placeholder) -->
+                <div class="step-container" id="step-3">
+                    <div class="main-content">
+                        <div class="content-header">
+                            <h1 class="content-title">Select Location</h1>
+                            <p class="content-subtitle">Choose a convenient location for your appointment</p>
+                        </div>
+                        
+                        <div class="content-body">
+                            <div class="provider-section">
+                                <h2 class="section-title">Available locations</h2>
+                                
+                                <div class="provider-grid">
+                                    <div class="provider-card" onclick="selectLocation('beverly', this)">
+                                        <div class="provider-info">
+                                            <div class="provider-name">Cedars-Sinai Primary Care - Los Angeles</div>
+                                            <div class="provider-specialty">8635 W Third Street Ste 295W Los Angeles CA 90048</div>
+                                        </div>
+                                        <div class="provider-arrow">→</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 4: Time Selection -->
+                <div class="step-container" id="step-4">
+                    <div class="main-content">
+                        <div class="content-header">
+                            <h1 class="content-title">Select Appointment Time</h1>
+                            <p class="content-subtitle">Choose an available time slot</p>
+                        </div>
+                        
+                        <div class="content-body">
+                            <!-- Filters -->
+                            <div class="filters-container">
+                                <h3 class="section-title">Search Criteria</h3>
+                                
+                                <div class="date-picker-container">
+                                    <label for="appointment-date">Start search on</label>
+                                    <div class="date-input-wrapper">
+                                        <input type="text" id="appointment-date" class="date-input" value="07/24/2025" />
+                                        <button class="calendar-button">📅</button>
+                                    </div>
+                                </div>
+                                
+                                <div class="time-preference-widget">
+                                    <h4>Times:</h4>
+                                    <div class="toggle-buttons">
+                                        <button class="toggle-button active" onclick="toggleTimeFilter('all', this)">All available times</button>
+                                        <button class="toggle-button" onclick="toggleTimeFilter('filter', this)">Filter times</button>
+                                    </div>
+                                    
+                                    <div class="day-time-table" id="time-filter-table" style="display: none;">
+                                        <div class="day-of-week">
+                                            <span class="day-string">Mon</span>
+                                            <div class="range-buttons">
+                                                <span class="time-range">
+                                                    <input type="checkbox" id="mon-am" />
+                                                    <label for="mon-am" class="button-check">AM</label>
+                                                </span>
+                                                <span class="time-range">
+                                                    <input type="checkbox" id="mon-pm" />
+                                                    <label for="mon-pm" class="button-check">PM</label>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="day-of-week">
+                                            <span class="day-string">Tue</span>
+                                            <div class="range-buttons">
+                                                <span class="time-range">
+                                                    <input type="checkbox" id="tue-am" />
+                                                    <label for="tue-am" class="button-check">AM</label>
+                                                </span>
+                                                <span class="time-range">
+                                                    <input type="checkbox" id="tue-pm" />
+                                                    <label for="tue-pm" class="button-check">PM</label>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="day-of-week">
+                                            <span class="day-string">Wed</span>
+                                            <div class="range-buttons">
+                                                <span class="time-range">
+                                                    <input type="checkbox" id="wed-am" />
+                                                    <label for="wed-am" class="button-check">AM</label>
+                                                </span>
+                                                <span class="time-range">
+                                                    <input type="checkbox" id="wed-pm" />
+                                                    <label for="wed-pm" class="button-check">PM</label>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="day-of-week">
+                                            <span class="day-string">Thu</span>
+                                            <div class="range-buttons">
+                                                <span class="time-range">
+                                                    <input type="checkbox" id="thu-am" />
+                                                    <label for="thu-am" class="button-check">AM</label>
+                                                </span>
+                                                <span class="time-range">
+                                                    <input type="checkbox" id="thu-pm" />
+                                                    <label for="thu-pm" class="button-check">PM</label>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="day-of-week">
+                                            <span class="day-string">Fri</span>
+                                            <div class="range-buttons">
+                                                <span class="time-range">
+                                                    <input type="checkbox" id="fri-am" />
+                                                    <label for="fri-am" class="button-check">AM</label>
+                                                </span>
+                                                <span class="time-range">
+                                                    <input type="checkbox" id="fri-pm" />
+                                                    <label for="fri-pm" class="button-check">PM</label>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Available Slots -->
+                            <div class="slots-container">
+                                <div class="alert-banner">
+                                    📱 Download the CS Connect app to get video visit access to your Cedars-Sinai care team sooner.
+                                </div>
+                                
+                                <div class="day">
+                                    <h3 class="day-header">Wednesday November 12, 2025</h3>
+                                    <div class="provider-section">
+                                        <h4 class="provider-name"><span id="selected-provider-slots">Janice Ribaudo, MD</span></h4>
+                                        <div class="slots-section">
+                                            <a href="#" class="slot" onclick="selectTimeSlot('7:40 AM', this)">7:40 AM</a>
+                                            <a href="#" class="slot" onclick="selectTimeSlot('8:40 AM', this)">8:40 AM</a>
+                                            <a href="#" class="slot" onclick="selectTimeSlot('10:40 AM', this)">10:40 AM</a>
+                                            <a href="#" class="slot" onclick="selectTimeSlot('1:20 PM', this)">1:20 PM</a>
+                                            <a href="#" class="slot" onclick="selectTimeSlot('2:20 PM', this)">2:20 PM</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="day">
+                                    <h3 class="day-header">Thursday November 13, 2025</h3>
+                                    <div class="provider-section">
+                                        <div class="slots-section">
+                                            <a href="#" class="slot" onclick="selectTimeSlot('7:40 AM', this)">7:40 AM</a>
+                                            <a href="#" class="slot" onclick="selectTimeSlot('10:40 AM', this)">10:40 AM</a>
+                                            <a href="#" class="slot" onclick="selectTimeSlot('11:40 AM', this)">11:40 AM</a>
+                                            <a href="#" class="slot" onclick="selectTimeSlot('1:00 PM', this)">1:00 PM</a>
+                                            <a href="#" class="slot" onclick="selectTimeSlot('2:40 PM', this)">2:40 PM</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="day">
+                                    <h3 class="day-header">Monday November 17, 2025</h3>
+                                    <div class="provider-section">
+                                        <div class="slots-section">
+                                            <a href="#" class="slot" onclick="selectTimeSlot('7:40 AM', this)">7:40 AM</a>
+                                            <a href="#" class="slot" onclick="selectTimeSlot('9:00 AM', this)">9:00 AM</a>
+                                            <a href="#" class="slot" onclick="selectTimeSlot('10:40 AM', this)">10:40 AM</a>
+                                            <a href="#" class="slot" onclick="selectTimeSlot('12:20 PM', this)">12:20 PM</a>
+                                            <a href="#" class="slot" onclick="selectTimeSlot('12:40 PM', this)">12:40 PM</a>
+                                            <a href="#" class="slot" onclick="selectTimeSlot('1:00 PM', this)">1:00 PM</a>
+                                            <a href="#" class="slot" onclick="selectTimeSlot('2:40 PM', this)">2:40 PM</a>
+                                            <a href="#" class="slot" onclick="selectTimeSlot('3:00 PM', this)">3:00 PM</a>
+                                            <a href="#" class="slot" onclick="selectTimeSlot('3:20 PM', this)">3:20 PM</a>
+                                            <a href="#" class="slot" onclick="selectTimeSlot('3:40 PM', this)">3:40 PM</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 5: Verification -->
+                <div class="step-container" id="step-5">
+                    <div class="verification-content">
+                        <div class="alert-banner">
+                            ⏰ This appointment time is reserved for you until 8:36 PM.
+                        </div>
+                        
+                        <h2 class="content-title">Verify your personal information</h2>
+                        
+                        <div class="demographics-card">
+                            <div class="card-header">
+                                <h3 class="card-title">Contact Information</h3>
+                                <button class="edit-button">
+                                    <span>✏️</span>
+                                    Edit
+                                </button>
+                            </div>
+                            
+                            <div class="info-grid">
+                                <div class="info-item">
+                                    <div class="info-label">Permanent Address</div>
+                                    <div class="info-value">
+                                        5733 AGNES AVE<br>
+                                        TEMPLE CITY CA 91780
+                                    </div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Home Phone</div>
+                                    <div class="info-value">765-427-9104</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Mobile Phone</div>
+                                    <div class="info-value">765-427-9104 (preferred)</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Email</div>
+                                    <div class="info-value">rachelli.purdue2@gmail.com</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="demographics-card">
+                            <div class="card-header">
+                                <h3 class="card-title">Details About Me</h3>
+                                <button class="edit-button">
+                                    <span>✏️</span>
+                                    Edit
+                                </button>
+                            </div>
+                            
+                            <div class="info-grid">
+                                <div class="info-item">
+                                    <div class="info-label">Preferred First Name</div>
+                                    <div class="info-value">RACHEL</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Legal Sex</div>
+                                    <div class="info-value">Female</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Race</div>
+                                    <div class="info-value">ASIAN-Chinese</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Ethnicity</div>
+                                    <div class="info-value">Non-Hispanic/Latino</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Language</div>
+                                    <div class="info-value">English</div>
+                                </div>
+                                <div class="info-item">
+                                    <div class="info-label">Marital Status</div>
+                                    <div class="info-value">Unknown</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <!-- Appointment Summary -->
+                <div class="sidebar-card">
+                    <h3 class="sidebar-title">
+                        <span class="sidebar-icon">📅</span>
+                        Appointment Summary
+                    </h3>
+                    
+                    <div class="appointment-summary">
+                        <div class="summary-item">
+                            <span class="summary-label">Provider:</span>
+                            <span class="summary-value" id="selected-provider">Not selected</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">Reason:</span>
+                            <span class="summary-value" id="selected-reason">Not selected</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">Location:</span>
+                            <span class="summary-value" id="selected-location">Not selected</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">Date & Time:</span>
+                            <span class="summary-value" id="selected-datetime">Not selected</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Help Section -->
+                <div class="sidebar-card">
+                    <div class="help-section">
+                        <div class="help-title">🆘 Need help scheduling?</div>
+                        <div class="help-text">Our scheduling team is available to assist you with booking your appointment.</div>
+                        <a href="tel:1-800-CEDARS-1" class="help-phone">Call us at 1-800-CEDARS-1</a>
+                    </div>
+                </div>
+
+                <!-- Patient Info -->
+                <div class="sidebar-card">
+                    <h3 class="sidebar-title">
+                        <span class="sidebar-icon">👤</span>
+                        Patient Information
+                    </h3>
+                    
+                    <div class="appointment-summary">
+                        <div class="summary-item">
+                            <span class="summary-label">Name:</span>
+                            <span class="summary-value">RACHEL Li</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">DOB:</span>
+                            <span class="summary-value">1/25/1999</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">MRN:</span>
+                            <span class="summary-value">203748565</span>
+                        </div>
+                        <div class="summary-item">
+                            <span class="summary-label">PCP:</span>
+                            <span class="summary-value">Janice Ribaudo, MD</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="navigation-buttons">
+            <button class="btn btn-secondary" id="back-button" onclick="goBack()">
+                ← Back
+            </button>
+            <button class="btn btn-primary" id="continue-button" disabled onclick="continueNext()">
+                Continue →
+            </button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="#" class="footer-link">Terms and Conditions</a>
+                <a href="#" class="footer-link">Privacy Policy</a>
+                <a href="#" class="footer-link">Contact Us</a>
+                <a href="#" class="footer-link">Help</a>
+            </div>
+            <div>
+                <p>&copy; 2025 Cedars-Sinai Health System. All rights reserved.</p>
+                <p>MyChart® licensed from Epic Systems Corporation</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // State management
+        let currentStep = 1;
+        let appointmentData = {
+            provider: null,
+            careOption: null,
+            reason: null,
+            location: null,
+            dateTime: null,
+            selectedDate: null,
+            selectedTime: null
+        };
+
+        // Step navigation
+        function showStep(stepNumber) {
+            // Hide all steps
+            document.querySelectorAll('.step-container').forEach(container => {
+                container.classList.remove('active');
+            });
+            
+            // Show current step
+            document.getElementById(`step-${stepNumber}`).classList.add('active');
+            
+            // Update progress bar
+            updateProgressBar(stepNumber);
+            
+            // Update navigation buttons
+            updateNavigationButtons(stepNumber);
+            
+            currentStep = stepNumber;
+        }
+
+        function updateProgressBar(stepNumber) {
+            const progressLine = document.getElementById('progress-line');
+            const progressPercent = ((stepNumber - 1) / 4) * 100;
+            progressLine.style.width = progressPercent + '%';
+            
+            // Update step circles and labels
+            for (let i = 1; i <= 5; i++) {
+                const circle = document.getElementById(`step-${i}-circle`);
+                const label = document.getElementById(`step-${i}-label`);
+                
+                if (i < stepNumber) {
+                    circle.classList.add('completed');
+                    circle.classList.remove('active');
+                    circle.innerHTML = '✓';
+                    label.classList.remove('active');
+                } else if (i === stepNumber) {
+                    circle.classList.add('active');
+                    circle.classList.remove('completed');
+                    circle.innerHTML = i;
+                    label.classList.add('active');
+                } else {
+                    circle.classList.remove('active', 'completed');
+                    circle.innerHTML = i;
+                    label.classList.remove('active');
+                }
+            }
+        }
+
+        function updateNavigationButtons(stepNumber) {
+            const backButton = document.getElementById('back-button');
+            const continueButton = document.getElementById('continue-button');
+            
+            // Show/hide back button
+            if (stepNumber === 1) {
+                backButton.textContent = '← Back to Home';
+            } else {
+                backButton.textContent = '← Back';
+            }
+            
+            // Update continue button
+            if (stepNumber === 5) {
+                continueButton.textContent = 'Schedule Appointment';
+                continueButton.classList.remove('btn-primary');
+                continueButton.classList.add('btn-success');
+            } else {
+                continueButton.textContent = 'Continue →';
+                continueButton.classList.add('btn-primary');
+                continueButton.classList.remove('btn-success');
+            }
+            
+            // Enable/disable continue button based on selection
+            updateContinueButton();
+        }
+
+        function updateContinueButton() {
+            const continueButton = document.getElementById('continue-button');
+            let canContinue = false;
+            
+            switch (currentStep) {
+                case 1:
+                    canContinue = appointmentData.provider || appointmentData.careOption;
+                    break;
+                case 2:
+                    canContinue = appointmentData.reason;
+                    break;
+                case 3:
+                    canContinue = appointmentData.location;
+                    break;
+                case 4:
+                    canContinue = appointmentData.selectedTime;
+                    break;
+                case 5:
+                    canContinue = true; // Can always schedule from verification
+                    break;
+            }
+            
+            continueButton.disabled = !canContinue;
+        }
+
+        // Provider selection
+        function selectProvider(provider, element) {
+            // Clear previous selections
+            document.querySelectorAll('.provider-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            document.querySelectorAll('.care-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            
+            // Mark as selected
+            element.classList.add('selected');
+            
+            // Update data
+            appointmentData.provider = provider;
+            appointmentData.careOption = null;
+            
+            // Update summary
+            const providerNames = {
+                'ribaudo': 'Janice Ribaudo, MD',
+                'tsang': 'Aloyisus Tsang, MD'
+            };
+            
+            document.getElementById('selected-provider').textContent = providerNames[provider];
+            
+            // Enable continue button
+            updateContinueButton();
+        }
+
+        function selectCareOption(option, element) {
+            // Clear previous selections
+            document.querySelectorAll('.provider-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            document.querySelectorAll('.care-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            
+            // Mark as selected
+            element.classList.add('selected');
+            
+            // Update data
+            appointmentData.careOption = option;
+            appointmentData.provider = null;
+            
+            // Update summary
+            const careOptions = {
+                'connect': '24/7 Cedars-Sinai Connect',
+                'urgent': 'Urgent Care',
+                'primary': 'Primary Care',
+                'lab': 'Lab Visit'
+            };
+            
+            document.getElementById('selected-provider').textContent = careOptions[option];
+            
+            // Enable continue button
+            updateContinueButton();
+        }
+
+        // Reason selection
+        function selectReason(reason, element) {
+            // Clear previous selections
+            document.querySelectorAll('#step-2 .provider-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            
+            // Mark as selected
+            element.classList.add('selected');
+            
+            // Update data
+            appointmentData.reason = reason;
+            
+            // Update summary
+            const reasons = {
+                'checkup': 'Annual Check-up',
+                'followup': 'Follow-up Visit',
+                'newconcern': 'New Health Concern'
+            };
+            
+            document.getElementById('selected-reason').textContent = reasons[reason];
+            
+            // Enable continue button
+            updateContinueButton();
+        }
+
+        // Location selection
+        function selectLocation(location, element) {
+            // Clear previous selections
+            document.querySelectorAll('#step-3 .provider-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            
+            // Mark as selected
+            element.classList.add('selected');
+            
+            // Update data
+            appointmentData.location = location;
+            
+            // Update summary
+            document.getElementById('selected-location').textContent = 'Cedars-Sinai Primary Care - Los Angeles';
+            
+            // Enable continue button
+            updateContinueButton();
+        }
+
+        // Time slot selection
+        function selectTimeSlot(time, element) {
+            // Prevent default link behavior
+            event.preventDefault();
+            
+            // Clear previous selections
+            document.querySelectorAll('.slot').forEach(slot => {
+                slot.classList.remove('selected');
+            });
+            
+            // Mark as selected
+            element.classList.add('selected');
+            
+            // Get the date from the parent day element
+            const dayElement = element.closest('.day');
+            const date = dayElement.querySelector('.day-header').textContent;
+            
+            // Update data
+            appointmentData.selectedTime = time;
+            appointmentData.selectedDate = date;
+            appointmentData.dateTime = `${date} at ${time}`;
+            
+            // Update summary
+            document.getElementById('selected-datetime').textContent = appointmentData.dateTime;
+            
+            // Enable continue button
+            updateContinueButton();
+        }
+
+        // Time filter toggle
+        function toggleTimeFilter(mode, element) {
+            const filterTable = document.getElementById('time-filter-table');
+            const toggleButtons = document.querySelectorAll('.toggle-button');
+            
+            // Update button states
+            toggleButtons.forEach(btn => btn.classList.remove('active'));
+            element.classList.add('active');
+            
+            // Show/hide filter table
+            if (mode === 'filter') {
+                filterTable.style.display = 'block';
+            } else {
+                filterTable.style.display = 'none';
+            }
+        }
+
+        // Navigation functions
+        function continueNext() {
+            if (currentStep < 5) {
+                showStep(currentStep + 1);
+                
+                // Update provider name in time slots if needed
+                if (currentStep === 4 && appointmentData.provider) {
+                    const providerNames = {
+                        'ribaudo': 'Janice Ribaudo, MD',
+                        'tsang': 'Aloyisus Tsang, MD'
+                    };
+                    document.getElementById('selected-provider-slots').textContent = providerNames[appointmentData.provider];
+                }
+            } else {
+                // Final step - schedule appointment
+                scheduleAppointment();
+            }
+        }
+
+        function goBack() {
+            if (currentStep > 1) {
+                showStep(currentStep - 1);
+            } else {
+                // Go back to home
+                window.location.href = '/mycslink/inside.asp';
+            }
+        }
+
+        function scheduleAppointment() {
+            // Show loading state
+            const continueButton = document.getElementById('continue-button');
+            continueButton.disabled = true;
+            continueButton.innerHTML = '<span class="loading-spinner" style="width: 20px; height: 20px; margin-right: 0.5rem;"></span> Scheduling...';
+            
+            // Simulate API call
+            setTimeout(() => {
+                alert('Appointment scheduled successfully!\n\n' + 
+                      'Provider: ' + document.getElementById('selected-provider').textContent + '\n' +
+                      'Reason: ' + document.getElementById('selected-reason').textContent + '\n' +
+                      'Location: ' + document.getElementById('selected-location').textContent + '\n' +
+                      'Date & Time: ' + document.getElementById('selected-datetime').textContent);
+                
+                // Redirect to appointment details
+                window.location.href = '/mycslink/visits/visitdetails?scheduled=1';
+            }, 2000);
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add smooth scrolling for mobile
+            if ('ontouchstart' in window) {
+                document.querySelectorAll('.provider-card, .care-card, .slot').forEach(element => {
+                    element.addEventListener('touchstart', function() {
+                        this.style.transform = 'scale(0.98)';
+                    });
+                    
+                    element.addEventListener('touchend', function() {
+                        this.style.transform = 'scale(1)';
+                    });
+                });
+            }
+            
+            // Make cards keyboard accessible
+            document.querySelectorAll('.provider-card, .care-card, .slot').forEach(element => {
+                element.setAttribute('tabindex', '0');
+                element.setAttribute('role', 'button');
+                
+                element.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        this.click();
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

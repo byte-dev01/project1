@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My CS-Link - Care Team History</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.4;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #1e4a6b 0%, #2c5f7e 100%);
+            color: white;
+            padding: 0.8rem 2rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .nav-btn {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+
+        .nav-btn:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            background: #4a90e2;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        /* Main Content */
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: white;
+            min-height: calc(100vh - 200px);
+        }
+
+        .page-title {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            color: #1e4a6b;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 0.5rem;
+        }
+
+        .care-team-container {
+            display: flex;
+            gap: 2rem;
+            min-height: 500px;
+        }
+
+        /* Provider List */
+        .provider-list {
+            flex: 1;
+            max-width: 400px;
+        }
+
+        .show-hidden-checkbox {
+            margin-bottom: 1rem;
+        }
+
+        .show-hidden-checkbox input {
+            margin-right: 0.5rem;
+        }
+
+        .provider-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            border: 1px solid #e0e0e0;
+            margin-bottom: 0.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: white;
+        }
+
+        .provider-item:hover {
+            background: #f8f9fa;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .provider-item.selected {
+            background: #e3f2fd;
+            border-color: #2196f3;
+        }
+
+        .provider-photo {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            margin-right: 1rem;
+            object-fit: cover;
+        }
+
+        .provider-info {
+            flex: 1;
+        }
+
+        .provider-name {
+            font-weight: bold;
+            font-size: 1rem;
+            color: #1e4a6b;
+            margin-bottom: 0.25rem;
+        }
+
+        .provider-role {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .provider-specialty {
+            color: #888;
+            font-size: 0.85rem;
+        }
+
+        .provider-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .action-btn {
+            background: #f0f0f0;
+            border: 1px solid #ddd;
+            padding: 0.3rem 0.6rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .action-btn:hover {
+            background: #e0e0e0;
+        }
+
+        .action-btn.message {
+            background: #e3f2fd;
+            border-color: #2196f3;
+            color: #1976d2;
+        }
+
+        .action-btn.schedule {
+            background: #e8f5e8;
+            border-color: #4caf50;
+            color: #388e3c;
+        }
+
+        /* Provider Details */
+        .provider-details {
+            flex: 1;
+            background: #fafafa;
+            border-radius: 8px;
+            padding: 2rem;
+        }
+
+        .provider-profile-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .provider-profile-photo {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            margin: 0 auto 1rem;
+            display: block;
+            object-fit: cover;
+        }
+
+        .provider-profile-name {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #1e4a6b;
+            margin-bottom: 0.5rem;
+        }
+
+        .provider-profile-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+
+        .profile-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #2196f3;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            text-decoration: none;
+        }
+
+        .profile-btn:hover {
+            background: #1976d2;
+        }
+
+        .profile-btn.secondary {
+            background: #4caf50;
+        }
+
+        .profile-btn.secondary:hover {
+            background: #388e3c;
+        }
+
+        .provider-toggle {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .toggle-link {
+            color: #666;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .toggle-link:hover {
+            text-decoration: underline;
+        }
+
+        .zero-state {
+            text-align: center;
+            color: #888;
+            padding: 2rem;
+        }
+
+        .zero-state img {
+            width: 100px;
+            opacity: 0.5;
+            margin-bottom: 1rem;
+        }
+
+        /* Footer */
+        .footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .footer-links a {
+            color: #ccc;
+            text-decoration: none;
+        }
+
+        .footer-links a:hover {
+            color: white;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .care-team-container {
+                flex-direction: column;
+            }
+
+            .provider-list {
+                max-width: none;
+            }
+
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav-buttons {
+                flex-wrap: wrap;
+            }
+
+            .main-container {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">My CS-Link</div>
+            <nav class="nav-buttons">
+                <a href="#" class="nav-btn">Menu</a>
+                <a href="#" class="nav-btn">Home</a>
+            </nav>
+            <div class="user-info">
+                <div class="user-avatar">R</div>
+                <span>RACHEL</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-container">
+        <h1 class="page-title">Care Team History</h1>
+        
+        <div class="care-team-container">
+            <div class="provider-list">
+                <div class="show-hidden-checkbox">
+                    <label>
+                        <input type="checkbox" id="showHidden">
+                        Show hidden providers
+                    </label>
+                </div>
+
+                <div class="provider-item selected" data-provider="0">
+                    <img src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=150&h=150&fit=crop&crop=face" alt="Dr. Janice Ribaudo" class="provider-photo">
+                    <div class="provider-info">
+                        <div class="provider-name">Janice Ribaudo, MD</div>
+                        <div class="provider-role">Primary Care Provider</div>
+                        <div class="provider-specialty">Family Medicine</div>
+                    </div>
+                    <div class="provider-actions">
+                        <button class="action-btn message">Message</button>
+                        <button class="action-btn schedule">Schedule</button>
+                    </div>
+                </div>
+
+                <div class="provider-item" data-provider="1">
+                    <img src="https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=150&h=150&fit=crop&crop=face" alt="Dr. Aloyisus Tsang" class="provider-photo">
+                    <div class="provider-info">
+                        <div class="provider-name">Aloyisus Tsang, MD</div>
+                        <div class="provider-role">MDN FFS PCP</div>
+                        <div class="provider-specialty">Internal Medicine</div>
+                    </div>
+                    <div class="provider-actions">
+                        <button class="action-btn message">Message</button>
+                        <button class="action-btn schedule">Schedule</button>
+                    </div>
+                </div>
+
+                <div class="provider-item" data-provider="2">
+                    <img src="https://images.unsplash.com/photo-1594824804732-ca8db7534275?w=150&h=150&fit=crop&crop=face" alt="Eno Elizabeth Inikori" class="provider-photo">
+                    <div class="provider-info">
+                        <div class="provider-name">Eno Elizabeth Inikori</div>
+                        <div class="provider-role">Specialist</div>
+                        <div class="provider-specialty">Neurology</div>
+                    </div>
+                    <div class="provider-actions">
+                        <button class="action-btn message">Message</button>
+                    </div>
+                </div>
+
+                <div class="provider-item" data-provider="3">
+                    <img src="https://images.unsplash.com/photo-1607990281513-2c110a25bd8c?w=150&h=150&fit=crop&crop=face" alt="Dr. Jeffrey Wertheimer" class="provider-photo">
+                    <div class="provider-info">
+                        <div class="provider-name">Jeffrey C Wertheimer, PhD</div>
+                        <div class="provider-role">Specialist</div>
+                        <div class="provider-specialty">Clinical Psychology</div>
+                    </div>
+                    <div class="provider-actions">
+                        <button class="action-btn message">Message</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="provider-details">
+                <div class="provider-profile-header">
+                    <img src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=200&h=200&fit=crop&crop=face" alt="Dr. Janice Ribaudo" class="provider-profile-photo">
+                    <div class="provider-profile-name">Janice Ribaudo, MD</div>
+                    
+                    <div class="provider-profile-actions">
+                        <a href="#" class="profile-btn">
+                            <span>📧</span>
+                            Send message
+                        </a>
+                        <a href="#" class="profile-btn secondary">
+                            <span>📅</span>
+                            Schedule appointment
+                        </a>
+                    </div>
+                </div>
+
+                <div class="provider-toggle">
+                    <a href="#" class="toggle-link">👁️ Hide provider</a>
+                    <div style="margin-top: 0.5rem; font-size: 0.8rem; color: #888;">
+                        ℹ️ Hidden providers will be filtered out of your care team. They may still be available for scheduling and messaging.
+                    </div>
+                </div>
+
+                <div class="zero-state">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='40' fill='%23ddd'/%3E%3Ctext x='50' y='55' text-anchor='middle' font-size='20' fill='%23999'%3E👨‍⚕️%3C/text%3E%3C/svg%3E" alt="Provider info placeholder">
+                    <div>Additional provider information not available at this time.</div>
+                </div>
+            </div>
+        </div>
+
+        <div style="margin-top: 2rem; text-align: center;">
+            <a href="#" class="nav-btn" style="color: #1e4a6b; background: #f0f0f0;">Back to the home page</a>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-links">
+            <a href="#">Interoperability Guide</a>
+            <a href="#">Terms and Conditions</a>
+            <a href="#">Contact Us</a>
+            <a href="#">Default Theme</a>
+            <a href="#">High Contrast Theme</a>
+        </div>
+        <div>
+            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 40'%3E%3Ctext x='100' y='25' text-anchor='middle' font-size='14' fill='%23ccc'%3EMyChart® licensed from Epic Systems Corporation%3C/text%3E%3C/svg%3E" alt="MyChart by Epic" style="height: 30px;">
+        </div>
+        <div style="margin-top: 1rem; font-size: 0.9rem; color: #ccc;">
+            © 1999 - 2025
+        </div>
+    </footer>
+
+    <script>
+        // Provider selection functionality
+        document.querySelectorAll('.provider-item').forEach(item => {
+            item.addEventListener('click', function() {
+                // Remove selected class from all items
+                document.querySelectorAll('.provider-item').forEach(i => i.classList.remove('selected'));
+                
+                // Add selected class to clicked item
+                this.classList.add('selected');
+                
+                // Update the provider details panel
+                const providerIndex = this.dataset.provider;
+                updateProviderDetails(providerIndex);
+            });
+        });
+
+        function updateProviderDetails(index) {
+            const providers = [
+                {
+                    name: "Janice Ribaudo, MD",
+                    photo: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=200&h=200&fit=crop&crop=face"
+                },
+                {
+                    name: "Aloyisus Tsang, MD", 
+                    photo: "https://images.unsplash.com/photo-1582750433449-648ed127bb54?w=200&h=200&fit=crop&crop=face"
+                },
+                {
+                    name: "Eno Elizabeth Inikori",
+                    photo: "https://images.unsplash.com/photo-1594824804732-ca8db7534275?w=200&h=200&fit=crop&crop=face"
+                },
+                {
+                    name: "Jeffrey C Wertheimer, PhD",
+                    photo: "https://images.unsplash.com/photo-1607990281513-2c110a25bd8c?w=200&h=200&fit=crop&crop=face"
+                }
+            ];
+
+            const provider = providers[index];
+            if (provider) {
+                document.querySelector('.provider-profile-photo').src = provider.photo;
+                document.querySelector('.provider-profile-name').textContent = provider.name;
+            }
+        }
+
+        // Show/hide functionality for hidden providers
+        document.getElementById('showHidden').addEventListener('change', function() {
+            console.log('Show hidden providers:', this.checked);
+            // This would typically show/hide providers marked as hidden
+        });
+    </script>
+</body>
+</html>

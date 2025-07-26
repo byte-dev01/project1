@@ -22,7 +22,8 @@ import {
   Search,
   X,
   ChevronRight,
-  ChevronLeft
+  ChevronLeft,
+  FileHeart
 } from 'lucide-react';
 
 const Menu = ({ isOpen, onClose }) => {
@@ -87,9 +88,9 @@ const Menu = ({ isOpen, onClose }) => {
       items: [
         { icon: Stethoscope, label: 'Symptom Checker', href: 'MenuItems/symptom-checker.html', popup: true },
         { icon: Video, label: 'Immediate Care Video Visits', href: 'MenuItems/ImmediateCare.html', popup: true },
-        { icon: Calendar, label: 'Schedule an Appointment', href: '/scheduling', popup: false },
+        { icon: Calendar, label: 'Schedule an Appointment', href: 'MenuItems/schedule', popup: false },
         { icon: Monitor, label: 'E-Visit', href: '/evisit', popup: true },
-        { icon: Users, label: 'View Care Team', href: '/care-team', popup: false },
+        { icon: Users, label: 'View Care Team', href: 'MenuItems/CareTeam.html', popup: false },
         { icon: MapPin, label: 'Find Immediate Care', href: 'MenuItems/FindLocation.html', popup: true }
       ]
     },
@@ -97,29 +98,31 @@ const Menu = ({ isOpen, onClose }) => {
       id: 'communication',
       title: 'Communication',
       items: [
-        { icon: Mail, label: 'My Messages', href: '/chat', popup: true },
+        { icon: Mail, label: 'My Messages', href: 'MenuItems/ProviderMessage', popup: true },
         { icon: HelpCircle, label: 'Ask a Question', href: '/ask-question', popup: true },
-        { icon: FileText, label: 'Letters', href: '/letters', popup: true },
-        { icon: Phone, label: 'Clinic Calls', href: '/clinic-calls', popup: true }
+        { icon: FileText, label: 'Letters', href: 'MenuItems/Letter.html', popup: true },
+        { icon: Phone, label: 'Clinic Calls', href: 'MenuItems/ContactPage.html', popup: true }
       ]
     },
     {
       id: 'myRecord',
       title: 'My Record',
       items: [
-        { icon: Virus, label: 'COVID-19', href: '/covid-status', popup: true },
+        { icon: Virus, label: 'COVID-19', href: 'MenuItems/Covid.html', popup: true },
         { icon: CheckSquare, label: 'To Do', href: '/todo', popup: true },
-        { icon: ClipboardList, label: 'Visits/Clinical Notes', href: '/visits', popup: true },
-        { icon: FlaskConical, label: 'Test Results', href: '/test-results', popup: true },
-        { icon: Pill, label: 'Medications', href: '/medications', popup: true },
-        { icon: BarChart3, label: 'Health Summary', href: '/health-summary', popup: true }
+        { icon: ClipboardList, label: 'Visits/Clinical Notes', href: 'MenuItems/Documents.html', popup: true },
+        { icon: FlaskConical, label: 'Test Results', href: 'MenuItems/TestResults.html', popup: true },
+        { icon: Pill, label: 'Medications', href: 'MenuItems/Medications', popup: true },
+        { icon: BarChart3, label: 'Health Summary', href: 'MenuItems/HealthHistory.html', popup: true }
       ]
     },
     {
       id: 'billing',
       title: 'Billing',
       items: [
-        { icon: DollarSign, label: 'Billing Summary', href: '/billing', popup: false },
+        { icon: DollarSign, label: 'Billing Summary', href: 'MenuItems/BillingSummary.html', popup: false },
+        { icon: FileHeart, label: 'Insurance', href: 'MenuItems/InsurancePage.html', popup: false },
+
         { icon: TrendingUp, label: 'Estimates', href: '/estimates', popup: true }
       ]
     }

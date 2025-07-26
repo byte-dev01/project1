@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My CS-Link - Document Center</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        /* Header Styles */
+        .header {
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: relative;
+            z-index: 1000;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            height: 70px;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .menu-button {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        .menu-button:hover {
+            background-color: #f0f0f0;
+        }
+
+        .menu-icon {
+            width: 20px;
+            height: 20px;
+            background-color: #0066cc;
+            mask: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>') center/contain no-repeat;
+            -webkit-mask: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>') center/contain no-repeat;
+        }
+
+        .home-button {
+            width: 24px;
+            height: 24px;
+            background-color: #666;
+            mask: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>') center/contain no-repeat;
+            -webkit-mask: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>') center/contain no-repeat;
+        }
+
+        .logo {
+            font-size: 18px;
+            font-weight: 600;
+            color: #0066cc;
+            text-decoration: none;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .language-button, .user-button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        .language-button:hover, .user-button:hover {
+            background-color: #f0f0f0;
+        }
+
+        .globe-icon {
+            width: 20px;
+            height: 20px;
+            background-color: #666;
+            mask: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.94-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>') center/contain no-repeat;
+            -webkit-mask: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.94-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>') center/contain no-repeat;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .user-menu:hover {
+            background-color: #f0f0f0;
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            background-color: #0066cc;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        .user-name {
+            font-weight: 500;
+        }
+
+        /* Main Content */
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .page-title {
+            font-size: 32px;
+            font-weight: 300;
+            margin-bottom: 16px;
+            color: #1a1a1a;
+        }
+
+        .pretext {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 32px;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 24px;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.3s ease;
+            border: 1px solid #e0e0e0;
+            display: block;
+            cursor: pointer;
+        }
+
+        .card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+            border-color: #0066cc;
+        }
+
+        .card h3 {
+            font-size: 20px;
+            font-weight: 600;
+            color: #0066cc;
+            margin-bottom: 12px;
+        }
+
+        .card p {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* Footer */
+        .footer {
+            background-color: #333;
+            color: #fff;
+            padding: 40px 20px;
+            margin-top: 80px;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 14px;
+            transition: opacity 0.2s;
+        }
+
+        .footer-links a:hover {
+            opacity: 0.8;
+        }
+
+        .copyright {
+            font-size: 12px;
+            color: #999;
+            margin-top: 20px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header-content {
+                padding: 0 12px;
+            }
+
+            .page-title {
+                font-size: 24px;
+            }
+
+            .footer-links {
+                flex-direction: column;
+                gap: 12px;
+            }
+        }
+
+        /* Loading spinner */
+        .loading {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 9999;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #0066cc;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="nav-left">
+                <button class="menu-button">
+                    <span class="menu-icon"></span>
+                    <span>Menu</span>
+                </button>
+                <a href="#" class="home-button" title="Home"></a>
+                <a href="#" class="logo">My CS-Link</a>
+            </div>
+            <div class="nav-right">
+                <button class="language-button" title="Select a language">
+                    <span class="globe-icon"></span>
+                </button>
+                <div class="user-menu">
+                    <div class="user-avatar">R</div>
+                    <span class="user-name">RACHEL</span>
+                </div>
+                <button class="logout-button">Log out</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-container">
+        <h1 class="page-title">Document Center</h1>
+        <p class="pretext">Please select the option that most closely matches the information you would like.</p>
+        
+        <div class="cards-grid">
+            <a href="#" class="card">
+                <h3>View, Download, or Send Visit Records</h3>
+                <p>Download and send visit summaries that would be helpful for a new doctor.</p>
+            </a>
+            
+            <a href="#" class="card">
+                <h3>Requested Records</h3>
+                <p>Download records you specifically requested from the Health Information Department.</p>
+            </a>
+            
+            <a href="#" class="card">
+                <h3>My Documents</h3>
+                <p>Sign, view, download, and print documents you have on file.</p>
+            </a>
+            
+            <a href="#" class="card">
+                <h3>Who's Accessed My Record?</h3>
+                <p>View actions of people who have accessed your record.</p>
+            </a>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="#">Interoperability Guide</a>
+                <a href="#">Terms and Conditions</a>
+                <a href="#">Contact Us</a>
+                <a href="#">Default Theme</a>
+                <a href="#">High Contrast Theme</a>
+            </div>
+            <div class="copyright">
+                <p>MyChart® licensed from Epic Systems Corporation</p>
+                <p>© 1999 - 2025</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Loading Spinner -->
+    <div class="loading" id="loading">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <script>
+        // Add click handlers to show loading spinner
+        document.querySelectorAll('.card').forEach(card => {
+            card.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.getElementById('loading').style.display = 'block';
+                // Simulate navigation delay
+                setTimeout(() => {
+                    document.getElementById('loading').style.display = 'none';
+                    alert('This is a visual replica. Navigation functionality is not implemented.');
+                }, 1000);
+            });
+        });
+
+        // Menu button handler
+        document.querySelector('.menu-button').addEventListener('click', function() {
+            alert('Menu functionality would open here');
+        });
+
+        // Language button handler
+        document.querySelector('.language-button').addEventListener('click', function() {
+            alert('Language selection would appear here');
+        });
+
+        // User menu handler
+        document.querySelector('.user-menu').addEventListener('click', function() {
+            alert('User menu dropdown would appear here');
+        });
+
+        // Logout handler
+        document.querySelector('.logout-button').addEventListener('click', function() {
+            if (confirm('Are you sure you want to log out?')) {
+                alert('Logout functionality would execute here');
+            }
+        });
+    </script>
+</body>
+</html>

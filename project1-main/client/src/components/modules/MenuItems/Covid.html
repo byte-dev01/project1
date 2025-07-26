@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My CS-Link - COVID-19</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.5;
+        }
+
+        /* Header Styles */
+        .header {
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .menu-btn {
+            background: #1976d2;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .home-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .language-btn, .account-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .user-dropdown {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem 1rem;
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            background: #1976d2;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .logout-btn {
+            background: none;
+            border: none;
+            color: #1976d2;
+            cursor: pointer;
+            padding: 0.5rem 1rem;
+        }
+
+        /* Main Container */
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            gap: 2rem;
+            padding: 2rem;
+        }
+
+        .main-content {
+            flex: 1;
+            background: white;
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .page-title {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            color: #333;
+        }
+
+        /* Patient Info Section */
+        .patient-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .patient-details {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .large-avatar {
+            width: 80px;
+            height: 80px;
+            background: #1976d2;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: bold;
+        }
+
+        .patient-name {
+            font-size: 1.5rem;
+            color: #1976d2;
+            margin-bottom: 0.25rem;
+        }
+
+        .patient-dob {
+            color: #666;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn-primary {
+            background: #1976d2;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .btn-primary:hover {
+            background: #1565c0;
+        }
+
+        /* Status Sections */
+        .status-section {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .status-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            padding: 1rem;
+            background: white;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .status-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .status-icon {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .status-icon.complete {
+            background: #4caf50;
+            border-radius: 50%;
+            color: white;
+        }
+
+        .status-icon.neutral {
+            background: #e0e0e0;
+            border-radius: 8px;
+            color: #666;
+        }
+
+        .status-text h3 {
+            color: #4caf50;
+            margin-bottom: 0.25rem;
+        }
+
+        .status-text p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .chevron {
+            width: 24px;
+            height: 24px;
+            color: #666;
+        }
+
+        /* Vaccine Details */
+        .vaccine-details {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+        }
+
+        .vaccine-dose {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .vaccine-dose:last-of-type {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .vaccine-dose h4 {
+            color: #333;
+            margin-bottom: 1rem;
+        }
+
+        .vaccine-detail-row {
+            display: flex;
+            margin-bottom: 0.5rem;
+        }
+
+        .vaccine-label {
+            font-weight: 600;
+            width: 120px;
+            color: #666;
+        }
+
+        .vaccine-value {
+            flex: 1;
+            color: #333;
+        }
+
+        /* Update Banner */
+        .update-banner {
+            background: #e3f2fd;
+            border: 1px solid #1976d2;
+            border-radius: 8px;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1rem;
+        }
+
+        .banner-content {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .banner-icon {
+            width: 24px;
+            height: 24px;
+            color: #1976d2;
+        }
+
+        .banner-text h4 {
+            color: #1976d2;
+            margin-bottom: 0.25rem;
+        }
+
+        .banner-text p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .banner-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-secondary {
+            background: none;
+            border: 1px solid #1976d2;
+            color: #1976d2;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 300px;
+        }
+
+        .sidebar-section {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .sidebar-section h2 {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: #333;
+        }
+
+        .resource-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .resource-link {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #1976d2;
+            text-decoration: none;
+            padding: 0.5rem;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+
+        .resource-link:hover {
+            background: #f5f5f5;
+        }
+
+        /* Footer */
+        .footer {
+            background: #333;
+            color: white;
+            padding: 2rem;
+            margin-top: 3rem;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .footer-links a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .footer-links a:hover {
+            text-decoration: underline;
+        }
+
+        /* Icons */
+        .icon {
+            width: 24px;
+            height: 24px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+            }
+
+            .patient-info {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .action-buttons {
+                width: 100%;
+                margin-top: 1rem;
+            }
+
+            .btn-primary {
+                flex: 1;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="header-nav">
+            <div class="nav-left">
+                <button class="menu-btn">
+                    <svg class="icon" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                    </svg>
+                    Menu
+                </button>
+                <button class="home-btn">
+                    <svg class="icon" viewBox="0 0 24 24" fill="#1976d2">
+                        <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="nav-right">
+                <button class="language-btn">
+                    <svg class="icon" viewBox="0 0 24 24" fill="#666">
+                        <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zm6.93 6h-2.95c-.32-1.25-.78-2.45-1.38-3.56 1.84.63 3.37 1.91 4.33 3.56zM12 4.04c.83 1.2 1.48 2.53 1.91 3.96h-3.82c.43-1.43 1.08-2.76 1.91-3.96zM4.26 14C4.1 13.36 4 12.69 4 12s.1-1.36.26-2h3.38c-.08.66-.14 1.32-.14 2 0 .68.06 1.34.14 2H4.26zm.82 2h2.95c.32 1.25.78 2.45 1.38 3.56-1.84-.63-3.37-1.9-4.33-3.56zm2.95-8H5.08c.96-1.66 2.49-2.93 4.33-3.56C8.81 5.55 8.35 6.75 8.03 8zM12 19.96c-.83-1.2-1.48-2.53-1.91-3.96h3.82c-.43 1.43-1.08 2.76-1.91 3.96zM14.34 16H9.66c-.09-.66-.16-1.32-.16-2 0-.68.07-1.35.16-2h4.68c.09.65.16 1.32.16 2 0 .68-.07 1.34-.16 2zm.25 3.56c.6-1.11 1.06-2.31 1.38-3.56h2.95c-.96 1.65-2.49 2.93-4.33 3.56zM16.36 14c.08-.66.14-1.32.14-2 0-.68-.06-1.34-.14-2h3.38c.16.64.26 1.31.26 2s-.1 1.36-.26 2h-3.38z"/>
+                    </svg>
+                </button>
+                <button class="user-dropdown">
+                    <div class="user-avatar">R</div>
+                    <span>RACHEL</span>
+                    <svg class="icon" viewBox="0 0 24 24" fill="#666">
+                        <path d="M7 10l5 5 5-5z"/>
+                    </svg>
+                </button>
+                <button class="logout-btn">Log out</button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Main Content -->
+        <main class="main-content">
+            <h1 class="page-title">COVID-19</h1>
+
+            <!-- Patient Info -->
+            <div class="patient-info">
+                <div class="patient-details">
+                    <div class="large-avatar">H</div>
+                    <div>
+                        <h2 class="patient-name">Hanmingmei Li</h2>
+                        <p class="patient-dob">Date of birth: Jan 25, 1999</p>
+                    </div>
+                </div>
+                <div class="action-buttons">
+                    <button class="btn-primary">
+                        <svg class="icon" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M3 11h8V3H3v8zm2-6h4v4H5V5zm8-2v8h8V3h-8zm6 6h-4V5h4v4zM3 21h8v-8H3v8zm2-6h4v4H5v-4zm13-2h3v2h-3v3h-2v-3h-3v-2h3v-3h2v3z"/>
+                        </svg>
+                        QR Codes
+                    </button>
+                    <button class="btn-primary">
+                        <svg class="icon" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
+                        </svg>
+                        Download
+                    </button>
+                </div>
+            </div>
+
+            <!-- Vaccine Status -->
+            <div class="status-section">
+                <div class="status-header">
+                    <div class="status-info">
+                        <div class="status-icon complete">
+                            <svg class="icon" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/>
+                            </svg>
+                        </div>
+                        <div class="status-text">
+                            <h3>2 COVID-19 vaccine doses received</h3>
+                            <p>Most recent dose received on May 15, 2025</p>
+                        </div>
+                    </div>
+                    <svg class="chevron" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
+                    </svg>
+                </div>
+
+                <div class="vaccine-details">
+                    <div class="vaccine-dose">
+                        <h4>Dose 2 administered on May 15, 2025</h4>
+                        <div class="vaccine-detail-row">
+                            <span class="vaccine-label">Name:</span>
+                            <span class="vaccine-value">COVID-19, SEASONAL, MRNA, PFIZER, 12+ YRS (Fall 2023 and later)</span>
+                        </div>
+                        <div class="vaccine-detail-row">
+                            <span class="vaccine-label">Manufacturer:</span>
+                            <span class="vaccine-value">Unknown Manufacturer</span>
+                        </div>
+                        <div class="vaccine-detail-row">
+                            <span class="vaccine-label">Lot #:</span>
+                            <span class="vaccine-value">MD3414</span>
+                        </div>
+                        <div class="vaccine-detail-row">
+                            <span class="vaccine-label">Location:</span>
+                            <span class="vaccine-value">UCLA HEALTH SYSTEM</span>
+                        </div>
+                    </div>
+
+                    <div class="vaccine-dose">
+                        <h4>Dose 1 administered on Dec 4, 2022</h4>
+                        <div class="vaccine-detail-row">
+                            <span class="vaccine-label">Name:</span>
+                            <span class="vaccine-value">COVID-19, bivalent, mRNA, Moderna, LNP-S (until 9/11/2023)</span>
+                        </div>
+                        <div class="vaccine-detail-row">
+                            <span class="vaccine-label">Manufacturer:</span>
+                            <span class="vaccine-value">Moderna US, Inc.</span>
+                        </div>
+                        <div class="vaccine-detail-row">
+                            <span class="vaccine-label">Lot #:</span>
+                            <span class="vaccine-value">051D22A</span>
+                        </div>
+                        <div class="vaccine-detail-row">
+                            <span class="vaccine-label">Location:</span>
+                            <span class="vaccine-value">CVS CORPORATE</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="update-banner">
+                    <div class="banner-content">
+                        <svg class="banner-icon" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+                        </svg>
+                        <div class="banner-text">
+                            <h4>Not seeing your vaccine dose?</h4>
+                            <p>If you received a COVID-19 vaccine and don't see it here, check for updates from vaccination registries.</p>
+                        </div>
+                    </div>
+                    <div class="banner-buttons">
+                        <button class="btn-primary">Update</button>
+                        <button class="btn-secondary">Not now</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Test Results -->
+            <div class="status-section">
+                <div class="status-header">
+                    <div class="status-info">
+                        <div class="status-icon neutral">
+                            <svg class="icon" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M7 2v2h1v14a4 4 0 0 0 8 0V4h1V2H7zm4 2h2v4h-2V4zm0 6h2v8a2 2 0 1 1-4 0v-8h2z"/>
+                            </svg>
+                        </div>
+                        <div class="status-text">
+                            <h3 style="color: #666;">No test results found</h3>
+                        </div>
+                    </div>
+                    <svg class="chevron" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
+                    </svg>
+                </div>
+            </div>
+        </main>
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-section">
+                <h2>Helpful Resources</h2>
+                <div class="resource-links">
+                    <a href="#" class="resource-link">
+                        <svg class="icon" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
+                        </svg>
+                        Testing for COVID-19
+                        <svg class="icon" viewBox="0 0 24 24" fill="currentColor" style="margin-left: auto;">
+                            <path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/>
+                        </svg>
+                    </a>
+                    <a href="#" class="resource-link">
+                        <svg class="icon" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
+                        </svg>
+                        Caring for someone sick at home
+                        <svg class="icon" viewBox="0 0 24 24" fill="currentColor" style="margin-left: auto;">
+                            <path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="#">Interoperability Guide</a>
+                <a href="#">Terms and Conditions</a>
+                <a href="#">Contact Us</a>
+                <a href="#">Default Theme</a>
+                <a href="#">High Contrast Theme</a>
+            </div>
+            <p>MyChart® licensed from Epic Systems Corporation © 1999 - 2025</p>
+        </div>
+    </footer>
+</body>
+</html>

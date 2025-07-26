@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Billing Summary - Patient Portal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .header {
+            background-color: #2c5aa0;
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 2rem;
+        }
+
+        .content-area {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .page-title {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: #2c5aa0;
+        }
+
+        .alert-box {
+            background-color: #fff3cd;
+            border: 1px solid #ffeeba;
+            color: #856404;
+            padding: 1rem;
+            border-radius: 4px;
+            margin-bottom: 2rem;
+        }
+
+        .alert-box strong {
+            color: #d32f2f;
+            font-size: 1.1rem;
+        }
+
+        .account-cards {
+            display: grid;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .account-card {
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            overflow: hidden;
+            background: white;
+            transition: box-shadow 0.3s ease;
+        }
+
+        .account-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .card-header {
+            background-color: #f8f9fa;
+            padding: 1.5rem;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .service-name {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .service-icon {
+            width: 24px;
+            height: 24px;
+            fill: #2c5aa0;
+        }
+
+        .account-info {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .card-body {
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .amount-due-label {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 0.5rem;
+        }
+
+        .amount-due {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #2c5aa0;
+            margin-bottom: 1rem;
+        }
+
+        .pay-button {
+            background-color: #2c5aa0;
+            color: white;
+            border: none;
+            padding: 0.75rem 2rem;
+            font-size: 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-bottom: 1rem;
+        }
+
+        .pay-button:hover {
+            background-color: #1e3d6f;
+        }
+
+        .recent-payment {
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        .card-actions {
+            border-top: 1px solid #e0e0e0;
+            padding: 1rem 1.5rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            background-color: #fafafa;
+        }
+
+        .action-link {
+            color: #2c5aa0;
+            text-decoration: none;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: color 0.3s ease;
+        }
+
+        .action-link:hover {
+            color: #1e3d6f;
+            text-decoration: underline;
+        }
+
+        .sidebar {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            height: fit-content;
+        }
+
+        .sidebar h3 {
+            color: #2c5aa0;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .sidebar p {
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .zero-balance-section {
+            margin-top: 3rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #333;
+        }
+
+        .paperless-notice {
+            background-color: #e8f5e9;
+            border: 1px solid #c8e6c9;
+            padding: 1rem;
+            border-radius: 4px;
+            margin-top: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .paperless-icon {
+            width: 32px;
+            height: 32px;
+            fill: #4caf50;
+        }
+
+        @media (max-width: 768px) {
+            .main-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">Health System Portal</div>
+            <div class="user-info">
+                <span>Welcome, Jane Doe</span>
+                <button style="background: white; color: #2c5aa0; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer;">Log Out</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <main class="content-area">
+            <h1 class="page-title">Billing Summary</h1>
+            
+            <div class="alert-box">
+                The amount listed on this page is your <strong>current account balance as of today.</strong> 
+                This amount may differ from your statement balance due on your scheduled statement date. 
+                To view your statement, click the Statement Detail below.
+            </div>
+
+            <div class="account-cards">
+                <!-- Physician Services Account -->
+                <div class="account-card">
+                    <div class="card-header">
+                        <div class="service-name">
+                            <svg class="service-icon" viewBox="0 0 24 24">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/>
+                            </svg>
+                            Health System - Physician Services
+                        </div>
+                        <div class="account-info">
+                            <p>Guarantor #1234567890 (Jane Doe)</p>
+                            <p>Patients included: You</p>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="amount-due-label">Amount Due</div>
+                        <div class="amount-due">$125.50</div>
+                        <button class="pay-button">Pay Now</button>
+                        <div class="recent-payment">Last paid: $50.00 on 7/15/2025</div>
+                    </div>
+                    <div class="card-actions">
+                        <a href="#" class="action-link">View balance details</a>
+                        <a href="#" class="action-link">View last statement (7/20/2025)</a>
+                        <a href="#" class="action-link">Contact customer service</a>
+                        <a href="#" class="action-link">Manage payment methods</a>
+                    </div>
+                </div>
+
+                <!-- Hospital Services Account -->
+                <div class="account-card">
+                    <div class="card-header">
+                        <div class="service-name">
+                            <svg class="service-icon" viewBox="0 0 24 24">
+                                <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5zm6 14h-4v4h-4v-4H6v-4h4V8h4v4h4v4z"/>
+                            </svg>
+                            Health System - Hospital Services
+                        </div>
+                        <div class="account-info">
+                            <p>Guarantor #1234567890 (Jane Doe)</p>
+                            <p>Patients included: You</p>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="amount-due-label">Amount Due</div>
+                        <div class="amount-due">$250.00</div>
+                        <button class="pay-button">Pay Now</button>
+                        <div class="recent-payment">Last paid: $100.00 on 7/10/2025</div>
+                    </div>
+                    <div class="card-actions">
+                        <a href="#" class="action-link">View balance details</a>
+                        <a href="#" class="action-link">View last statement (7/18/2025)</a>
+                        <a href="#" class="action-link">Contact customer service</a>
+                        <a href="#" class="action-link">Manage payment methods</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="zero-balance-section">
+                <h2 class="section-title">Zero-Dollar Balance Accounts</h2>
+                
+                <div class="account-card">
+                    <div class="card-header">
+                        <div class="service-name">
+                            <svg class="service-icon" viewBox="0 0 24 24">
+                                <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5zm6 14h-4v4h-4v-4H6v-4h4V8h4v4h4v4z"/>
+                            </svg>
+                            Health System - Previous Account
+                        </div>
+                        <div class="account-info">
+                            <p>Guarantor #9876543210 (Jane Doe)</p>
+                            <p>Patients included: You</p>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="amount-due-label">Amount Due</div>
+                        <div class="amount-due" style="color: #4caf50;">$0.00</div>
+                    </div>
+                    <div class="card-actions">
+                        <a href="#" class="action-link">View balance details</a>
+                        <a href="#" class="action-link">Manage payment methods</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="paperless-notice">
+                <svg class="paperless-icon" viewBox="0 0 24 24">
+                    <path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zM6 20V4h7v5h5v11H6zm10-7l-4 4-4-4 1.41-1.41L11 13.17V9h2v4.17l1.59-1.58L16 13z"/>
+                </svg>
+                <div>
+                    <strong>You are opted in to paperless billing.</strong><br>
+                    Guarantor accounts with a leaf icon are paperless. <a href="#">Paperless Preferences</a>
+                </div>
+            </div>
+        </main>
+
+        <aside class="sidebar">
+            <h3>What is a guarantor?</h3>
+            <p>The guarantor is the person responsible for paying the balance of an account.</p>
+
+            <h3>Payment Plan Options</h3>
+            <p>If you are unable to pay your whole bill at once, you may be able to set up a monthly payment plan. Please contact Customer Service to discuss your options.</p>
+
+            <h3>Customer Service</h3>
+            <p>
+                Hospital Services: (555) 123-4567<br>
+                Physician Services: (555) 234-5678
+            </p>
+
+            <h3>Accepted Insurance</h3>
+            <p>We work with many insurance providers including Medicare, PPO, and various HMO products. Call us if you have questions about whether your insurance is accepted.</p>
+        </aside>
+    </div>
+</body>
+</html>

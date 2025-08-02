@@ -2,6 +2,7 @@ const User = require("./app/models/user.model");
 const socketManager = require("./server-socket");
 const jwt = require("jsonwebtoken");
 const config = require("./app/config/auth.config");
+require('dotenv').config();
 
 // Populate current user from JWT token or session
 function populateCurrentUser(req, res, next) {

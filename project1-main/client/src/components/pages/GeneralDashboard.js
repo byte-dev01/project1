@@ -1,153 +1,54 @@
-// pages/Dashboard.js - Main application UI after login
-import React, { Component } from "react";
+// pages/GeneralDashboard.js - Fixed to use AuthContext
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
 import Menu from "../modules/Menu";
 import CalendarFeedLink from "./CalendarFeedLink";
 import "./GeneralDashboard.css";
-import Feed from "./Feed.js";
-import NotFound from "../modules/NotFound.js";
-import Profile from "./Profile.js";
-import FaxDashboard from "./FaxDashboard.js";
-import Upload from "./Upload.js";
-import Chatbook from "./Chatbook.js";
-import MedicalAudioTranscriber from "./Recorder3.js";
-import Calendar from "./Calendar.js";
-import AlertDashboard from "./MedDashboard1.js";
 
-class Dashboard extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isMenuOpen: false
-    };
-  }
+const Dashboard = () => {
+  const { user, logout, hasRole } = useAuth();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  toggleMenu = () => {
-    this.setState({ isMenuOpen: !this.state.isMenuOpen });
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
   };
 
-  closeMenu = () => {
-    this.setState({ isMenuOpen: false });
+  const closeMenu = () => {
+    setIsMenuOpen(false);
   };
 
-  // Helper to check if user has a specific role
-  hasRole = (role) => {
-    return this.props.userRoles.some(userRole => 
-      userRole.toLowerCase().includes(role.toLowerCase())
-    );
-  };
-
-  getRoleDisplay = () => {
-    if (this.hasRole('admin')) return 'Administrator';
-    if (this.hasRole('doctor')) return 'Doctor';
-    if (this.hasRole('moderator')) return 'Moderator';
-    if (this.hasRole('staff')) return 'Staff';
+  const getRoleDisplay = () => {
+    if (hasRole('admin')) return 'Administrator';
+    if (hasRole('doctor')) return 'Doctor';
+    if (hasRole('moderator')) return 'Moderator';
+    if (hasRole('staff')) return 'Staff';
     return 'Patient';
   };
 
-  getRoleColor = () => {
-    if (this.hasRole('admin')) return '#dc3545';
-    if (this.hasRole('doctor')) return '#28a745';
-    if (this.hasRole('moderator')) return '#ffc107';
-    if (this.hasRole('staff')) return '#17a2b8';
+  const getRoleColor = () => {
+    if (hasRole('admin')) return '#dc3545';
+    if (hasRole('doctor')) return '#28a745';
+    if (hasRole('moderator')) return '#ffc107';
+    if (hasRole('staff')) return '#17a2b8';
     return '#6c757d';
   };
 
-  render() {
-    const { userId, userName, clinicName, onLogout } = this.props;
-
-    return (
-      <div className="dashboard-container">
-        {/* Menu Component */}
-        <Menu isOpen={this.state.isMenuOpen} onClose={this.closeMenu} />
-        
-        {/* Header */}
-        <header className="header">
-          <div className="header-content">
-            <div className="nav-left">
-              <button className="menu-button" onClick={this.toggleMenu}>
-                <div>☰</div>
-                <div>Menu</div>
-              </button>
-              <a href="/" className="logo">
-                HealthBridge
-                {clinicName && (
-                  <span className="clinic-name">
-                    - {clinicName}
-                  </span>
-                )}
-              </a>
-            </div>
-            <div className="header-right">
-              <button className="icon-button" title="Select language">🌐</button>
-              <div className="user-menu">
-                <span className="user-name">{userName}</span>
-                <span 
-                  className="role-badge"
-                  style={{ backgroundColor: this.getRoleColor() }}
-                >
-                  {this.getRoleDisplay()}
-                </span>
-                <button
-                  onClick={onLogout}
-                  className="logout-button"
-                >
-                  🚪 Logout
-                </button>
-              </div>
-            </div>
-          </div>
-        </header>
-
-        {/* Main Content */}
-        <div className="dashboard-content">
-          <div className="main-container">
-            <div className="main-content">
-              {/* Welcome Section */}
-              <div className="welcome-section">
-                <h1>Welcome, {userName}!</h1>
-                <p className="clinic-info">
-                  {clinicName} • {this.getRoleDisplay()}
-                </p>
-                
-                {/* Role-based Shortcuts */}
-                <div className="shortcuts">
-                  {this.renderShortcuts()}
-                </div>
-              </div>
-
-              {/* Feed Items */}
-              <div className="feed-container">
-                {this.renderFeedItems()}
-              </div>
-            </div>
-
-            {/* Sidebar */}
-            <aside className="sidebar">
-              {this.renderSidebar()}
-            </aside>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  renderShortcuts() {
-    const { userId } = this.props;
+  const renderShortcuts = () => {
     const shortcuts = [];
 
-    // All users can see messages
+    // All users can see messages - NO userId in URL
     shortcuts.push(
-      <Link to={`/chat/${userId}`} key="chat" className="shortcut-button">
+      <Link to="/chat" key="chat" className="shortcut-button">
         <div className="shortcut-icon">✉️</div>
         <span>Messages</span>
       </Link>
     );
 
     // Staff and above can use OCR
-    if (this.hasRole('staff') || this.hasRole('doctor') || this.hasRole('moderator') || this.hasRole('admin')) {
+    if (hasRole('staff') || hasRole('doctor') || hasRole('moderator') || hasRole('admin')) {
       shortcuts.push(
-        <Link to={`/upload/${userId}`} key="upload" className="shortcut-button">
+        <Link to={`/upload`} key="upload" className="shortcut-button">
           <div className="shortcut-icon">🔍</div>
           <span>OCR Upload</span>
         </Link>
@@ -155,9 +56,9 @@ class Dashboard extends Component {
     }
 
     // Doctors can use clinical notes
-    if (this.hasRole('doctor') || this.hasRole('admin')|| this.hasRole('moderator')) {
+    if (hasRole('doctor') || hasRole('admin') || hasRole('moderator')) {
       shortcuts.push(
-        <Link to={`/recorder/${userId}`} key="recorder" className="shortcut-button">
+        <Link to={`/recorder`} key="recorder" className="shortcut-button">
           <div className="shortcut-icon">🎤</div>
           <span>Clinical Notes</span>
         </Link>
@@ -169,15 +70,13 @@ class Dashboard extends Component {
           <span>Fax Dashboard</span>
         </Link>
       );
+      
       shortcuts.push(
         <Link to="/medical-management" key="med-dash" className="shortcut-button">
           <div className="shortcut-icon">👨‍👩‍👧‍👦</div>
           <span>Medical Management</span>
         </Link>
       );
-
-
-
     }
 
     // Common shortcuts for all
@@ -189,7 +88,7 @@ class Dashboard extends Component {
     );
 
     // Patient-specific shortcuts
-    if (!this.hasRole('staff') && !this.hasRole('doctor') && !this.hasRole('moderator')) {
+    if (!hasRole('staff') && !hasRole('doctor') && !hasRole('moderator')) {
       shortcuts.push(
         <a href="#" key="referrals" className="shortcut-button">
           <div className="shortcut-icon">🔄</div>
@@ -206,20 +105,19 @@ class Dashboard extends Component {
     );
 
     return shortcuts;
-  }
+  };
 
-  renderFeedItems() {
-    const { clinicName } = this.props;
+  const renderFeedItems = () => {
     const feedItems = [];
 
     // Clinic-specific notification
-    if (clinicName) {
+    if (user?.clinicName) {
       feedItems.push(
         <div className="feed-item clinic-notification" key="clinic">
           <div className="feed-content">
             <div className="feed-icon">🏥</div>
             <div className="feed-header">
-              <div className="feed-title">{clinicName} Notice</div>
+              <div className="feed-title">{user.clinicName} Notice</div>
               <div className="feed-description">
                 Welcome to HealthBridge secure medical system
               </div>
@@ -230,7 +128,7 @@ class Dashboard extends Component {
     }
 
     // Role-specific feed items
-    if (this.hasRole('doctor')) {
+    if (hasRole('doctor')) {
       feedItems.push(
         <div className="feed-item" key="pending-reviews">
           <div className="feed-content">
@@ -285,7 +183,7 @@ class Dashboard extends Component {
           <div className="feed-header">
             <div className="feed-title">Amount Due</div>
             <div className="feed-description">
-              You owe $00.00 • {clinicName || "HealthBridge"} • Last paid: $0.00 on 06/01/2025
+              You owe $00.00 • {user?.clinicName || "HealthBridge"} • Last paid: $0.00 on 06/01/2025
             </div>
           </div>
         </div>
@@ -297,15 +195,13 @@ class Dashboard extends Component {
     );
 
     return feedItems;
-  }
+  };
 
-  renderSidebar() {
-    const { clinicName } = this.props;
-
+  const renderSidebar = () => {
     return (
       <>
         <h2 className="care-team-header">
-          {clinicName ? `${clinicName} Care Team` : "Care Team"}
+          {user?.clinicName ? `${user.clinicName} Care Team` : "Care Team"}
         </h2>
         
         <div className="provider-item">
@@ -329,7 +225,7 @@ class Dashboard extends Component {
           </div>
         </div>
 
-        {this.hasRole('doctor') && (
+        {hasRole('doctor') && (
           <div className="doctor-stats">
             <h3>Today's Schedule</h3>
             <div className="stat-item">
@@ -346,7 +242,92 @@ class Dashboard extends Component {
         <a href="#" className="link-all">See all providers</a>
       </>
     );
+  };
+
+  // If user is not loaded yet, show loading
+  if (!user) {
+    return (
+      <div className="loading-container">
+        <div className="spinner"></div>
+        <p>Loading...</p>
+      </div>
+    );
   }
-}
+
+  return (
+    <div className="dashboard-container">
+      {/* Menu Component */}
+      <Menu isOpen={isMenuOpen} onClose={closeMenu} />
+      
+      {/* Header */}
+      <header className="header">
+        <div className="header-content">
+          <div className="nav-left">
+            <button className="menu-button" onClick={toggleMenu}>
+              <div>☰</div>
+              <div>Menu</div>
+            </button>
+            <a href="/" className="logo">
+              HealthBridge
+              {user?.clinicName && (
+                <span className="clinic-name">
+                  - {user.clinicName}
+                </span>
+              )}
+            </a>
+          </div>
+          <div className="header-right">
+            <button className="icon-button" title="Select language">🌐</button>
+            <div className="user-menu">
+              <span className="user-name">{user?.name || user?.username || 'User'}</span>
+              <span 
+                className="role-badge"
+                style={{ backgroundColor: getRoleColor() }}
+              >
+                {getRoleDisplay()}
+              </span>
+              <button
+                onClick={logout}
+                className="logout-button"
+              >
+                🚪 Logout
+              </button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {/* Main Content */}
+      <div className="dashboard-content">
+        <div className="main-container">
+          <div className="main-content">
+            {/* Welcome Section */}
+            <div className="welcome-section">
+              <h1>Welcome, {user?.name || user?.username || 'User'}!</h1>
+              <p className="clinic-info">
+                {user?.clinicName || 'HealthBridge'} • {getRoleDisplay()}
+              </p>
+              
+              {/* Role-based Shortcuts */}
+              <div className="shortcuts">
+                {renderShortcuts()}
+              </div>
+            </div>
+
+            {/* Feed Items */}
+            <div className="feed-container">
+              {renderFeedItems()}
+            </div>
+          </div>
+
+          {/* Sidebar */}
+          <aside className="sidebar">
+            {renderSidebar()}
+          </aside>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 export default Dashboard;

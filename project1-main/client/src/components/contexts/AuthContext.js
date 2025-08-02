@@ -123,7 +123,7 @@ export const AuthProvider = ({ children }) => {
             error: null
           });
           
-          //await post("/api/initsocket", { socketid: socket.id });
+          await post("/api/initsocket", { socketid: socket.id });
         } else {
           setState(prev => ({ ...prev, isLoading: false }));
         }

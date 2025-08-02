@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+require('dotenv').config();
 
 const mongoConnectionURL =
   process.env.MONGO_SRV;

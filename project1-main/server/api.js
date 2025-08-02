@@ -9,6 +9,7 @@
 */
 
 const express = require("express");
+require('dotenv').config();
 
 // import models so we can interact with the database
 const Story = require("./models/story");

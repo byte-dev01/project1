@@ -2,6 +2,7 @@
 // Run this script to find where the connection string is coming from
 
 const mongoose = require("mongoose");
+require('dotenv').config();
 
 // 1. Check environment variables
 console.log("=== CHECKING ENVIRONMENT VARIABLES ===");

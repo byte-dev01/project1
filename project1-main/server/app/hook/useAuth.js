@@ -48,12 +48,19 @@ axios.interceptors.response.use(
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [authLoading, setAuthLoading] = useState(false); // ✅ Added authLoading
+  const [authError, setAuthError] = useState(null); // ✅ Added authError
   const [organization, setOrganization] = useState(null);
   const navigate = useNavigate();
   
   useEffect(() => {
     checkAuth();
   }, []);
+  
+  // ✅ Added clearError function
+  const clearError = () => {
+    setAuthError(null);
+  };
   
   const checkAuth = async () => {
     try {
@@ -67,22 +74,26 @@ export const AuthProvider = ({ children }) => {
       setUser(response.data.user);
       setOrganization(response.data.organization);
     } catch (error) {
+      console.error('Auth check failed:', error);
       localStorage.removeItem('accessToken');
       localStorage.removeItem('refreshToken');
+      setAuthError('Session expired. Please log in again.');
     } finally {
       setLoading(false);
     }
   };
   
   const login = async (credentials) => {
-    try {
-        // 添加诊所选择
-        const clinicSlug = localStorage.getItem('selectedClinic');
+    setAuthError(null); // ✅ Clear previous errors
     
-        const response = await axios.post('/api/auth/signin', {
-      ...credentials,
-      clinicSlug  // 发送诊所信息
-    });
+    try {
+      // 添加诊所选择
+      const clinicSlug = localStorage.getItem('selectedClinic');
+  
+      const response = await axios.post('/api/auth/signin', {
+        ...credentials,
+        clinicSlug  // 发送诊所信息
+      });
 
       const { user, accessToken, refreshToken, requires2FA, tempToken } = response.data;
       
@@ -107,11 +118,19 @@ export const AuthProvider = ({ children }) => {
       navigate(redirectPath);
       return { success: true };
     } catch (error) {
-      throw error.response?.data || error;
+      console.error('Login error:', error);
+      const errorMessage = error.response?.data?.message || error.message || 'Login failed';
+      setAuthError(errorMessage); // ✅ Set error state
+      return { success: false, error: errorMessage };
+    } finally {
+      setAuthLoading(false); // ✅ Clear loading state
     }
   };
   
   const verify2FA = async (tempToken, code) => {
+    setAuthLoading(true);
+    setAuthError(null);
+    
     try {
       const response = await axios.post('/api/auth/verify-2fa', { tempToken, code });
       const { user, accessToken, refreshToken } = response.data;
@@ -132,11 +151,18 @@ export const AuthProvider = ({ children }) => {
       navigate(redirectPath);
       return { success: true };
     } catch (error) {
-      throw error.response?.data || error;
+      const errorMessage = error.response?.data?.message || error.message || '2FA verification failed';
+      setAuthError(errorMessage);
+      return { success: false, error: errorMessage };
+    } finally {
+      setAuthLoading(false);
     }
   };
   
   const logout = async () => {
+    setAuthLoading(true);
+    setAuthError(null);
+    
     try {
       await axios.post('/api/auth/logout');
     } catch (error) {
@@ -146,16 +172,24 @@ export const AuthProvider = ({ children }) => {
       localStorage.removeItem('refreshToken');
       setUser(null);
       setOrganization(null);
+      setAuthLoading(false);
       navigate('/login');
     }
   };
   
   const register = async (userData) => {
+    setAuthLoading(true);
+    setAuthError(null);
+    
     try {
       const response = await axios.post('/api/auth/signup', userData);
-      return response.data;
+      return { success: true, data: response.data };
     } catch (error) {
-      throw error.response?.data || error;
+      const errorMessage = error.response?.data?.message || error.message || 'Registration failed';
+      setAuthError(errorMessage);
+      return { success: false, error: errorMessage };
+    } finally {
+      setAuthLoading(false);
     }
   };
   
@@ -175,11 +209,14 @@ export const AuthProvider = ({ children }) => {
     user,
     organization,
     loading,
+    authLoading, // ✅ Added authLoading
+    authError,   // ✅ Added authError
     login,
     verify2FA,
     logout,
     register,
     checkAuth,
+    clearError,  // ✅ Added clearError
     hasRole,
     hasPermission,
     belongsToOrganization

@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-d
 import { AuthProvider, ProtectedRoute } from './contexts/AuthContext';
 
 // Pages - Fixed imports to match usage
-import LoginPage from "./pages/LoginPage"; // Make sure this component exists
+import LoginPage from "./pages/LoginPage3"; // Make sure this component exists
 import Dashboard from "./pages/GeneralDashboard";
 import FaxDashboardWrapper from "./pages/FaxDashboardWrapper";
 import Upload from "./pages/Upload";

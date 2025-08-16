@@ -8,6 +8,8 @@ const mongoConnectionURL =
 const baseOptions = {
   useNewUrlParser: true,
   useUnifiedTopology: true,
+  useCreateIndex: true,  // Add this to fix deprecation warning
+
 };
 
 // Helper function to reduce repetition

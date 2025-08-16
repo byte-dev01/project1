@@ -165,9 +165,11 @@ app.use(helmet({
   contentSecurityPolicy: {
     directives: {
       defaultSrc: ["'self'"],
-      styleSrc: ["'self'", "'unsafe-inline'"],
+      styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+      fontSrc: ["'self'", "https://fonts.gstatic.com"],
       scriptSrc: ["'self'"],
       imgSrc: ["'self'", "data:", "https:"],
+      connectSrc: ["'self'", "ws:", "wss:", "https://healthbridge.up.railway.app"],
     },
   },
   hsts: {
@@ -197,7 +199,10 @@ app.use((req, res, next) => {
 // CORS configuration
 const corsOptions = {
   origin: function (origin, callback) {
-    const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(',') || ['http://localhost:5000', 'healthbridge.up.railway.app'];
+    const allowedOrigins = ['https://healthbridge.up.railway.app',     // Add your custom domain!
+      'http://localhost:5000',
+      'http://localhost:3000']
+
     
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
@@ -212,6 +217,8 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
+// Trust proxy - Required for Railway
+app.set('trust proxy', true);
 
 //Rate Limiter
 
@@ -302,8 +309,16 @@ const socketManager = require("./server-socket");
 
 // Connect to MongoDB for authentication (bezkoder_db)
 authDb.mongoose
-  .connect(authDbUrl)
-  .then(() => {
+  .connect(authDbUrl, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useCreateIndex: true,
+    writeConcern: {
+      w: 'majority',
+      j: true,
+      wtimeout: 5000
+    }
+  }).then(() => {
     console.log("✅ Successfully connected to Auth MongoDB (bezkoder_db)");
     initializeDatabase();
   })

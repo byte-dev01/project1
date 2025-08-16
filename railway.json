@@ -2,7 +2,7 @@
   "services": [
     {
       "name": "api",
-      "path": "project1-main/healthbridge"
+      "path": "project1-main"
     }
   ]
 }

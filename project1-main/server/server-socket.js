@@ -48,7 +48,7 @@ module.exports = {
 init: (http) => {
   io = require("socket.io")(http, {
     cors: {
-      origin: ["http://localhost:3000", "http://localhost:5000"], // ✅ Allow both ports
+      origin: ["http://localhost:3000", "http://localhost:5000", "healthbridge.up.railway.app"], // ✅ Allow both ports
       methods: ["GET", "POST"],
       credentials: true
     }

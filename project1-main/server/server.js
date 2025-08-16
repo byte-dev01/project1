@@ -197,7 +197,7 @@ app.use((req, res, next) => {
 // CORS configuration
 const corsOptions = {
   origin: function (origin, callback) {
-    const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(',') || ['http://localhost:5000'];
+    const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(',') || ['http://localhost:5000', 'healthbridge.up.railway.app'];
     
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);

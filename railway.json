@@ -1,0 +1,8 @@
+{
+  "services": [
+    {
+      "name": "api",
+      "path": "project1-main"
+    }
+  ]
+}

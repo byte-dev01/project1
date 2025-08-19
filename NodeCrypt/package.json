@@ -31,13 +31,18 @@
   "dependencies": {
     "@dicebear/core": "^9.2.2",
     "@dicebear/micah": "^9.2.2",
+    "@signalapp/libsignal-client": "^0.78.3",
     "aes-js": "^3.1.2",
     "buffer": "^6.0.3",
     "dompurify": "^3.2.6",
     "elliptic": "^6.6.1",
     "emoji-picker-element": "^1.26.3",
+    "express": "^5.1.0",
     "fflate": "^0.8.2",
     "js-chacha20": "^1.1.0",
-    "js-sha256": "^0.11.0"
+    "js-sha256": "^0.11.0",
+    "mongodb": "^6.18.0",
+    "socket.io": "^4.8.1",
+    "socket.io-client": "^4.8.1"
   }
 }

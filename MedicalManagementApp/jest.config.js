@@ -1,0 +1,45 @@
+module.exports = {
+  preset: 'react-native',
+  testEnvironment: 'node',
+  setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
+  moduleNameMapper: {
+    '^@/(.*)$': '<rootDir>/src/$1',
+    '^@api/(.*)$': '<rootDir>/src/api/$1',
+    '^@components/(.*)$': '<rootDir>/src/components/$1',
+    '^@screens/(.*)$': '<rootDir>/src/screens/$1',
+    '^@navigation/(.*)$': '<rootDir>/src/navigation/$1',
+    '^@store/(.*)$': '<rootDir>/store/$1',
+    '^@types/(.*)$': '<rootDir>/types/$1',
+    '^@utils/(.*)$': '<rootDir>/utils/$1',
+    '^@theme/(.*)$': '<rootDir>/theme/$1',
+    '^@domains/(.*)$': '<rootDir>/domains/$1',
+    '^@constants/(.*)$': '<rootDir>/constants/$1',
+  },
+  transform: {
+    '^.+\\.(js|jsx|ts|tsx)$': 'babel-jest',
+  },
+  testMatch: [
+    '**/__tests__/**/*.(ts|tsx|js)',
+    '**/*.(test|spec).(ts|tsx|js)',
+  ],
+  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
+  collectCoverageFrom: [
+    'src/**/*.{js,jsx,ts,tsx}',
+    'store/**/*.{js,jsx,ts,tsx}',
+    'utils/**/*.{js,jsx,ts,tsx}',
+    'domains/**/*.{js,jsx,ts,tsx}',
+    '!**/node_modules/**',
+    '!**/__tests__/**',
+    '!**/*.test.{js,jsx,ts,tsx}',
+    '!**/*.spec.{js,jsx,ts,tsx}',
+  ],
+  coverageThreshold: {
+    global: {
+      branches: 70,
+      functions: 70,
+      lines: 70,
+      statements: 70,
+    },
+  },
+  testTimeout: 10000,
+};

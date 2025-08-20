@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>myUCLAhealth - Medications</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.4;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .menu-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(255,255,255,0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            background: #3b82f6;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        /* Main Content */
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 2rem;
+        }
+
+        .content {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .page-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .page-title {
+            font-size: 2rem;
+            font-weight: 600;
+            color: #1e3a8a;
+        }
+
+        .print-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        /* Progress Steps */
+        .progress-steps {
+            padding: 1rem 1.5rem;
+            background: #f8fafc;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .steps-container {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .step {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1rem;
+            border-radius: 20px;
+            font-weight: 500;
+        }
+
+        .step.active {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .step.inactive {
+            background: #e5e7eb;
+            color: #6b7280;
+        }
+
+        .step-icon {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: currentColor;
+            opacity: 0.7;
+        }
+
+        /* Instructions */
+        .instructions {
+            padding: 1.5rem;
+            background: #eff6ff;
+            border-left: 4px solid #3b82f6;
+            margin: 1.5rem;
+            border-radius: 4px;
+        }
+
+        .instructions p {
+            margin-bottom: 0.75rem;
+        }
+
+        .pharmacy-link {
+            color: #3b82f6;
+            text-decoration: none;
+        }
+
+        .pharmacy-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Action Bar */
+        .action-bar {
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .refill-instructions {
+            color: #6b7280;
+        }
+
+        .request-refills-btn {
+            background: #16a34a;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .request-refills-btn:hover {
+            background: #15803d;
+        }
+
+        /* Medication Cards */
+        .medications-list {
+            padding: 1.5rem;
+        }
+
+        .medication-card {
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            background: white;
+            transition: box-shadow 0.2s;
+        }
+
+        .medication-card:hover {
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .card-header {
+            padding: 1rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .medication-checkbox {
+            margin-top: 0.25rem;
+        }
+
+        .medication-icon {
+            width: 40px;
+            height: 40px;
+            background: #eff6ff;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .medication-info {
+            flex: 1;
+        }
+
+        .medication-name {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #1e3a8a;
+            margin-bottom: 0.25rem;
+        }
+
+        .common-name {
+            color: #6b7280;
+            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .learn-more {
+            color: #3b82f6;
+            text-decoration: none;
+            font-size: 0.875rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .info-icon {
+            width: 16px;
+            height: 16px;
+            background: #3b82f6;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+
+        .dosage {
+            margin-top: 0.75rem;
+            font-weight: 500;
+        }
+
+        .card-details {
+            border-top: 1px solid #e5e7eb;
+            padding: 1rem;
+            background: #f8fafc;
+        }
+
+        .details-toggle {
+            background: none;
+            border: none;
+            color: #3b82f6;
+            cursor: pointer;
+            font-size: 0.875rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .details-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .detail-section h4 {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #1e3a8a;
+        }
+
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.25rem;
+            font-size: 0.875rem;
+        }
+
+        .detail-label {
+            color: #6b7280;
+        }
+
+        .detail-value {
+            font-weight: 500;
+        }
+
+        .pharmacy-info {
+            background: white;
+            padding: 1rem;
+            border-radius: 6px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .pharmacy-name {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .pharmacy-address {
+            color: #6b7280;
+            font-size: 0.875rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .pharmacy-phone {
+            color: #3b82f6;
+            text-decoration: none;
+            font-size: 0.875rem;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .action-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            background: white;
+            cursor: pointer;
+            font-size: 0.875rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .action-btn.primary {
+            background: #16a34a;
+            color: white;
+            border-color: #16a34a;
+        }
+
+        .action-btn.danger {
+            color: #dc2626;
+            border-color: #dc2626;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 1.5rem;
+            height: fit-content;
+        }
+
+        .sidebar h3 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #1e3a8a;
+        }
+
+        .sidebar-links {
+            list-style: none;
+        }
+
+        .sidebar-links li {
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-links a {
+            color: #3b82f6;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        .sidebar-links a:hover {
+            background: #eff6ff;
+        }
+
+        .link-icon {
+            width: 20px;
+            height: 20px;
+            background: #3b82f6;
+            border-radius: 4px;
+            opacity: 0.7;
+        }
+
+        /* Add Medication Box */
+        .add-medication {
+            border: 2px dashed #d1d5db;
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            margin-top: 1rem;
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
+
+        .add-medication:hover {
+            border-color: #3b82f6;
+        }
+
+        .add-medication-text {
+            color: #6b7280;
+            font-weight: 500;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-container {
+                grid-template-columns: 1fr;
+                padding: 1rem;
+            }
+            
+            .steps-container {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .details-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .header-content {
+                padding: 0 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="header-left">
+                <button class="menu-btn">☰</button>
+                <div class="logo">myUCLAhealth</div>
+            </div>
+            <div class="header-right">
+                <div class="user-profile">
+                    <div class="user-avatar">R</div>
+                    <span>Rachel</span>
+                </div>
+                <button style="background: none; border: none; color: white; cursor: pointer;">🌐</button>
+                <button style="background: none; border: none; color: white; cursor: pointer;">Log out</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <main class="content">
+            <!-- Page Header -->
+            <div class="page-header">
+                <h1 class="page-title">Medications</h1>
+                <button class="print-btn">🖨️</button>
+            </div>
+
+            <!-- Progress Steps -->
+            <div class="progress-steps">
+                <div class="steps-container">
+                    <div class="step active">
+                        <div class="step-icon"></div>
+                        <span>Medications</span>
+                    </div>
+                    <div class="step inactive">
+                        <div class="step-icon"></div>
+                        <span>Pharmacy</span>
+                    </div>
+                    <div class="step inactive">
+                        <div class="step-icon"></div>
+                        <span>Review Your Request</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Instructions -->
+            <div class="instructions">
+                <p>If your medication is dispensed at a <a href="#" class="pharmacy-link">UCLA Health Pharmacy</a>, you may directly request a refill by clicking on the Request Refill button. Your medication is filled at UCLA pharmacies if it has a Prescription Number.</p>
+                <p>If you use a commercial pharmacy (e.g. CVS, Walgreens, etc) or mail order, please call the pharmacy directly for a medication refill.</p>
+                <p>When you run out of refills, request another prescription from your UCLA Health doctor. Please note that physician approval must first be obtained before the pharmacies can fill and so, it may take longer than usual for these medications to be ready for pickup.</p>
+            </div>
+
+            <!-- Action Bar -->
+            <div class="action-bar">
+                <div class="refill-instructions">Choose prescriptions to refill.</div>
+                <button class="request-refills-btn">Request refills</button>
+            </div>
+
+            <!-- Medications List -->
+            <div class="medications-list">
+                <h2 style="margin-bottom: 1rem; color: #1e3a8a;">Current Medications</h2>
+                
+                <!-- Medication Card 1 -->
+                <div class="medication-card">
+                    <div class="card-header">
+                        <input type="checkbox" class="medication-checkbox">
+                        <div class="medication-icon">💊</div>
+                        <div class="medication-info">
+                            <div class="medication-name">folic acid 1 mg tablet</div>
+                            <div class="common-name">Commonly known as: Folvite</div>
+                            <a href="#" class="learn-more">
+                                <span class="info-icon">i</span>
+                                Learn more
+                            </a>
+                            <div class="dosage">Take 1 tablet (1 mg total) by mouth daily.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="card-details">
+                        <button class="details-toggle">
+                            ▼ Additional information
+                        </button>
+                        
+                        <div class="details-content">
+                            <div class="detail-section">
+                                <h4>Prescription Details</h4>
+                                <div class="detail-item">
+                                    <span class="detail-label">Prescribed</span>
+                                    <span class="detail-value">May 16, 2025</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Approved by</span>
+                                    <span class="detail-value">Mary C. Mayo, MD</span>
+                                </div>
+                            </div>
+                            
+                            <div class="detail-section">
+                                <h4>Refill Details</h4>
+                                <div class="detail-item">
+                                    <span class="detail-label">Quantity</span>
+                                    <span class="detail-value">100 tablets</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Day supply</span>
+                                    <span class="detail-value">100</span>
+                                </div>
+                            </div>
+                            
+                            <div class="detail-section">
+                                <h4>Pharmacy Details</h4>
+                                <div class="pharmacy-info">
+                                    <div class="pharmacy-name">CVS/pharmacy #9680 - Arcadia, CA</div>
+                                    <div class="pharmacy-address">188 W. Las Tunas Dr., Arcadia CA 91007</div>
+                                    <a href="tel:626-446-8827" class="pharmacy-phone">626-446-8827</a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="card-actions">
+                            <button class="action-btn primary">Request refill</button>
+                            <button class="action-btn danger">Remove</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Medication Card 2 -->
+                <div class="medication-card">
+                    <div class="card-header">
+                        <input type="checkbox" class="medication-checkbox">
+                        <div class="medication-icon">💊</div>
+                        <div class="medication-info">
+                            <div class="medication-name">metFORMIN 500 mg ER 24 hr tablet</div>
+                            <div class="common-name">Commonly known as: Glucophage XR</div>
+                            <a href="#" class="learn-more">
+                                <span class="info-icon">i</span>
+                                Learn more
+                            </a>
+                            <div class="dosage">Take 1 tablet (500 mg total) by mouth daily with breakfast.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="card-details">
+                        <button class="details-toggle">
+                            ▼ Additional information
+                        </button>
+                        
+                        <div class="details-content">
+                            <div class="detail-section">
+                                <h4>Prescription Details</h4>
+                                <div class="detail-item">
+                                    <span class="detail-label">Prescribed</span>
+                                    <span class="detail-value">May 16, 2025</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Approved by</span>
+                                    <span class="detail-value">Clifford Pang, DO</span>
+                                </div>
+                            </div>
+                            
+                            <div class="detail-section">
+                                <h4>Refill Details</h4>
+                                <div class="detail-item">
+                                    <span class="detail-label">Quantity</span>
+                                    <span class="detail-value">90 tablets</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Day supply</span>
+                                    <span class="detail-value">90</span>
+                                </div>
+                            </div>
+                            
+                            <div class="detail-section">
+                                <h4>Pharmacy Details</h4>
+                                <div class="pharmacy-info">
+                                    <div class="pharmacy-name">CVS/pharmacy #9680 - Arcadia, CA</div>
+                                    <div class="pharmacy-address">188 W. Las Tunas Dr., Arcadia CA 91007</div>
+                                    <a href="tel:626-446-8827" class="pharmacy-phone">626-446-8827</a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="card-actions">
+                            <button class="action-btn primary">Request refill</button>
+                            <button class="action-btn danger">Remove</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Add Medication -->
+                <div class="add-medication">
+                    <div class="add-medication-text">+ Report a medication</div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <h3>Related Links</h3>
+            <ul class="sidebar-links">
+                <li>
+                    <a href="#">
+                        <div class="link-icon"></div>
+                        Health Summary
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <div class="link-icon"></div>
+                        Health Issues
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <div class="link-icon"></div>
+                        Allergies
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <div class="link-icon"></div>
+                        Immunizations
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <div class="link-icon"></div>
+                        Preventive Care
+                    </a>
+                </li>
+            </ul>
+        </aside>
+    </div>
+
+    <script>
+        // Add interactivity for details toggle
+        document.querySelectorAll('.details-toggle').forEach(button => {
+            button.addEventListener('click', function() {
+                const content = this.nextElementSibling;
+                const isVisible = content.style.display !== 'none';
+                content.style.display = isVisible ? 'none' : 'block';
+                this.textContent = isVisible ? '▶ Additional information' : '▼ Additional information';
+            });
+        });
+
+        // Add checkbox functionality
+        document.querySelectorAll('.medication-checkbox').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                updateRefillButton();
+            });
+        });
+
+        function updateRefillButton() {
+            const checkedBoxes = document.querySelectorAll('.medication-checkbox:checked');
+            const refillBtn = document.querySelector('.request-refills-btn');
+            
+            if (checkedBoxes.length > 0) {
+                refillBtn.style.background = '#16a34a';
+                refillBtn.disabled = false;
+            } else {
+                refillBtn.style.background = '#9ca3af';
+                refillBtn.disabled = true;
+            }
+        }
+
+        // Initialize
+        updateRefillButton();
+    </script>
+</body>
+</html>

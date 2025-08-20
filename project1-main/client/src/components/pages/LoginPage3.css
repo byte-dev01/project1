@@ -1,0 +1,573 @@
+/* IU Health Style Login.css */
+
+/* Import fonts */
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;600;700&display=swap');
+
+/* Root variables for consistent theming */
+:root {
+  --iu-primary: #981e32;
+  --iu-primary-dark: #6d1624;
+  --iu-secondary: #353535;
+  --iu-text-primary: #353535;
+  --iu-text-secondary: #6a6a6a;
+  --iu-border: #605e5c;
+  --iu-bg-light: #f8f9fa;
+  --iu-error: #dc3545;
+  --iu-success: #28a745;
+}
+
+/* Base styles */
+body {
+  font-family: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  font-weight: 300;
+  font-size: 16px;
+  color: var(--iu-text-primary);
+  background-color: var(--iu-bg-light);
+  margin: 0;
+  padding: 0;
+  line-height: 1.5;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 700;
+  color: var(--iu-text-primary);
+  margin: 0;
+}
+
+h1 {
+  font-size: 32px;
+}
+
+h2 {
+  font-size: 24px;
+}
+
+p {
+  margin: 0;
+}
+
+a {
+  color: var(--iu-primary);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+a:hover, a:focus {
+  color: var(--iu-primary-dark);
+  text-decoration: underline;
+  outline: 0;
+}
+
+/* Login Page Layout */
+.iu-login-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--iu-bg-light);
+}
+
+/* Header */
+.iu-header {
+  background-color: #fff;
+  border-bottom: 1px solid #e0e0e0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.iu-header-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem 2rem;
+}
+
+.iu-logo-section {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.iu-logo {
+  background-color: var(--iu-primary);
+  color: white;
+  font-weight: 700;
+  font-size: 1.5rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 0.25rem;
+}
+
+.iu-logo-text {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--iu-text-primary);
+}
+
+/* Main Content */
+.iu-main-content {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.iu-login-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  max-width: 1000px;
+  width: 100%;
+}
+
+/* Login Box */
+.iu-login-box {
+  background: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 2.5rem;
+}
+
+.iu-login-header {
+  margin-bottom: 2rem;
+}
+
+.iu-login-header h1 {
+  margin-bottom: 0.5rem;
+}
+
+.iu-login-header p {
+  color: var(--iu-text-secondary);
+}
+
+/* Form Styles */
+.iu-login-form {
+  margin-bottom: 2rem;
+}
+
+.iu-form-group {
+  margin-bottom: 1.5rem;
+}
+
+.iu-form-group label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: var(--iu-text-primary);
+}
+
+.iu-input,
+.iu-select {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--iu-border);
+  border-radius: 0.375rem;
+  font-size: 1rem;
+  font-family: inherit;
+  transition: border-color 0.2s ease;
+  background-color: white;
+}
+
+.iu-input:focus,
+.iu-select:focus {
+  outline: none;
+  border-color: var(--iu-primary);
+  box-shadow: 0 0 0 3px rgba(152, 30, 50, 0.1);
+}
+
+.iu-input::placeholder {
+  color: var(--iu-text-secondary);
+}
+
+.iu-input:disabled,
+.iu-select:disabled {
+  background-color: #f5f5f5;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+/* Select dropdown styling */
+.iu-select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23605e5c' d='M10.293 3.293L6 7.586 1.707 3.293A1 1 0 00.293 4.707l5 5a1 1 0 001.414 0l5-5a1 1 0 10-1.414-1.414z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  padding-right: 2.5rem;
+}
+
+.iu-select optgroup {
+  font-weight: 600;
+  color: var(--iu-text-primary);
+}
+
+.iu-select option {
+  font-weight: normal;
+  padding: 0.5rem;
+}
+
+/* Clinic help text */
+.iu-clinic-help {
+  font-size: 0.75rem;
+  color: var(--iu-text-secondary);
+  margin-top: 0.25rem;
+}
+
+/* Password field wrapper */
+.iu-password-wrapper {
+  position: relative;
+}
+
+.iu-password-toggle {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.25rem;
+  font-size: 1.25rem;
+  color: var(--iu-text-secondary);
+  transition: color 0.2s ease;
+}
+
+.iu-password-toggle:hover {
+  color: var(--iu-text-primary);
+}
+
+/* Form Options */
+.iu-form-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.iu-checkbox-container {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.iu-checkbox-container input[type="checkbox"] {
+  margin-right: 0.5rem;
+  cursor: pointer;
+}
+
+.iu-checkbox-label {
+  color: var(--iu-text-secondary);
+  font-size: 0.875rem;
+}
+
+.iu-forgot-link {
+  font-size: 0.875rem;
+  color: var(--iu-primary);
+}
+
+/* Buttons */
+.iu-submit-button {
+  width: 100%;
+  padding: 0.875rem 1.5rem;
+  background-color: var(--iu-primary);
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.iu-submit-button:hover:not(:disabled) {
+  background-color: var(--iu-primary-dark);
+}
+
+.iu-submit-button:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(152, 30, 50, 0.3);
+}
+
+.iu-submit-button:disabled {
+  background-color: #ccc;
+  color: #666;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.iu-alt-login-button {
+  width: 100%;
+  padding: 0.875rem 1.5rem;
+  background-color: white;
+  color: var(--iu-text-primary);
+  border: 2px solid #e0e0e0;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.iu-alt-login-button:hover {
+  background-color: #f8f9fa;
+  border-color: var(--iu-primary);
+  color: var(--iu-primary);
+}
+
+/* Error Message */
+.iu-error-message {
+  background-color: #fee;
+  border: 1px solid #fcc;
+  border-radius: 0.375rem;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1.5rem;
+  color: var(--iu-error);
+  display: flex;
+  align-items: center;
+}
+
+.iu-error-icon {
+  margin-right: 0.5rem;
+  font-size: 1.25rem;
+}
+
+/* Login Footer */
+.iu-login-footer {
+  text-align: center;
+}
+
+.iu-login-footer p {
+  color: var(--iu-text-secondary);
+  font-size: 0.875rem;
+}
+
+.iu-divider {
+  position: relative;
+  margin: 1.5rem 0;
+}
+
+.iu-divider::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background-color: #e0e0e0;
+}
+
+.iu-divider span {
+  position: relative;
+  background-color: white;
+  padding: 0 1rem;
+  color: var(--iu-text-secondary);
+  font-size: 0.875rem;
+}
+
+/* Info Section */
+.iu-info-section {
+  background-color: #fef5f6;
+  border-radius: 0.5rem;
+  padding: 2.5rem;
+  height: 100%;
+}
+
+.iu-info-section h2 {
+  margin-bottom: 0.75rem;
+}
+
+.iu-info-section p {
+  color: var(--iu-text-secondary);
+  margin-bottom: 2rem;
+}
+
+.iu-features-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.iu-features-list li {
+  padding: 0.75rem 0;
+  display: flex;
+  align-items: flex-start;
+  color: var(--iu-text-primary);
+}
+
+.iu-features-list li::before {
+  content: "✓";
+  color: var(--iu-success);
+  font-weight: 700;
+  margin-right: 0.75rem;
+  font-size: 1.25rem;
+}
+
+/* Demo Mode Notification */
+.iu-demo-notice {
+  background-color: #e3f2fd;
+  border: 1px solid #90caf9;
+  border-radius: 0.375rem;
+  padding: 1rem;
+  margin-top: 1.5rem;
+}
+
+.iu-demo-notice-title {
+  font-weight: 600;
+  color: #1565c0;
+  margin-bottom: 0.25rem;
+}
+
+.iu-demo-notice-text {
+  font-size: 0.75rem;
+  color: #1976d2;
+}
+
+/* Selected Clinic Display */
+.iu-selected-clinic {
+  background-color: white;
+  border: 1px solid rgba(152, 30, 50, 0.2);
+  border-radius: 0.375rem;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.iu-selected-clinic h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.iu-selected-clinic-name {
+  font-size: 0.875rem;
+  color: var(--iu-text-primary);
+}
+
+.iu-selected-clinic-address {
+  font-size: 0.75rem;
+  color: var(--iu-text-secondary);
+  margin-top: 0.25rem;
+}
+
+/* Help Box */
+.iu-help-box {
+  background-color: #fffbeb;
+  border: 1px solid #fcd34d;
+  border-radius: 0.375rem;
+  padding: 1rem;
+  margin-top: 1.5rem;
+}
+
+.iu-help-box p {
+  font-size: 0.875rem;
+  color: #92400e;
+  margin: 0;
+}
+
+.iu-help-box strong {
+  font-weight: 600;
+}
+
+.iu-help-box a {
+  color: #92400e;
+  text-decoration: underline;
+  font-weight: 600;
+}
+
+/* Footer */
+.iu-footer {
+  background-color: #2c2c2c;
+  color: white;
+  padding: 2rem 0;
+  margin-top: auto;
+}
+
+.iu-footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  text-align: center;
+}
+
+.iu-footer-content p {
+  margin-bottom: 0.75rem;
+  font-size: 0.875rem;
+}
+
+.iu-footer-links {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  font-size: 0.875rem;
+}
+
+.iu-footer-links a {
+  color: white;
+  opacity: 0.8;
+  transition: opacity 0.2s ease;
+}
+
+.iu-footer-links a:hover {
+  opacity: 1;
+  text-decoration: underline;
+}
+
+.iu-footer-links span {
+  opacity: 0.5;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .iu-login-container {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .iu-info-section {
+    order: -1;
+  }
+
+  .iu-login-box {
+    padding: 2rem;
+  }
+
+  .iu-header-content {
+    padding: 1rem;
+  }
+
+  h1 {
+    font-size: 28px;
+  }
+
+  h2 {
+    font-size: 20px;
+  }
+  
+  .iu-select {
+    font-size: 16px; /* Prevents zoom on iOS */
+  }
+}
+
+@media (max-width: 480px) {
+  .iu-main-content {
+    padding: 1rem;
+  }
+
+  .iu-login-box {
+    padding: 1.5rem;
+  }
+
+  .iu-form-options {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+  
+  .iu-input,
+  .iu-select {
+    font-size: 16px; /* Prevents zoom on iOS */
+  }
+  
+  .iu-selected-clinic,
+  .iu-demo-notice,
+  .iu-help-box {
+    padding: 0.875rem;
+  }
+}

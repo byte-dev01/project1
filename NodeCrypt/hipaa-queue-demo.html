@@ -1,0 +1,1230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HIPAA Queue Management System - Complete Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .demo-header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+        
+        .demo-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .demo-header .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+        
+        .compliance-badges {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .badge {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .demo-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .role-tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            gap: 10px;
+        }
+        
+        .role-tab {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .role-tab:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        .role-tab.active {
+            background: white;
+            color: #667eea;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        
+        .role-panel {
+            display: none;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .role-panel.active {
+            display: block;
+        }
+        
+        .panel-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .panel-header h2 {
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+        }
+        
+        .panel-header .description {
+            opacity: 0.9;
+            font-size: 1rem;
+        }
+        
+        .panel-content {
+            padding: 30px;
+        }
+        
+        /* Doctor Panel Styles */
+        .doctor-dashboard {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 30px;
+        }
+        
+        .queue-main {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+        }
+        
+        .queue-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #495057;
+            margin-bottom: 5px;
+        }
+        
+        .stat-value.emergency {
+            color: #dc3545;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+        
+        .queue-list {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .queue-header {
+            background: #e9ecef;
+            padding: 15px;
+            font-weight: 600;
+            color: #495057;
+            border-bottom: 2px solid #dee2e6;
+        }
+        
+        .queue-item {
+            display: grid;
+            grid-template-columns: 50px 150px 120px 100px 120px 100px;
+            padding: 15px;
+            border-bottom: 1px solid #e9ecef;
+            align-items: center;
+            transition: background-color 0.2s;
+        }
+        
+        .queue-item:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .queue-item.emergency {
+            border-left: 4px solid #dc3545;
+            background-color: #f8d7da;
+            animation: pulse 2s infinite;
+        }
+        
+        .queue-item.priority {
+            border-left: 4px solid #ffc107;
+            background-color: #fff3cd;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+        
+        .priority-badge {
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        
+        .priority-badge.normal {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+        
+        .priority-badge.high {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .priority-badge.emergency {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .queue-controls {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+        }
+        
+        .controls-header {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .control-group {
+            margin-bottom: 15px;
+        }
+        
+        .control-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #495057;
+        }
+        
+        .control-group input,
+        .control-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ced4da;
+            border-radius: 6px;
+            font-size: 0.9rem;
+        }
+        
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-bottom: 10px;
+        }
+        
+        .btn-primary {
+            background: #007bff;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #0056b3;
+            transform: translateY(-2px);
+        }
+        
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background: #1e7e34;
+            transform: translateY(-2px);
+        }
+        
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background: #c82333;
+            transform: translateY(-2px);
+        }
+        
+        .btn-warning {
+            background: #ffc107;
+            color: #212529;
+        }
+        
+        .btn-warning:hover {
+            background: #e0a800;
+            transform: translateY(-2px);
+        }
+        
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 0.8rem;
+            margin: 0 2px;
+        }
+        
+        /* Patient Panel Styles */
+        .patient-status {
+            text-align: center;
+            padding: 40px 20px;
+        }
+        
+        .position-display {
+            font-size: 5rem;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .position-label {
+            font-size: 1.5rem;
+            color: #495057;
+            margin-bottom: 30px;
+        }
+        
+        .wait-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .wait-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+        }
+        
+        .wait-value {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        
+        .wait-label {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+        
+        .patient-instructions {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: left;
+        }
+        
+        .patient-instructions h3 {
+            color: #495057;
+            margin-bottom: 15px;
+        }
+        
+        .patient-instructions ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .patient-instructions li {
+            padding: 8px 0;
+            color: #6c757d;
+            position: relative;
+            padding-left: 25px;
+        }
+        
+        .patient-instructions li:before {
+            content: "✓";
+            color: #28a745;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+        
+        /* Admin Panel Styles */
+        .admin-overview {
+            display: grid;
+            gap: 30px;
+        }
+        
+        .system-metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        
+        .metric-card {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .metric-card.emergency {
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+        }
+        
+        .metric-card.warning {
+            background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%);
+            color: #212529;
+        }
+        
+        .metric-icon {
+            font-size: 3rem;
+            opacity: 0.8;
+        }
+        
+        .metric-info {
+            flex: 1;
+        }
+        
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .metric-label {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+        
+        .doctors-grid {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+        }
+        
+        .doctors-header {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .doctors-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .doctors-table th {
+            background: #f8f9fa;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            color: #495057;
+            border-bottom: 2px solid #dee2e6;
+        }
+        
+        .doctors-table td {
+            padding: 15px;
+            border-bottom: 1px solid #e9ecef;
+            color: #495057;
+        }
+        
+        .doctors-table tr:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        
+        .status-badge.active {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+        
+        .status-badge.busy {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .status-badge.emergency {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        /* Notifications */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            padding: 15px 20px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 500;
+            min-width: 300px;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .notification.success {
+            background: #28a745;
+        }
+        
+        .notification.error {
+            background: #dc3545;
+        }
+        
+        .notification.info {
+            background: #17a2b8;
+        }
+        
+        .notification.warning {
+            background: #ffc107;
+            color: #212529;
+        }
+        
+        /* Emergency Alert */
+        .emergency-alert {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1001;
+            background: #dc3545;
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(220, 53, 69, 0.4);
+            display: none;
+        }
+        
+        .emergency-alert.show {
+            display: block;
+            animation: emergencyPulse 1s infinite;
+        }
+        
+        @keyframes emergencyPulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.05); }
+        }
+        
+        .emergency-alert h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+        
+        .emergency-alert p {
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .demo-header h1 {
+                font-size: 2rem;
+            }
+            
+            .role-tabs {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .doctor-dashboard {
+                grid-template-columns: 1fr;
+            }
+            
+            .queue-item {
+                grid-template-columns: 1fr;
+                text-align: center;
+                gap: 10px;
+            }
+            
+            .wait-info {
+                grid-template-columns: 1fr;
+            }
+            
+            .system-metrics {
+                grid-template-columns: 1fr;
+            }
+            
+            .doctors-table {
+                font-size: 0.8rem;
+            }
+            
+            .notification {
+                right: 10px;
+                left: 10px;
+                transform: translateY(-100px);
+            }
+            
+            .notification.show {
+                transform: translateY(0);
+            }
+        }
+        
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Demo Header -->
+    <div class="demo-header">
+        <h1>🏥 HIPAA Queue Management System</h1>
+        <div class="subtitle">Complete End-to-End Encrypted Patient Queue with Real-Time Updates</div>
+        
+        <div class="compliance-badges">
+            <div class="badge">✅ HIPAA Compliant</div>
+            <div class="badge">🔐 End-to-End Encrypted</div>
+            <div class="badge">📋 Real-Time Updates</div>
+            <div class="badge">🚨 Emergency Priority</div>
+            <div class="badge">📊 500+ Patients/Doctor</div>
+            <div class="badge">⚡ <100ms Latency</div>
+        </div>
+    </div>
+
+    <div class="demo-container">
+        <!-- Role Tabs -->
+        <div class="role-tabs">
+            <div class="role-tab active" data-role="doctor">👨‍⚕️ Doctor View</div>
+            <div class="role-tab" data-role="patient">🤒 Patient View</div>
+            <div class="role-tab" data-role="admin">👨‍💼 Admin View</div>
+        </div>
+
+        <!-- Doctor Panel -->
+        <div class="role-panel active" id="doctor-panel">
+            <div class="panel-header">
+                <h2>👨‍⚕️ Doctor Queue Dashboard</h2>
+                <div class="description">Manage patient queue with encrypted identities and real-time updates</div>
+            </div>
+            <div class="panel-content">
+                <div class="doctor-dashboard">
+                    <div class="queue-main">
+                        <!-- Queue Statistics -->
+                        <div class="queue-stats">
+                            <div class="stat-card">
+                                <div class="stat-value" id="total-patients">8</div>
+                                <div class="stat-label">Total Patients</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value emergency" id="emergency-count">2</div>
+                                <div class="stat-label">Emergency</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value" id="regular-count">6</div>
+                                <div class="stat-label">Regular</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value" id="avg-wait">23</div>
+                                <div class="stat-label">Avg Wait (min)</div>
+                            </div>
+                        </div>
+
+                        <!-- Patient Queue List -->
+                        <div class="queue-list">
+                            <div class="queue-header">
+                                <div style="display: grid; grid-template-columns: 50px 150px 120px 100px 120px 100px; gap: 10px;">
+                                    <div>#</div>
+                                    <div>Patient ID</div>
+                                    <div>Appointment</div>
+                                    <div>Priority</div>
+                                    <div>Wait Time</div>
+                                    <div>Actions</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Emergency Patients -->
+                            <div class="queue-item emergency">
+                                <div>1</div>
+                                <div>a7b2c4d8e9f1a2b3</div>
+                                <div>Emergency</div>
+                                <div><span class="priority-badge emergency">Emergency</span></div>
+                                <div>3 min</div>
+                                <div>
+                                    <button class="btn btn-sm btn-success" onclick="callPatient('a7b2c4d8e9f1a2b3')">📞 Call</button>
+                                </div>
+                            </div>
+                            
+                            <div class="queue-item emergency">
+                                <div>2</div>
+                                <div>f3e1d9c7b5a4f2e1</div>
+                                <div>Emergency</div>
+                                <div><span class="priority-badge emergency">Emergency</span></div>
+                                <div>7 min</div>
+                                <div>
+                                    <button class="btn btn-sm btn-success" onclick="callPatient('f3e1d9c7b5a4f2e1')">📞 Call</button>
+                                </div>
+                            </div>
+                            
+                            <!-- Regular Patients -->
+                            <div class="queue-item">
+                                <div>3</div>
+                                <div>b8c3f1e2d4a9b7c2</div>
+                                <div>Consultation</div>
+                                <div><span class="priority-badge normal">Normal</span></div>
+                                <div>15 min</div>
+                                <div>
+                                    <button class="btn btn-sm btn-success" onclick="callPatient('b8c3f1e2d4a9b7c2')">📞 Call</button>
+                                    <button class="btn btn-sm btn-warning" onclick="prioritizePatient('b8c3f1e2d4a9b7c2')">🚨 Priority</button>
+                                </div>
+                            </div>
+                            
+                            <div class="queue-item">
+                                <div>4</div>
+                                <div>d2a7f3e1b9c4d8a3</div>
+                                <div>Follow-up</div>
+                                <div><span class="priority-badge normal">Normal</span></div>
+                                <div>22 min</div>
+                                <div>
+                                    <button class="btn btn-sm btn-success" onclick="callPatient('d2a7f3e1b9c4d8a3')">📞 Call</button>
+                                    <button class="btn btn-sm btn-warning" onclick="prioritizePatient('d2a7f3e1b9c4d8a3')">🚨 Priority</button>
+                                </div>
+                            </div>
+                            
+                            <div class="queue-item">
+                                <div>5</div>
+                                <div>c9b2f4e7a1d3c8f1</div>
+                                <div>Consultation</div>
+                                <div><span class="priority-badge normal">Normal</span></div>
+                                <div>28 min</div>
+                                <div>
+                                    <button class="btn btn-sm btn-success" onclick="callPatient('c9b2f4e7a1d3c8f1')">📞 Call</button>
+                                    <button class="btn btn-sm btn-warning" onclick="prioritizePatient('c9b2f4e7a1d3c8f1')">🚨 Priority</button>
+                                </div>
+                            </div>
+                            
+                            <div class="queue-item">
+                                <div>6</div>
+                                <div>e1f8a3d2c7b4e9f3</div>
+                                <div>Procedure</div>
+                                <div><span class="priority-badge normal">Normal</span></div>
+                                <div>35 min</div>
+                                <div>
+                                    <button class="btn btn-sm btn-success" onclick="callPatient('e1f8a3d2c7b4e9f3')">📞 Call</button>
+                                    <button class="btn btn-sm btn-warning" onclick="prioritizePatient('e1f8a3d2c7b4e9f3')">🚨 Priority</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Queue Controls -->
+                    <div class="queue-controls">
+                        <div class="controls-header">Queue Management</div>
+                        
+                        <div class="control-group">
+                            <label for="patient-id">Patient ID</label>
+                            <input type="text" id="patient-id" placeholder="Enter patient identifier">
+                        </div>
+                        
+                        <div class="control-group">
+                            <label for="appointment-type">Appointment Type</label>
+                            <select id="appointment-type">
+                                <option value="consultation">Consultation</option>
+                                <option value="follow-up">Follow-up</option>
+                                <option value="emergency">Emergency</option>
+                                <option value="procedure">Procedure</option>
+                            </select>
+                        </div>
+                        
+                        <div class="control-group">
+                            <label for="priority-level">Priority Level</label>
+                            <select id="priority-level">
+                                <option value="normal">Normal</option>
+                                <option value="high">High</option>
+                                <option value="emergency">Emergency</option>
+                            </select>
+                        </div>
+                        
+                        <button class="btn btn-primary" onclick="addPatient()">➕ Add Patient to Queue</button>
+                        <button class="btn btn-success" onclick="callNextPatient()">📞 Call Next Patient</button>
+                        <button class="btn btn-danger" onclick="clearQueue()">🗑️ Clear Queue</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Patient Panel -->
+        <div class="role-panel" id="patient-panel">
+            <div class="panel-header">
+                <h2>🤒 Patient Queue Status</h2>
+                <div class="description">View your position and estimated wait time</div>
+            </div>
+            <div class="panel-content">
+                <div class="patient-status">
+                    <div class="position-display" id="patient-position">#3</div>
+                    <div class="position-label">Your position in queue</div>
+                    
+                    <div class="wait-info">
+                        <div class="wait-card">
+                            <div class="wait-value" id="estimated-wait">15</div>
+                            <div class="wait-label">Minutes Est. Wait</div>
+                        </div>
+                        <div class="wait-card">
+                            <div class="wait-value" id="queue-total">8</div>
+                            <div class="wait-label">Total in Queue</div>
+                        </div>
+                        <div class="wait-card">
+                            <div class="wait-value" id="last-updated">2:34 PM</div>
+                            <div class="wait-label">Last Updated</div>
+                        </div>
+                    </div>
+                    
+                    <div class="patient-instructions">
+                        <h3>📋 Important Information</h3>
+                        <ul>
+                            <li>Please stay available - you'll be called when it's your turn</li>
+                            <li>Emergency cases may be prioritized and affect wait times</li>
+                            <li>Estimated times are approximate and may change</li>
+                            <li>If you need to leave, please notify the front desk</li>
+                            <li>All communications are encrypted for your privacy</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Admin Panel -->
+        <div class="role-panel" id="admin-panel">
+            <div class="panel-header">
+                <h2>👨‍💼 Admin Queue Overview</h2>
+                <div class="description">System-wide queue statistics and doctor performance</div>
+            </div>
+            <div class="panel-content">
+                <div class="admin-overview">
+                    <!-- System Metrics -->
+                    <div class="system-metrics">
+                        <div class="metric-card">
+                            <div class="metric-icon">🏥</div>
+                            <div class="metric-info">
+                                <div class="metric-value">12</div>
+                                <div class="metric-label">Active Doctors</div>
+                            </div>
+                        </div>
+                        
+                        <div class="metric-card warning">
+                            <div class="metric-icon">👥</div>
+                            <div class="metric-info">
+                                <div class="metric-value">156</div>
+                                <div class="metric-label">Total Patients</div>
+                            </div>
+                        </div>
+                        
+                        <div class="metric-card emergency">
+                            <div class="metric-icon">🚨</div>
+                            <div class="metric-info">
+                                <div class="metric-value">7</div>
+                                <div class="metric-label">Emergency Cases</div>
+                            </div>
+                        </div>
+                        
+                        <div class="metric-card">
+                            <div class="metric-icon">⏱️</div>
+                            <div class="metric-info">
+                                <div class="metric-value">18</div>
+                                <div class="metric-label">Avg Wait (min)</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Doctors Table -->
+                    <div class="doctors-grid">
+                        <div class="doctors-header">Doctor Queue Status</div>
+                        <table class="doctors-table">
+                            <thead>
+                                <tr>
+                                    <th>Doctor</th>
+                                    <th>Total Patients</th>
+                                    <th>Emergency</th>
+                                    <th>Regular</th>
+                                    <th>Avg Wait</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Dr. Smith</td>
+                                    <td>23</td>
+                                    <td style="color: #dc3545; font-weight: bold;">3</td>
+                                    <td>20</td>
+                                    <td>25 min</td>
+                                    <td><span class="status-badge busy">Busy</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Dr. Johnson</td>
+                                    <td>18</td>
+                                    <td style="color: #dc3545; font-weight: bold;">1</td>
+                                    <td>17</td>
+                                    <td>15 min</td>
+                                    <td><span class="status-badge active">Active</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Dr. Williams</td>
+                                    <td>31</td>
+                                    <td style="color: #dc3545; font-weight: bold;">2</td>
+                                    <td>29</td>
+                                    <td>22 min</td>
+                                    <td><span class="status-badge emergency">Emergency</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Dr. Brown</td>
+                                    <td>8</td>
+                                    <td>0</td>
+                                    <td>8</td>
+                                    <td>12 min</td>
+                                    <td><span class="status-badge active">Active</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Dr. Davis</td>
+                                    <td>42</td>
+                                    <td style="color: #dc3545; font-weight: bold;">1</td>
+                                    <td>41</td>
+                                    <td>28 min</td>
+                                    <td><span class="status-badge busy">Busy</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Emergency Alert Modal -->
+    <div class="emergency-alert" id="emergency-alert">
+        <h3>🚨 EMERGENCY ALERT</h3>
+        <p id="emergency-message">Emergency patient added to queue - requires immediate attention!</p>
+        <button class="btn btn-primary" onclick="dismissEmergencyAlert()">Acknowledge</button>
+    </div>
+
+    <!-- Notification Container -->
+    <div class="notification" id="notification"></div>
+
+    <script>
+        // Demo Data and State
+        let currentRole = 'doctor';
+        let queueData = {
+            totalPatients: 8,
+            emergencyCount: 2,
+            regularCount: 6,
+            avgWait: 23
+        };
+
+        // Initialize Demo
+        document.addEventListener('DOMContentLoaded', function() {
+            setupRoleTabs();
+            startRealTimeUpdates();
+            showNotification('Queue system initialized successfully!', 'success');
+        });
+
+        // Role Tab Management
+        function setupRoleTabs() {
+            const roleTabs = document.querySelectorAll('.role-tab');
+            const rolePanels = document.querySelectorAll('.role-panel');
+
+            roleTabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const role = this.dataset.role;
+                    
+                    // Update active tab
+                    roleTabs.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Update active panel
+                    rolePanels.forEach(p => p.classList.remove('active'));
+                    document.getElementById(`${role}-panel`).classList.add('active');
+                    
+                    currentRole = role;
+                    showNotification(`Switched to ${role} view`, 'info');
+                });
+            });
+        }
+
+        // Doctor Functions
+        function addPatient() {
+            const patientId = document.getElementById('patient-id').value;
+            const appointmentType = document.getElementById('appointment-type').value;
+            const priority = document.getElementById('priority-level').value;
+
+            if (!patientId.trim()) {
+                showNotification('Please enter a patient ID', 'error');
+                return;
+            }
+
+            // Simulate adding patient
+            const position = queueData.totalPatients + 1;
+            queueData.totalPatients++;
+            
+            if (priority === 'emergency') {
+                queueData.emergencyCount++;
+                showEmergencyAlert('Emergency patient added to queue!');
+            } else {
+                queueData.regularCount++;
+            }
+
+            updateQueueStats();
+            showNotification(`Patient added at position ${position} (${priority} priority)`, 'success');
+            
+            // Clear form
+            document.getElementById('patient-id').value = '';
+            document.getElementById('appointment-type').value = 'consultation';
+            document.getElementById('priority-level').value = 'normal';
+
+            // Simulate adding to queue list (in real app, this would update from WebSocket)
+            console.log(`📝 Added patient: ${patientId} (${appointmentType}, ${priority})`);
+        }
+
+        function callPatient(patientId) {
+            showNotification(`Calling patient ${patientId}...`, 'info');
+            
+            // Simulate calling patient
+            setTimeout(() => {
+                queueData.totalPatients--;
+                queueData.regularCount = Math.max(0, queueData.regularCount - 1);
+                updateQueueStats();
+                showNotification(`Patient ${patientId} called successfully`, 'success');
+            }, 1500);
+        }
+
+        function prioritizePatient(patientId) {
+            showNotification(`Escalating patient ${patientId} to emergency priority...`, 'warning');
+            
+            setTimeout(() => {
+                queueData.emergencyCount++;
+                queueData.regularCount--;
+                updateQueueStats();
+                showEmergencyAlert(`Patient ${patientId} escalated to emergency priority!`);
+            }, 1000);
+        }
+
+        function callNextPatient() {
+            if (queueData.totalPatients === 0) {
+                showNotification('No patients in queue', 'warning');
+                return;
+            }
+
+            showNotification('Calling next patient...', 'info');
+            
+            setTimeout(() => {
+                queueData.totalPatients--;
+                if (queueData.emergencyCount > 0) {
+                    queueData.emergencyCount--;
+                } else {
+                    queueData.regularCount--;
+                }
+                updateQueueStats();
+                showNotification('Next patient called successfully', 'success');
+            }, 1500);
+        }
+
+        function clearQueue() {
+            if (confirm('Are you sure you want to clear the entire queue?')) {
+                queueData.totalPatients = 0;
+                queueData.emergencyCount = 0;
+                queueData.regularCount = 0;
+                updateQueueStats();
+                showNotification('Queue cleared', 'info');
+            }
+        }
+
+        // Update UI Functions
+        function updateQueueStats() {
+            document.getElementById('total-patients').textContent = queueData.totalPatients;
+            document.getElementById('emergency-count').textContent = queueData.emergencyCount;
+            document.getElementById('regular-count').textContent = queueData.regularCount;
+            
+            // Update patient view
+            const position = Math.min(3, queueData.totalPatients);
+            document.getElementById('patient-position').textContent = `#${position || 'N/A'}`;
+            document.getElementById('estimated-wait').textContent = position * 15 || 0;
+            document.getElementById('queue-total').textContent = queueData.totalPatients;
+            document.getElementById('last-updated').textContent = new Date().toLocaleTimeString([], { 
+                hour: '2-digit', 
+                minute: '2-digit' 
+            });
+        }
+
+        // Real-time Updates Simulation
+        function startRealTimeUpdates() {
+            setInterval(() => {
+                // Simulate random queue updates
+                if (Math.random() > 0.7) {
+                    const events = ['patient_arrived', 'patient_called', 'priority_updated'];
+                    const event = events[Math.floor(Math.random() * events.length)];
+                    
+                    switch(event) {
+                        case 'patient_arrived':
+                            if (queueData.totalPatients < 50) {
+                                queueData.totalPatients++;
+                                queueData.regularCount++;
+                                updateQueueStats();
+                                showNotification('New patient arrived', 'info');
+                            }
+                            break;
+                            
+                        case 'patient_called':
+                            if (queueData.totalPatients > 0) {
+                                queueData.totalPatients--;
+                                queueData.regularCount = Math.max(0, queueData.regularCount - 1);
+                                updateQueueStats();
+                            }
+                            break;
+                            
+                        case 'priority_updated':
+                            if (queueData.regularCount > 0 && Math.random() > 0.9) {
+                                queueData.emergencyCount++;
+                                queueData.regularCount--;
+                                updateQueueStats();
+                                showEmergencyAlert('Patient priority escalated to emergency!');
+                            }
+                            break;
+                    }
+                }
+                
+                // Update timestamps
+                document.getElementById('last-updated').textContent = new Date().toLocaleTimeString([], { 
+                    hour: '2-digit', 
+                    minute: '2-digit' 
+                });
+            }, 5000); // Update every 5 seconds
+        }
+
+        // Notification System
+        function showNotification(message, type = 'info') {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = `notification ${type}`;
+            notification.classList.add('show');
+
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        // Emergency Alert System
+        function showEmergencyAlert(message) {
+            const alert = document.getElementById('emergency-alert');
+            document.getElementById('emergency-message').textContent = message;
+            alert.classList.add('show');
+            
+            // Auto-dismiss after 10 seconds
+            setTimeout(() => {
+                dismissEmergencyAlert();
+            }, 10000);
+        }
+
+        function dismissEmergencyAlert() {
+            const alert = document.getElementById('emergency-alert');
+            alert.classList.remove('show');
+        }
+
+        // Performance Simulation
+        function simulateHighLoad() {
+            console.log('🚀 Simulating high load - adding 100 patients...');
+            const startTime = Date.now();
+            
+            for (let i = 0; i < 100; i++) {
+                queueData.totalPatients++;
+                queueData.regularCount++;
+            }
+            
+            const endTime = Date.now();
+            updateQueueStats();
+            
+            showNotification(`Added 100 patients in ${endTime - startTime}ms`, 'success');
+            console.log(`⚡ High load simulation completed in ${endTime - startTime}ms`);
+        }
+
+        // Expose functions for console testing
+        window.simulateHighLoad = simulateHighLoad;
+        window.addTestPatient = () => addPatient();
+        window.showTestAlert = () => showEmergencyAlert('Test emergency alert!');
+        
+        console.log('🏥 HIPAA Queue Demo Ready!');
+        console.log('📋 Try these commands in the console:');
+        console.log('   - simulateHighLoad() - Add 100 patients');
+        console.log('   - addTestPatient() - Add a test patient');
+        console.log('   - showTestAlert() - Show emergency alert');
+    </script>
+</body>
+</html>

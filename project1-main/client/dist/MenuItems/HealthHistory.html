@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>myUCLAhealth - Health Summary</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        
+        /* Header Styles */
+        .header {
+            background-color: #fff;
+            border-bottom: 1px solid #e0e0e0;
+            padding: 0;
+        }
+        
+        .header-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+        }
+        
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .menu-button {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            color: #333;
+        }
+        
+        .menu-icon {
+            width: 24px;
+            height: 24px;
+            background-color: #0084c7;
+            border-radius: 4px;
+            position: relative;
+        }
+        
+        .menu-icon::before,
+        .menu-icon::after,
+        .menu-icon span {
+            position: absolute;
+            width: 14px;
+            height: 2px;
+            background-color: white;
+            left: 5px;
+        }
+        
+        .menu-icon::before {
+            content: '';
+            top: 6px;
+        }
+        
+        .menu-icon span {
+            top: 11px;
+        }
+        
+        .menu-icon::after {
+            content: '';
+            bottom: 6px;
+        }
+        
+        .logo {
+            font-size: 20px;
+            font-weight: bold;
+            color: #0084c7;
+            text-decoration: none;
+        }
+        
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .user-dropdown {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+        }
+        
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: #0084c7;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        
+        .logout-btn {
+            background: none;
+            border: none;
+            color: #333;
+            cursor: pointer;
+            padding: 8px 16px;
+            font-size: 14px;
+        }
+        
+        /* Main Content */
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .page-header {
+            margin-bottom: 20px;
+        }
+        
+        .page-title {
+            font-size: 28px;
+            font-weight: normal;
+            margin-bottom: 16px;
+        }
+        
+        .patient-info {
+            display: flex;
+            gap: 40px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+        
+        .info-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        
+        .jump-to-actions {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #0084c7;
+            text-decoration: none;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+        
+        .jump-icon {
+            width: 20px;
+            height: 20px;
+            background-color: #0084c7;
+            border-radius: 50%;
+        }
+        
+        /* Grid Layout */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+        }
+        
+        .left-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        /* Widget Styles */
+        .widget {
+            background-color: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            padding: 20px;
+            position: relative;
+            min-height: 200px;
+        }
+        
+        .widget-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        
+        .widget-icon {
+            width: 20px;
+            height: 20px;
+            background-color: #0084c7;
+            border-radius: 4px;
+        }
+        
+        .widget-title {
+            font-size: 18px;
+            font-weight: normal;
+        }
+        
+        .widget-list {
+            list-style: none;
+        }
+        
+        .widget-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .widget-list li:last-child {
+            border-bottom: none;
+        }
+        
+        .primary-text {
+            font-weight: 500;
+            color: #333;
+        }
+        
+        .sub-label {
+            font-size: 12px;
+            color: #666;
+            margin-top: 4px;
+        }
+        
+        .sub-text {
+            font-size: 12px;
+            color: #333;
+        }
+        
+        .widget-footer {
+            position: absolute;
+            bottom: 16px;
+            left: 20px;
+            right: 20px;
+        }
+        
+        .widget-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            color: #0084c7;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        
+        .plus-more {
+            color: #666;
+            font-size: 14px;
+            padding: 8px 0;
+        }
+        
+        .zero-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 20px 0;
+        }
+        
+        .zero-state-icon {
+            width: 40px;
+            height: 40px;
+            background-color: #e0e0e0;
+            border-radius: 50%;
+            margin-bottom: 12px;
+        }
+        
+        .add-goal-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: none;
+            border: none;
+            color: #0084c7;
+            cursor: pointer;
+            font-size: 14px;
+            margin-top: 16px;
+        }
+        
+        /* Recommended Actions Widget */
+        .recommended-actions {
+            background-color: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .action-item {
+            padding: 16px;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .action-text {
+            font-size: 14px;
+        }
+        
+        .action-btn {
+            background-color: #0084c7;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        /* Quick Links */
+        .quick-links {
+            background-color: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            padding: 20px;
+        }
+        
+        .quick-link {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f0f0;
+            color: #0084c7;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        
+        .quick-link:last-child {
+            border-bottom: none;
+        }
+        
+        .arrow-icon {
+            width: 20px;
+            height: 20px;
+            color: #0084c7;
+        }
+        
+        /* Footer */
+        .footer {
+            background-color: #333;
+            color: white;
+            padding: 40px 20px;
+            margin-top: 40px;
+            text-align: center;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .footer-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        
+        .copyright {
+            font-size: 12px;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="header-nav">
+            <div class="nav-left">
+                <button class="menu-button">
+                    <div class="menu-icon"><span></span></div>
+                    <span>Menu</span>
+                </button>
+                <a href="#" class="logo">myUCLAhealth</a>
+            </div>
+            <div class="nav-right">
+                <button class="user-dropdown">
+                    <div class="user-avatar">R</div>
+                    <span>Rachel</span>
+                </button>
+                <button class="logout-btn">Log out</button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-container">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1 class="page-title">Health Summary</h1>
+            <div class="patient-info">
+                <div class="info-group">
+                    <div>Height: 1.702 m (5' 7")</div>
+                    <div>Weight: 67.2 kg (148 lb 3.2 oz)</div>
+                </div>
+                <div class="info-group">
+                    <div>Age: 26</div>
+                </div>
+                <div class="info-group">
+                    <div>Last visit: <a href="#">Jun 30, 2025 - Office Visit</a></div>
+                    <div>Next visit: <a href="#">Aug 4, 2025 - Appointment</a></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Jump to Actions -->
+        <a href="#recommended-actions" class="jump-to-actions">
+            <span class="jump-icon"></span>
+            <span>Jump to Recommended Actions (2)</span>
+        </a>
+
+        <!-- Content Grid -->
+        <div class="content-grid">
+            <div class="left-column">
+                <!-- Medications Widget -->
+                <div class="widget">
+                    <div class="widget-header">
+                        <div class="widget-icon"></div>
+                        <h2 class="widget-title">Medications</h2>
+                    </div>
+                    <ul class="widget-list">
+                        <li>
+                            <div class="primary-text">folic acid 1 mg tablet</div>
+                            <div class="sub-label">Commonly known as:</div>
+                            <div class="sub-text">Folvite</div>
+                        </li>
+                        <li>
+                            <div class="primary-text">metFORMIN 500 mg ER 24 hr tablet</div>
+                            <div class="sub-label">Commonly known as:</div>
+                            <div class="sub-text">Glucophage XR</div>
+                        </li>
+                    </ul>
+                    <div class="widget-footer">
+                        <a href="#" class="widget-link">→ Go to Medications</a>
+                    </div>
+                </div>
+
+                <!-- Current Health Issues Widget -->
+                <div class="widget">
+                    <div class="widget-header">
+                        <div class="widget-icon"></div>
+                        <h2 class="widget-title">Current Health Issues</h2>
+                    </div>
+                    <ul class="widget-list">
+                        <li><div class="primary-text">Dizziness</div></li>
+                        <li><div class="primary-text">Folate deficiency</div></li>
+                        <li><div class="primary-text">Gluten intolerance</div></li>
+                        <li><div class="primary-text">Hyperinsulinism</div></li>
+                    </ul>
+                    <div class="plus-more">+ more</div>
+                    <div class="widget-footer">
+                        <a href="#" class="widget-link">→ Go to Health Issues</a>
+                    </div>
+                </div>
+
+                <!-- My Health Goal Widget -->
+                <div class="widget">
+                    <div class="widget-header">
+                        <div class="widget-icon"></div>
+                        <h2 class="widget-title">My Health Goal</h2>
+                    </div>
+                    <div class="zero-state">
+                        <div class="zero-state-icon"></div>
+                        <div>You have no health goals shared with your care team.</div>
+                        <div style="font-size: 12px; color: #666; margin-top: 8px;">
+                            Sharing a health goal with your care team can help them discuss your plan of care with you at future visits.
+                        </div>
+                        <button class="add-goal-btn">
+                            <span>+</span>
+                            <span>Add goal</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Allergies Widget -->
+                <div class="widget">
+                    <div class="widget-header">
+                        <div class="widget-icon"></div>
+                        <h2 class="widget-title">Allergies</h2>
+                    </div>
+                    <div class="zero-state">
+                        <div class="zero-state-icon"></div>
+                        <div>No known allergies.</div>
+                    </div>
+                    <div class="widget-footer">
+                        <a href="#" class="widget-link">→ Go to Allergies</a>
+                    </div>
+                </div>
+
+                <!-- Immunizations Widget -->
+                <div class="widget" style="grid-column: span 2;">
+                    <div class="widget-header">
+                        <div class="widget-icon"></div>
+                        <h2 class="widget-title">Immunizations</h2>
+                    </div>
+                    <ul class="widget-list">
+                        <li>
+                            <div class="primary-text">BCG</div>
+                            <div class="sub-label">Dates on file:</div>
+                            <div class="sub-text">01/26/1999</div>
+                        </li>
+                        <li>
+                            <div class="primary-text">COVID-19 (Pfizer 12y and up) PF, 30 mcg/0.3 mL</div>
+                            <div class="sub-label">Dates on file:</div>
+                            <div class="sub-text">05/15/2025</div>
+                        </li>
+                        <li>
+                            <div class="primary-text">COVID-19, mRNA, bivalent (Moderna) 50 mcg/0.5 mL (12y and up)</div>
+                            <div class="sub-label">Dates on file:</div>
+                            <div class="sub-text">12/04/2022</div>
+                        </li>
+                        <li>
+                            <div class="primary-text">DTP</div>
+                            <div class="sub-label">Dates on file:</div>
+                            <div class="sub-text">02/19/2001, +3 more</div>
+                        </li>
+                    </ul>
+                    <div class="plus-more">+ more</div>
+                    <div class="widget-footer">
+                        <a href="#" class="widget-link">→ Go to Immunizations</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column -->
+            <div class="right-column">
+                <!-- Recommended Actions -->
+                <div class="recommended-actions" id="recommended-actions">
+                    <div class="widget-header">
+                        <div class="widget-icon"></div>
+                        <h2 class="widget-title">Recommended Actions</h2>
+                    </div>
+                    <div class="action-item">
+                        <span class="action-text">HPV Vaccines is overdue.</span>
+                        <button class="action-btn">View details</button>
+                    </div>
+                    <div class="action-item">
+                        <span class="action-text">Cervical Cancer Screening: Pap Smear is overdue.</span>
+                        <button class="action-btn">View details</button>
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div class="quick-links">
+                    <div class="widget-header">
+                        <div class="widget-icon"></div>
+                        <h2 class="widget-title">Quick Links</h2>
+                    </div>
+                    <a href="#" class="quick-link">
+                        <span>Visits/Clinical Notes</span>
+                        <span class="arrow-icon">→</span>
+                    </a>
+                    <a href="#" class="quick-link">
+                        <span>Health Reminders</span>
+                        <span class="arrow-icon">→</span>
+                    </a>
+                    <a href="#" class="quick-link">
+                        <span>Upcoming Tests and Procedures</span>
+                        <span class="arrow-icon">→</span>
+                    </a>
+                    <a href="#" class="quick-link">
+                        <span>Care Journeys</span>
+                        <span class="arrow-icon">→</span>
+                    </a>
+                    <a href="#" class="quick-link">
+                        <span>Growth Charts</span>
+                        <span class="arrow-icon">→</span>
+                    </a>
+                    <a href="#" class="quick-link">
+                        <span>Download School Health Summary</span>
+                        <span class="arrow-icon">→</span>
+                    </a>
+                    <a href="#" class="quick-link">
+                        <span>Sharing Hub</span>
+                        <span class="arrow-icon">→</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-links">
+            <a href="#">Interoperability Guide</a>
+            <a href="#">Terms and Conditions</a>
+            <a href="#">Contact Us</a>
+            <a href="#">Default Theme</a>
+            <a href="#">High Contrast Theme</a>
+        </div>
+        <div class="copyright">
+            MyChart® licensed from Epic Systems Corporation © 1999 - 2025
+        </div>
+    </footer>
+</body>
+</html>

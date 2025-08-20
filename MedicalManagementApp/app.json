@@ -1,0 +1,59 @@
+{
+  "expo": {
+    "name": "HealthBridge",
+    "slug": "healthbridge-mobile",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#3B82F6"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.healthbridge.mobile",
+      "infoPlist": {
+        "NSFaceIDUsageDescription": "HealthBridge uses Face ID for secure authentication to protect your medical records.",
+        "NSCameraUsageDescription": "HealthBridge needs camera access to scan insurance cards and documents.",
+        "NSPhotoLibraryUsageDescription": "HealthBridge needs photo library access to upload medical documents."
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#3B82F6"
+      },
+      "package": "com.healthbridge.mobile",
+      "permissions": [
+        "USE_FINGERPRINT",
+        "USE_BIOMETRIC",
+        "CAMERA",
+        "READ_EXTERNAL_STORAGE"
+      ]
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-secure-store",
+      "expo-local-authentication",
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/notification-icon.png",
+          "color": "#3B82F6"
+        }
+      ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "your-project-id"
+      }
+    }
+  }
+}

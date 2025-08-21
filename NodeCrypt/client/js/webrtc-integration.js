@@ -25,37 +25,46 @@ class WebRTCManager {
     }
 
     /**
+     * Add video call button to the header
+     */
+    addVideoCallButton() {
+        const headerActions = document.querySelector('.main-header-actions');
+        if (headerActions && !document.getElementById('video-call-btn')) {
+            const callButton = createElement('button', {
+                id: 'video-call-btn',
+                class: 'video-call-btn',
+                title: 'Start Video Call'
+            });
+            callButton.innerHTML = '📹';
+            callButton.onclick = () => this.toggleVideoCall();
+            
+            // Insert before the more button
+            const moreBtn = headerActions.querySelector('.more-btn');
+            if (moreBtn) {
+                headerActions.insertBefore(callButton, moreBtn);
+            } else {
+                headerActions.appendChild(callButton);
+            }
+        }
+    }
+
+    /**
      * Initialize WebRTC UI components in the chat interface
      */
     initializeUI() {
-        // Add video call button to main header actions (where the more button is)
-        // We'll insert it after the header is rendered
-        const observer = new MutationObserver((mutations) => {
-            const headerActions = document.querySelector('.main-header-actions');
-            if (headerActions && !document.getElementById('video-call-btn')) {
-                const callButton = createElement('button', {
-                    id: 'video-call-btn',
-                    class: 'video-call-btn',
-                    title: 'Start Video Call',
-                    onclick: () => this.toggleVideoCall()
-                });
-                callButton.innerHTML = '📹';
-                
-                // Insert before the more button
-                const moreBtn = headerActions.querySelector('.more-btn');
-                if (moreBtn) {
-                    headerActions.insertBefore(callButton, moreBtn);
-                } else {
-                    headerActions.appendChild(callButton);
-                }
-            }
-        });
+        // Hook into renderMainHeader to add button after each render
+        const originalRenderHeader = window.renderMainHeader;
+        const self = this;
         
-        // Observe the main header for changes
-        const mainHeader = document.getElementById('main-header');
-        if (mainHeader) {
-            observer.observe(mainHeader, { childList: true, subtree: true });
-        }
+        // Override renderMainHeader function
+        window.renderMainHeader = function() {
+            // Call original function if it exists
+            if (originalRenderHeader && typeof originalRenderHeader === 'function') {
+                originalRenderHeader.apply(this, arguments);
+            }
+            // Add our video call button
+            setTimeout(() => self.addVideoCallButton(), 0);
+        };
 
         // Create video container (hidden by default)
         if (!document.getElementById('video-container')) {
@@ -157,11 +166,13 @@ class WebRTCManager {
 
             // Create peer connections for existing users in room
             const room = roomsData[activeRoomIndex];
-            room.userList.forEach(user => {
-                if (user.id !== room.myId) {
-                    this.createPeerConnection(user.id, true);
-                }
-            });
+            if (room.userList) {
+                room.userList.forEach(user => {
+                    if (user.clientId !== room.myId) {
+                        this.createPeerConnection(user.clientId, true);
+                    }
+                });
+            }
 
         } catch (error) {
             console.error('Failed to start video call:', error);
@@ -406,6 +417,7 @@ class WebRTCManager {
 
     /**
      * Send WebRTC signaling through existing WebSocket
+     * This will be overridden by webrtc-handler.js to use NodeCrypt
      */
     sendSignal(data) {
         const room = roomsData[activeRoomIndex];

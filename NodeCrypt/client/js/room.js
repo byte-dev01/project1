@@ -237,6 +237,15 @@ export function handleClientMessage(idx, msg) {
 	const newRd = roomsData[idx];
 	if (!newRd) return;
 
+	// Handle WebRTC signaling messages
+	if (msg.type === 'webrtc_signal') {
+		// Import webRTC handler dynamically to avoid circular dependency
+		import('./webrtc-handler.js').then(module => {
+			module.handleWebRTCSignal(msg);
+		});
+		return; // Don't process WebRTC signals as regular messages
+	}
+
 	// Prevent processing own messages unless it's a private message sent to oneself
 	if (msg.clientId === newRd.myId && msg.userName === newRd.myUserName && !msg.type.includes('_private')) {
 		return;

@@ -2,6 +2,9 @@
 // Import the NodeCrypt module (used for encryption)
 import './NodeCrypt.js';
 
+// Import WebRTC integration module
+import webRTCManager from './webrtc-integration.js';
+
 // 从 util.file.js 中导入设置文件发送的函数
 // Import setupFileSend function from util.file.js
 import {
@@ -144,6 +147,14 @@ window.addEventListener('DOMContentLoaded', () => {
 	// initSettings();
 	// updateStaticTexts(); // 在初始化设置后更新静态文本 / Update static texts after initializing settings
 	initTheme(); // 初始化主题 / Initialize theme
+	
+	// Initialize WebRTC UI components
+	webRTCManager.initializeUI();
+	
+	// Initialize WebRTC integration with NodeCrypt
+	import('./webrtc-handler.js').then(module => {
+		module.initWebRTCIntegration();
+	});
 	
 	const settingsBtn = $id('settings-btn'); // 设置按钮 / Settings button
 	if (settingsBtn) {

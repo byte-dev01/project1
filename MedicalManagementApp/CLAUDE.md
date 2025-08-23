@@ -1,364 +1,159 @@
-# HealthBridge Medical Management App - Claude Development Guide
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 ## Project Overview
 
-HealthBridge is a **HIPAA-compliant React Native medical management application** built with Expo. It enables healthcare providers to securely manage patient records, prescriptions, fax communications, and provider messaging while maintaining strict compliance with healthcare regulations.
+HealthBridge is a HIPAA-compliant React Native medical management application built with Expo SDK 53. It provides healthcare providers with tools for patient management, prescriptions, fax processing, and secure messaging.
 
-## Tech Stack
-
-### Core Technologies
-- **Framework**: React Native 0.79.5 with Expo SDK 53
-- **Language**: TypeScript with strict mode enabled
-- **State Management**: Zustand for client-side state
-- **Navigation**: React Navigation 7 (Stack + Bottom Tabs)
-- **Styling**: Custom theme system with design tokens
-
-### Security & Compliance
-- **Storage**: Expo Secure Store + AsyncStorage with AES encryption
-- **Authentication**: Biometric (Face ID/Touch ID) + credential-based
-- **Network**: Enforced HTTPS with certificate pinning
-- **Audit**: SQLite-based comprehensive audit logging
-- **Compliance**: HIPAA + California healthcare regulations
-
-### Key Dependencies
-```json
-{
-  "@react-navigation/native": "^7.1.6",
-  "@react-navigation/bottom-tabs": "^7.3.10",
-  "expo-secure-store": "Latest via plugins",
-  "expo-local-authentication": "Latest via plugins", 
-  "react-native-sqlite-storage": "Latest",
-  "zustand": "Latest"
-}
-```
-
-## Application Architecture
-
-### Navigation Hierarchy
-```
-RootNavigator
-├── AuthNavigator (when !authenticated)
-│   └── LoginScreen (biometric + credential auth)
-└── MainNavigator (when authenticated)
-    ├── Dashboard (Tab 1)
-    ├── FaxNavigator (Tab 2)
-    │   ├── FaxListScreen
-    │   └── FaxDetailScreen
-    ├── PatientNavigator (Tab 3)
-    │   ├── PatientSearchScreen
-    │   ├── PatientDetailScreen
-    │   ├── NewPatient (PatientForm)
-    │   ├── PatientEdit (PatientForm)
-    │   └── InsuranceForm
-    ├── MessageNavigator (Tab 4)
-    │   └── MessageListScreen
-    └── More (Tab 5 - Settings/Logout)
-```
-
-### Directory Structure & Path Aliases
-```
-src/
-├── api/                    (@api/*)
-│   ├── AuthApi.tsx        # Authentication endpoints
-│   ├── PatientsApi.tsx    # Patient management
-│   ├── FaxApi.tsx         # Fax processing
-│   └── endpoints.ts       # API endpoint definitions
-├── components/             (@components/*)
-│   ├── common/            # Reusable components
-│   ├── forms/             # Form components
-│   ├── fax/               # Fax-specific components
-│   └── ui/                # UI primitives
-├── screens/                (@screens/*)
-│   ├── auth/              # Authentication screens
-│   ├── fax/               # Fax management
-│   └── [feature]/         # Feature-specific screens
-├── services/               # Core services
-│   ├── SecureStorageService.ts    # Encrypted storage
-│   ├── SecureAPIClient.ts         # HTTPS-only API client
-│   └── security.ts                # Security manager
-├── store/                  (@store/*)
-│   ├── authStore.ts       # Authentication state
-│   ├── patientStore.ts    # Patient data
-│   └── faxStore.ts        # Fax message state
-├── core/                   # Business logic
-│   ├── compliance/        # HIPAA/CA compliance
-│   └── clinical/          # Clinical safety services
-├── navigation/             (@navigation/*)
-├── types/                  (@types/*)
-├── theme/                  (@theme/*)
-└── utils/                  (@utils/*)
-```
-
-## Security Architecture
-
-### Multi-Layer Security Model
-1. **Transport Layer**: HTTPS-only with certificate validation
-2. **Storage Layer**: AES encryption for all PHI data
-3. **Authentication**: Biometric + multi-factor
-4. **Audit Layer**: Comprehensive logging with integrity chains
-5. **Application Layer**: Screenshot prevention, app backgrounding protection
-
-### Key Security Services
-
-#### SecureStorageService
-```typescript
-// Automatically encrypts/decrypts PHI data
-await SecureStorageService.setSecureItem('prescription_123', prescriptionData);
-const data = await SecureStorageService.getSecureItem('prescription_123');
-```
-
-#### SecureAPIClient  
-```typescript
-// Enforces HTTPS, adds auth headers, logs requests
-const prescriptions = await SecureAPIClient.get('/patients/123/prescriptions');
-```
-
-#### AuditLogService
-```typescript
-// HIPAA-compliant audit logging
-await auditLog.log({
-  action: 'VIEW',
-  resourceType: 'PRESCRIPTION', 
-  patientId: '123',
-  userId: currentUser.id,
-  purpose: 'TREATMENT'
-});
-```
-
-## Development Patterns
-
-### State Management with Zustand
-```typescript
-// Store pattern for feature state
-export const useAuthStore = create<AuthState>((set, get) => ({
-  user: null,
-  isAuthenticated: false,
-  login: async (username, password, clinicId) => {
-    // Login logic with security logging
-  },
-  logout: async () => {
-    // Secure cleanup
-  }
-}));
-```
-
-### Component Patterns
-```typescript
-// Consistent component structure
-export const ComponentName: React.FC<Props> = ({ ...props }) => {
-  // Hooks
-  // State  
-  // Effects
-  // Handlers
-  // Render
-  return (
-    <SafeAreaWrapper>
-      {/* Component JSX */}
-    </SafeAreaWrapper>
-  );
-};
-```
-
-### Theme Usage
-```typescript
-// Consistent design system usage
-import { colors } from '@theme/colors';
-import { typography } from '@theme/typography';
-import { spacing } from '@theme/spacing';
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: colors.background.primary,
-    padding: spacing.lg,
-  },
-  title: {
-    fontSize: typography.fontSize.xl,
-    fontWeight: typography.fontWeight.bold,
-    color: colors.text.primary,
-  }
-});
-```
-
-## Compliance Requirements
-
-### HIPAA Compliance Features
-- ✅ Encrypted data at rest and in transit
-- ✅ Comprehensive audit logging
-- ✅ Access controls and authentication
-- ✅ Session timeouts and automatic logout
-- ✅ Secure PHI handling and storage
-
-### California Healthcare Compliance
-- ✅ Minor patient access controls
-- ✅ Mental health data protections (LPS Act)
-- ✅ Knox-Keene Act compliance
-- ✅ Substance abuse data protections (42 CFR Part 2)
-- ✅ Data retention policies (7 years adult, until age 25 for minors)
-
-## Key Features
-
-### 1. Fax Processing System
-- AI-powered severity analysis with scoring (轻度/中度/重度/紧急)
-- OCR text extraction and transcription
-- Automatic patient matching and assignment
-- Priority-based workflow management
-
-### 2. Patient Management
-- Comprehensive patient search and records
-- Insurance verification and form management
-- Medical history tracking with encrypted storage
-- Allergy and medication management
-
-### 3. Secure Messaging
-- Provider-to-provider encrypted communication
-- Message threading and attachment support
-- Audit logging for all message activities
-- Urgent message prioritization
-
-### 4. Clinical Safety
-- Drug interaction checking
-- Prescription management with CURES2 integration
-- Clinical decision support tools
-- Automated safety alerts
-
-## Development Scripts
+## Key Commands
 
 ```bash
 # Development
-npm start                 # Start Expo dev server
-npm run android          # Run on Android emulator  
-npm run ios             # Run on iOS simulator
-npm run web             # Run on web browser
+npm start                 # Start Expo development server
+npm run android          # Run on Android
+npm run ios              # Run on iOS  
+npm run web              # Run in web browser
 
 # Code Quality
-npm run lint            # ESLint checking
-npm run reset-project   # Reset to blank template
+npm run lint             # Run ESLint
 
-# Testing (when configured)
-npm test                # Run unit tests
-npm run e2e             # Run Playwright E2E tests
+# Utilities
+npm run reset-project    # Reset to blank Expo template
 ```
 
-## Environment Setup
+## Architecture Overview
 
-### Required for Development
-1. **Expo CLI**: `npm install -g @expo/cli`
-2. **iOS Development**: Xcode + iOS Simulator
-3. **Android Development**: Android Studio + AVD
-4. **Security Testing**: Device with biometric capabilities
+### Tech Stack
+- **Framework**: React Native 0.79.5 + Expo SDK 53
+- **State Management**: Zustand stores in `/store`
+- **Navigation**: React Navigation 7 (Stack + Bottom Tabs)
+- **Security**: Expo Secure Store, biometric auth, AES encryption
+- **Database**: SQLite for audit logging
+- **Language**: TypeScript with strict mode
 
-### Configuration Files
-- `app.json` - Expo app configuration with security permissions
-- `tsconfig.json` - TypeScript config with strict mode + path aliases
-- `babel.config.js` - Babel config with module resolver for aliases
-- `eslint.config.js` - ESLint config using Expo defaults
+### Navigation Structure
 
-## Security Considerations for Development
+The app uses a dual-navigation pattern:
+- **Unauthenticated**: Login → Main app
+- **Authenticated**: Bottom tabs with nested stacks
 
-### Never Commit
-- Real API keys or secrets
-- Actual patient data or PHI
-- Production authentication credentials
-- Hardcoded encryption keys
+Main navigation tabs:
+1. **Dashboard** - Overview and quick actions
+2. **Patients** - Patient management system
+3. **Medications** - Prescription handling
+4. **Faxes** - AI-powered fax processing
+5. **Messages** - Secure provider messaging
 
-### Always Ensure
-- HTTPS-only API communication
-- Encrypted storage for any sensitive data
-- Proper audit logging for all PHI access
-- Biometric authentication testing on real devices
-- Session timeout implementation
+### Security Architecture
 
-### Testing PHI Compliance
-- Use synthetic/mock patient data only
-- Test encryption/decryption flows
-- Verify audit log completeness
-- Test offline sync and conflict resolution
-- Validate session management and timeouts
+**Critical**: This is a HIPAA-compliant healthcare application. All development must maintain:
+- Patient data encryption at rest and in transit
+- Comprehensive audit logging for all PHI access
+- Session management with automatic timeout
+- Biometric authentication support
+- Input validation and sanitization
 
-## Common Development Tasks
+Key security implementations:
+- `utils/encryption.ts` - AES-256 encryption utilities
+- `utils/auditLogger.ts` - HIPAA-compliant audit logging
+- `utils/sessionManager.ts` - Session lifecycle management
+- `domains/auth/services/AuthService.ts` - Authentication logic
 
-### Adding New Screens
-1. Create in appropriate `src/screens/[feature]/` directory
-2. Add to navigation types in `types/navigation.types.ts`
-3. Update navigator configuration
-4. Implement security audit logging if accessing PHI
+### Core Services
 
-### Adding New API Endpoints
-1. Add endpoint to `src/api/endpoints.ts`
-2. Create or update corresponding API service file
-3. Ensure HTTPS-only communication via SecureAPIClient
-4. Add proper error handling and audit logging
+**Patient Management** (`domains/patients/`)
+- CRUD operations with encryption
+- Medical record management
+- Document attachments
+- Visit history tracking
 
-### Adding New Features
-1. Create feature directory under `src/`
-2. Implement business logic in `src/core/`
-3. Add Zustand store if needed in `store/`
-4. Create reusable components in `components/`
-5. Add proper TypeScript types in `types/`
-6. Ensure HIPAA compliance and audit logging
+**Fax Processing** (`domains/faxes/`)
+- AI-powered text extraction and categorization
+- Severity scoring (URGENT/HIGH/NORMAL/LOW)
+- Auto-attachment to patient records
+- Action item extraction
 
-## Performance Considerations
+**Messaging** (`domains/messages/`)
+- End-to-end encrypted provider messaging
+- Read receipts and typing indicators
+- Message attachments
+- Thread management
 
-### Optimization Strategies
-- Use React.memo for expensive components
-- Implement proper list virtualization for large datasets
-- Lazy load screens and heavy components
-- Optimize image loading and caching
-- Monitor bundle size and implement code splitting
+**Prescription Management** (`domains/medications/`)
+- Electronic prescribing
+- Drug interaction checking
+- Refill management
+- Medication history
 
-### Security vs Performance Balance
-- Encryption/decryption adds overhead - use judiciously
-- Audit logging is comprehensive - balance detail vs performance
-- Biometric authentication adds UI flow complexity
-- Secure storage operations are slower than regular storage
+### Data Flow
 
-## Production Deployment
+1. **API Layer** (`api/`) - Centralized API client with auth headers
+2. **Domain Services** - Business logic in `/domains/[feature]/services`
+3. **Zustand Stores** (`store/`) - Global state management
+4. **UI Components** - React Native screens and components
+5. **Local Storage** - Expo Secure Store for sensitive data
 
-### Security Checklist
-- [ ] All API communications over HTTPS
-- [ ] Certificate pinning implemented
-- [ ] Encryption keys properly managed
-- [ ] Audit logging fully implemented
-- [ ] Session timeouts configured
-- [ ] Screenshot/recording prevention enabled
-- [ ] Compliance requirements verified
+### Path Aliases
 
-### Build Configuration
-- Configure proper signing certificates
-- Set up proper environment variables
-- Ensure security permissions are minimal
-- Test on real devices with biometrics
-- Validate offline functionality
+The project uses TypeScript path aliases for clean imports:
+- `@/` → Root directory
+- `@domains/` → Domain modules
+- `@store/` → State management
+- `@utils/` → Utilities
+- `@theme/` → Theme configuration
+- `@constants/` → App constants
+- `@types/` → TypeScript definitions
 
----
+### Development Patterns
+
+**Component Structure**:
+- Screens in `app/(tabs)/` or `app/screens/`
+- Shared components in domain folders
+- Custom hooks in domain services
+
+**State Management**:
+- Zustand stores for global state
+- React hooks for local state
+- Persist sensitive data with Secure Store
+
+**Error Handling**:
+- Global error boundary in app layout
+- Service-level try-catch blocks
+- User-friendly error messages
+
+### Testing Approach
+
+Currently no test framework is configured. When adding tests:
+- Consider Jest + React Native Testing Library
+- Test security-critical functions first
+- Mock Expo modules appropriately
+- Ensure PHI is never logged in tests
+
+### Important Files
+
+- `app/_layout.tsx` - Root navigation setup
+- `api/client.ts` - API configuration
+- `store/authStore.ts` - Authentication state
+- `utils/encryption.ts` - Encryption utilities
+- `constants/config.ts` - App configuration
+- `theme/colors.ts` - Design system colors
+
+## Compliance Requirements
+
+When developing features:
+1. Never log PHI to console in production
+2. Always encrypt patient data before storage
+3. Implement audit logging for all data access
+4. Validate and sanitize all user inputs
+5. Use HTTPS for all network requests
+6. Implement proper session timeout
+7. Clear sensitive data on logout
 
 ## Quick Reference
 
-### Most Important Files
-- `app.tsx` - Main app entry point with security initialization
-- `src/navigation/RootNavigator.tsx` - Navigation structure
-- `src/services/SecureStorageService.ts` - Encrypted storage
-- `src/core/compliance/AuditLog.ts` - HIPAA audit logging
-- `src/store/authStore.ts` - Authentication state management
-
-### Key Commands for Claude
-```bash
-# Start development
-npm install && npm start
-
-# Check code quality  
-npm run lint
-
-# Common file operations
-# Read: C:\Users\rache\catbook\MedicalManagementApp\src\[path]
-# Edit: Use absolute paths with @aliases in imports
-```
-
-### Architecture Principles
-1. **Security First**: All PHI handling must be encrypted and audited
-2. **Compliance by Design**: HIPAA and California regulations built-in
-3. **User Experience**: Intuitive medical workflows with proper error handling
-4. **Maintainability**: Clean architecture with TypeScript and proper separation
-5. **Performance**: Efficient data handling with offline-first capabilities
-
-This codebase represents a production-ready medical application with enterprise-level security and compliance requirements. Always prioritize patient data protection and regulatory compliance in any modifications.
+**Add a new screen**: Create in `app/screens/` and add to navigation
+**Add a new API endpoint**: Update `api/client.ts` and create service in relevant domain
+**Add global state**: Create new store in `store/` directory
+**Add a new domain**: Create folder structure in `domains/` with services, types, and components
+**Update theme**: Modify files in `theme/` directory

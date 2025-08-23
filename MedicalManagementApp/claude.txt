@@ -1,0 +1,498 @@
+│ │ CLAUDE.md                                                                                                        │ │
+│ │                                                                                                                  │ │
+│ │     1 -  # HealthBridge Medical Management App - Claude Development Guide                                        │ │
+│ │     1 +  # CLAUDE.md                                                                                             │ │
+│ │     2                                                                                                            │ │
+│ │     3 +  This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.  │ │
+│ │     4 +                                                                                                          │ │
+│ │     5    ## Project Overview                                                                                     │ │
+│ │     6                                                                                                            │ │
+│ │     7 -  HealthBridge is a **HIPAA-compliant React Native medical management application** built with Expo. It   │ │
+│ │ enables healthcare providers to securely manage patient records, prescriptions, fax communications, and provider │ │
+│ │  messaging while maintaining strict compliance with healthcare regulations.                                      │ │
+│ │       - enables healthcare providers to securely manage patient records, prescriptions, fax communications, and  │ │
+│ │       - provider messaging while maintaining strict compliance with healthcare regulations.                      │ │
+│ │     7 +  HealthBridge is a HIPAA-compliant React Native medical management application built with Expo SDK 53.   │ │
+│ │ It provides healthcare providers with tools for patient management, prescriptions, fax processing, and secure    │ │
+│ │ messaging.                                                                                                       │ │
+│ │       +  provides healthcare providers with tools for patient management, prescriptions, fax processing, and     │ │
+│ │       + secure messaging.                                                                                        │ │
+│ │     8                                                                                                            │ │
+│ │     9 -  ## Tech Stack                                                                                           │ │
+│ │     9 +  ## Key Commands                                                                                         │ │
+│ │    10                                                                                                            │ │
+│ │    11 -  ### Core Technologies                                                                                   │ │
+│ │    12 -  - **Framework**: React Native 0.79.5 with Expo SDK 53                                                   │ │
+│ │    13 -  - **Language**: TypeScript with strict mode enabled                                                     │ │
+│ │    14 -  - **State Management**: Zustand for client-side state                                                   │ │
+│ │    15 -  - **Navigation**: React Navigation 7 (Stack + Bottom Tabs)                                              │ │
+│ │    16 -  - **Styling**: Custom theme system with design tokens                                                   │ │
+│ │    11 +  ```bash                                                                                                 │ │
+│ │    12 +  # Development                                                                                           │ │
+│ │    13 +  npm start                 # Start Expo development server                                               │ │
+│ │    14 +  npm run android          # Run on Android                                                               │ │
+│ │    15 +  npm run ios              # Run on iOS                                                                   │ │
+│ │    16 +  npm run web              # Run in web browser                                                           │ │
+│ │    17                                                                                                            │ │
+│ │    18 -  ### Security & Compliance                                                                               │ │
+│ │    19 -  - **Storage**: Expo Secure Store + AsyncStorage with AES encryption                                     │ │
+│ │    20 -  - **Authentication**: Biometric (Face ID/Touch ID) + credential-based                                   │ │
+│ │    21 -  - **Network**: Enforced HTTPS with certificate pinning                                                  │ │
+│ │    22 -  - **Audit**: SQLite-based comprehensive audit logging                                                   │ │
+│ │    23 -  - **Compliance**: HIPAA + California healthcare regulations                                             │ │
+│ │    18 +  # Code Quality                                                                                          │ │
+│ │    19 +  npm run lint             # Run ESLint                                                                   │ │
+│ │    20                                                                                                            │ │
+│ │    21 -  ### Key Dependencies                                                                                    │ │
+│ │    22 -  ```json                                                                                                 │ │
+│ │    23 -  {                                                                                                       │ │
+│ │    24 -    "@react-navigation/native": "^7.1.6",                                                                 │ │
+│ │    25 -    "@react-navigation/bottom-tabs": "^7.3.10",                                                           │ │
+│ │    26 -    "expo-secure-store": "Latest via plugins",                                                            │ │
+│ │    27 -    "expo-local-authentication": "Latest via plugins",                                                    │ │
+│ │    28 -    "react-native-sqlite-storage": "Latest",                                                              │ │
+│ │    29 -    "zustand": "Latest"                                                                                   │ │
+│ │    30 -  }                                                                                                       │ │
+│ │    21 +  # Utilities                                                                                             │ │
+│ │    22 +  npm run reset-project    # Reset to blank Expo template                                                 │ │
+│ │    23    ```                                                                                                     │ │
+│ │    24                                                                                                            │ │
+│ │    25 -  ## Application Architecture                                                                             │ │
+│ │    25 +  ## Architecture Overview                                                                                │ │
+│ │    26                                                                                                            │ │
+│ │    27 -  ### Navigation Hierarchy                                                                                │ │
+│ │    28 -  ```                                                                                                     │ │
+│ │    29 -  RootNavigator                                                                                           │ │
+│ │    30 -  ├── AuthNavigator (when !authenticated)                                                                 │ │
+│ │    31 -  │   └── LoginScreen (biometric + credential auth)                                                       │ │
+│ │    32 -  └── MainNavigator (when authenticated)                                                                  │ │
+│ │    33 -      ├── Dashboard (Tab 1)                                                                               │ │
+│ │    34 -      ├── FaxNavigator (Tab 2)                                                                            │ │
+│ │    35 -      │   ├── FaxListScreen                                                                               │ │
+│ │    36 -      │   └── FaxDetailScreen                                                                             │ │
+│ │    37 -      ├── PatientNavigator (Tab 3)                                                                        │ │
+│ │    38 -      │   ├── PatientSearchScreen                                                                         │ │
+│ │    39 -      │   ├── PatientDetailScreen                                                                         │ │
+│ │    40 -      │   ├── NewPatient (PatientForm)                                                                    │ │
+│ │    41 -      │   ├── PatientEdit (PatientForm)                                                                   │ │
+│ │    42 -      │   └── InsuranceForm                                                                               │ │
+│ │    43 -      ├── MessageNavigator (Tab 4)                                                                        │ │
+│ │    44 -      │   └── MessageListScreen                                                                           │ │
+│ │    45 -      └── More (Tab 5 - Settings/Logout)                                                                  │ │
+│ │    46 -  ```                                                                                                     │ │
+│ │    27 +  ### Tech Stack                                                                                          │ │
+│ │    28 +  - **Framework**: React Native 0.79.5 + Expo SDK 53                                                      │ │
+│ │    29 +  - **State Management**: Zustand stores in `/store`                                                      │ │
+│ │    30 +  - **Navigation**: React Navigation 7 (Stack + Bottom Tabs)                                              │ │
+│ │    31 +  - **Security**: Expo Secure Store, biometric auth, AES encryption                                       │ │
+│ │    32 +  - **Database**: SQLite for audit logging                                                                │ │
+│ │    33 +  - **Language**: TypeScript with strict mode                                                             │ │
+│ │    34                                                                                                            │ │
+│ │    35 -  ### Directory Structure & Path Aliases                                                                  │ │
+│ │    36 -  ```                                                                                                     │ │
+│ │    37 -  src/                                                                                                    │ │
+│ │    38 -  ├── api/                    (@api/*)                                                                    │ │
+│ │    39 -  │   ├── AuthApi.tsx        # Authentication endpoints                                                   │ │
+│ │    40 -  │   ├── PatientsApi.tsx    # Patient management                                                         │ │
+│ │    41 -  │   ├── FaxApi.tsx         # Fax processing                                                             │ │
+│ │    42 -  │   └── endpoints.ts       # API endpoint definitions                                                   │ │
+│ │    43 -  ├── components/             (@components/*)                                                             │ │
+│ │    44 -  │   ├── common/            # Reusable components                                                        │ │
+│ │    45 -  │   ├── forms/             # Form components                                                            │ │
+│ │    46 -  │   ├── fax/               # Fax-specific components                                                    │ │
+│ │    47 -  │   └── ui/                # UI primitives                                                              │ │
+│ │    48 -  ├── screens/                (@screens/*)                                                                │ │
+│ │    49 -  │   ├── auth/              # Authentication screens                                                     │ │
+│ │    50 -  │   ├── fax/               # Fax management                                                             │ │
+│ │    51 -  │   └── [feature]/         # Feature-specific screens                                                   │ │
+│ │    52 -  ├── services/               # Core services                                                             │ │
+│ │    53 -  │   ├── SecureStorageService.ts    # Encrypted storage                                                  │ │
+│ │    54 -  │   ├── SecureAPIClient.ts         # HTTPS-only API client                                              │ │
+│ │    55 -  │   └── security.ts                # Security manager                                                   │ │
+│ │    56 -  ├── store/                  (@store/*)                                                                  │ │
+│ │    57 -  │   ├── authStore.ts       # Authentication state                                                       │ │
+│ │    58 -  │   ├── patientStore.ts    # Patient data                                                               │ │
+│ │    59 -  │   └── faxStore.ts        # Fax message state                                                          │ │
+│ │    60 -  ├── core/                   # Business logic                                                            │ │
+│ │    61 -  │   ├── compliance/        # HIPAA/CA compliance                                                        │ │
+│ │    62 -  │   └── clinical/          # Clinical safety services                                                   │ │
+│ │    63 -  ├── navigation/             (@navigation/*)                                                             │ │
+│ │    64 -  ├── types/                  (@types/*)                                                                  │ │
+│ │    65 -  ├── theme/                  (@theme/*)                                                                  │ │
+│ │    66 -  └── utils/                  (@utils/*)                                                                  │ │
+│ │    67 -  ```                                                                                                     │ │
+│ │    35 +  ### Navigation Structure                                                                                │ │
+│ │    36                                                                                                            │ │
+│ │    37 -  ## Security Architecture                                                                                │ │
+│ │    37 +  The app uses a dual-navigation pattern:                                                                 │ │
+│ │    38 +  - **Unauthenticated**: Login → Main app                                                                 │ │
+│ │    39 +  - **Authenticated**: Bottom tabs with nested stacks                                                     │ │
+│ │    40                                                                                                            │ │
+│ │    41 -  ### Multi-Layer Security Model                                                                          │ │
+│ │    42 -  1. **Transport Layer**: HTTPS-only with certificate validation                                          │ │
+│ │    43 -  2. **Storage Layer**: AES encryption for all PHI data                                                   │ │
+│ │    44 -  3. **Authentication**: Biometric + multi-factor                                                         │ │
+│ │    45 -  4. **Audit Layer**: Comprehensive logging with integrity chains                                         │ │
+│ │    46 -  5. **Application Layer**: Screenshot prevention, app backgrounding protection                           │ │
+│ │    41 +  Main navigation tabs:                                                                                   │ │
+│ │    42 +  1. **Dashboard** - Overview and quick actions                                                           │ │
+│ │    43 +  2. **Patients** - Patient management system                                                             │ │
+│ │    44 +  3. **Medications** - Prescription handling                                                              │ │
+│ │    45 +  4. **Faxes** - AI-powered fax processing                                                                │ │
+│ │    46 +  5. **Messages** - Secure provider messaging                                                             │ │
+│ │    47                                                                                                            │ │
+│ │    48 -  ### Key Security Services                                                                               │ │
+│ │    48 +  ### Security Architecture                                                                               │ │
+│ │    49                                                                                                            │ │
+│ │    50 -  #### SecureStorageService                                                                               │ │
+│ │    51 -  ```typescript                                                                                           │ │
+│ │    52 -  // Automatically encrypts/decrypts PHI data                                                             │ │
+│ │    53 -  await SecureStorageService.setSecureItem('prescription_123', prescriptionData);                         │ │
+│ │    54 -  const data = await SecureStorageService.getSecureItem('prescription_123');                              │ │
+│ │    55 -  ```                                                                                                     │ │
+│ │    50 +  **Critical**: This is a HIPAA-compliant healthcare application. All development must maintain:          │ │
+│ │    51 +  - Patient data encryption at rest and in transit                                                        │ │
+│ │    52 +  - Comprehensive audit logging for all PHI access                                                        │ │
+│ │    53 +  - Session management with automatic timeout                                                             │ │
+│ │    54 +  - Biometric authentication support                                                                      │ │
+│ │    55 +  - Input validation and sanitization                                                                     │ │
+│ │    56                                                                                                            │ │
+│ │    57 -  #### SecureAPIClient                                                                                    │ │
+│ │    58 -  ```typescript                                                                                           │ │
+│ │    59 -  // Enforces HTTPS, adds auth headers, logs requests                                                     │ │
+│ │    60 -  const prescriptions = await SecureAPIClient.get('/patients/123/prescriptions');                         │ │
+│ │    61 -  ```                                                                                                     │ │
+│ │    57 +  Key security implementations:                                                                           │ │
+│ │    58 +  - `utils/encryption.ts` - AES-256 encryption utilities                                                  │ │
+│ │    59 +  - `utils/auditLogger.ts` - HIPAA-compliant audit logging                                                │ │
+│ │    60 +  - `utils/sessionManager.ts` - Session lifecycle management                                              │ │
+│ │    61 +  - `domains/auth/services/AuthService.ts` - Authentication logic                                         │ │
+│ │    62                                                                                                            │ │
+│ │    63 -  #### AuditLogService                                                                                    │ │
+│ │    64 -  ```typescript                                                                                           │ │
+│ │    65 -  // HIPAA-compliant audit logging                                                                        │ │
+│ │    66 -  await auditLog.log({                                                                                    │ │
+│ │    67 -    action: 'VIEW',                                                                                       │ │
+│ │    68 -    resourceType: 'PRESCRIPTION',                                                                         │ │
+│ │    69 -    patientId: '123',                                                                                     │ │
+│ │    70 -    userId: currentUser.id,                                                                               │ │
+│ │    71 -    purpose: 'TREATMENT'                                                                                  │ │
+│ │    72 -  });                                                                                                     │ │
+│ │    73 -  ```                                                                                                     │ │
+│ │    63 +  ### Core Services                                                                                       │ │
+│ │    64                                                                                                            │ │
+│ │    65 -  ## Development Patterns                                                                                 │ │
+│ │    65 +  **Patient Management** (`domains/patients/`)                                                            │ │
+│ │    66 +  - CRUD operations with encryption                                                                       │ │
+│ │    67 +  - Medical record management                                                                             │ │
+│ │    68 +  - Document attachments                                                                                  │ │
+│ │    69 +  - Visit history tracking                                                                                │ │
+│ │    70                                                                                                            │ │
+│ │    71 -  ### State Management with Zustand                                                                       │ │
+│ │    72 -  ```typescript                                                                                           │ │
+│ │    73 -  // Store pattern for feature state                                                                      │ │
+│ │    74 -  export const useAuthStore = create<AuthState>((set, get) => ({                                          │ │
+│ │    75 -    user: null,                                                                                           │ │
+│ │    76 -    isAuthenticated: false,                                                                               │ │
+│ │    77 -    login: async (username, password, clinicId) => {                                                      │ │
+│ │    78 -      // Login logic with security logging                                                                │ │
+│ │    79 -    },                                                                                                    │ │
+│ │    80 -    logout: async () => {                                                                                 │ │
+│ │    81 -      // Secure cleanup                                                                                   │ │
+│ │    82 -    }                                                                                                     │ │
+│ │    83 -  }));                                                                                                    │ │
+│ │    84 -  ```                                                                                                     │ │
+│ │    71 +  **Fax Processing** (`domains/faxes/`)                                                                   │ │
+│ │    72 +  - AI-powered text extraction and categorization                                                         │ │
+│ │    73 +  - Severity scoring (URGENT/HIGH/NORMAL/LOW)                                                             │ │
+│ │    74 +  - Auto-attachment to patient records                                                                    │ │
+│ │    75 +  - Action item extraction                                                                                │ │
+│ │    76                                                                                                            │ │
+│ │    77 -  ### Component Patterns                                                                                  │ │
+│ │    78 -  ```typescript                                                                                           │ │
+│ │    79 -  // Consistent component structure                                                                       │ │
+│ │    80 -  export const ComponentName: React.FC<Props> = ({ ...props }) => {                                       │ │
+│ │    81 -    // Hooks                                                                                              │ │
+│ │    82 -    // State                                                                                              │ │
+│ │    83 -    // Effects                                                                                            │ │
+│ │    84 -    // Handlers                                                                                           │ │
+│ │    85 -    // Render                                                                                             │ │
+│ │    86 -    return (                                                                                              │ │
+│ │    87 -      <SafeAreaWrapper>                                                                                   │ │
+│ │    88 -        {/* Component JSX */}                                                                             │ │
+│ │    89 -      </SafeAreaWrapper>                                                                                  │ │
+│ │    90 -    );                                                                                                    │ │
+│ │    91 -  };                                                                                                      │ │
+│ │    92 -  ```                                                                                                     │ │
+│ │    77 +  **Messaging** (`domains/messages/`)                                                                     │ │
+│ │    78 +  - End-to-end encrypted provider messaging                                                               │ │
+│ │    79 +  - Read receipts and typing indicators                                                                   │ │
+│ │    80 +  - Message attachments                                                                                   │ │
+│ │    81 +  - Thread management                                                                                     │ │
+│ │    82                                                                                                            │ │
+│ │    83 -  ### Theme Usage                                                                                         │ │
+│ │    84 -  ```typescript                                                                                           │ │
+│ │    85 -  // Consistent design system usage                                                                       │ │
+│ │    86 -  import { colors } from '@theme/colors';                                                                 │ │
+│ │    87 -  import { typography } from '@theme/typography';                                                         │ │
+│ │    88 -  import { spacing } from '@theme/spacing';                                                               │ │
+│ │    89 -                                                                                                          │ │
+│ │    90 -  const styles = StyleSheet.create({                                                                      │ │
+│ │    91 -    container: {                                                                                          │ │
+│ │    92 -      backgroundColor: colors.background.primary,                                                         │ │
+│ │    93 -      padding: spacing.lg,                                                                                │ │
+│ │    94 -    },                                                                                                    │ │
+│ │    95 -    title: {                                                                                              │ │
+│ │    96 -      fontSize: typography.fontSize.xl,                                                                   │ │
+│ │    97 -      fontWeight: typography.fontWeight.bold,                                                             │ │
+│ │    98 -      color: colors.text.primary,                                                                         │ │
+│ │    99 -    }                                                                                                     │ │
+│ │   100 -  });                                                                                                     │ │
+│ │   101 -  ```                                                                                                     │ │
+│ │   102 -                                                                                                          │ │
+│ │   103 -  ## Compliance Requirements                                                                              │ │
+│ │   104 -                                                                                                          │ │
+│ │   105 -  ### HIPAA Compliance Features                                                                           │ │
+│ │   106 -  - ✅ Encrypted data at rest and in transit                                                               │ │
+│ │   107 -  - ✅ Comprehensive audit logging                                                                         │ │
+│ │   108 -  - ✅ Access controls and authentication                                                                  │ │
+│ │   109 -  - ✅ Session timeouts and automatic logout                                                               │ │
+│ │   110 -  - ✅ Secure PHI handling and storage                                                                     │ │
+│ │   111 -                                                                                                          │ │
+│ │   112 -  ### California Healthcare Compliance                                                                    │ │
+│ │   113 -  - ✅ Minor patient access controls                                                                       │ │
+│ │   114 -  - ✅ Mental health data protections (LPS Act)                                                            │ │
+│ │   115 -  - ✅ Knox-Keene Act compliance                                                                           │ │
+│ │   116 -  - ✅ Substance abuse data protections (42 CFR Part 2)                                                    │ │
+│ │   117 -  - ✅ Data retention policies (7 years adult, until age 25 for minors)                                    │ │
+│ │   118 -                                                                                                          │ │
+│ │   119 -  ## Key Features                                                                                         │ │
+│ │   120 -                                                                                                          │ │
+│ │   121 -  ### 1. Fax Processing System                                                                            │ │
+│ │   122 -  - AI-powered severity analysis with scoring (轻度/中度/重度/紧急)                                       │ │
+│ │   123 -  - OCR text extraction and transcription                                                                 │ │
+│ │   124 -  - Automatic patient matching and assignment                                                             │ │
+│ │   125 -  - Priority-based workflow management                                                                    │ │
+│ │   126 -                                                                                                          │ │
+│ │   127 -  ### 2. Patient Management                                                                               │ │
+│ │   128 -  - Comprehensive patient search and records                                                              │ │
+│ │   129 -  - Insurance verification and form management                                                            │ │
+│ │   130 -  - Medical history tracking with encrypted storage                                                       │ │
+│ │   131 -  - Allergy and medication management                                                                     │ │
+│ │   132 -                                                                                                          │ │
+│ │   133 -  ### 3. Secure Messaging                                                                                 │ │
+│ │   134 -  - Provider-to-provider encrypted communication                                                          │ │
+│ │   135 -  - Message threading and attachment support                                                              │ │
+│ │   136 -  - Audit logging for all message activities                                                              │ │
+│ │   137 -  - Urgent message prioritization                                                                         │ │
+│ │   138 -                                                                                                          │ │
+│ │   139 -  ### 4. Clinical Safety                                                                                  │ │
+│ │    83 +  **Prescription Management** (`domains/medications/`)                                                    │ │
+│ │    84 +  - Electronic prescribing                                                                                │ │
+│ │    85    - Drug interaction checking                                                                             │ │
+│ │    86 -  - Prescription management with CURES2 integration                                                       │ │
+│ │    87 -  - Clinical decision support tools                                                                       │ │
+│ │    88 -  - Automated safety alerts                                                                               │ │
+│ │    86 +  - Refill management                                                                                     │ │
+│ │    87 +  - Medication history                                                                                    │ │
+│ │    88                                                                                                            │ │
+│ │    89 -  ## Development Scripts                                                                                  │ │
+│ │    89 +  ### Data Flow                                                                                           │ │
+│ │    90                                                                                                            │ │
+│ │    91 -  ```bash                                                                                                 │ │
+│ │    92 -  # Development                                                                                           │ │
+│ │    93 -  npm start                 # Start Expo dev server                                                       │ │
+│ │    94 -  npm run android          # Run on Android emulator                                                      │ │
+│ │    95 -  npm run ios             # Run on iOS simulator                                                          │ │
+│ │    96 -  npm run web             # Run on web browser                                                            │ │
+│ │    91 +  1. **API Layer** (`api/`) - Centralized API client with auth headers                                    │ │
+│ │    92 +  2. **Domain Services** - Business logic in `/domains/[feature]/services`                                │ │
+│ │    93 +  3. **Zustand Stores** (`store/`) - Global state management                                              │ │
+│ │    94 +  4. **UI Components** - React Native screens and components                                              │ │
+│ │    95 +  5. **Local Storage** - Expo Secure Store for sensitive data                                             │ │
+│ │    96                                                                                                            │ │
+│ │    97 -  # Code Quality                                                                                          │ │
+│ │    98 -  npm run lint            # ESLint checking                                                               │ │
+│ │    99 -  npm run reset-project   # Reset to blank template                                                       │ │
+│ │    97 +  ### Path Aliases                                                                                        │ │
+│ │    98                                                                                                            │ │
+│ │    99 -  # Testing (when configured)                                                                             │ │
+│ │   100 -  npm test                # Run unit tests                                                                │ │
+│ │   101 -  npm run e2e             # Run Playwright E2E tests                                                      │ │
+│ │   102 -  ```                                                                                                     │ │
+│ │    99 +  The project uses TypeScript path aliases for clean imports:                                             │ │
+│ │   100 +  - `@/` → Root directory                                                                                 │ │
+│ │   101 +  - `@domains/` → Domain modules                                                                          │ │
+│ │   102 +  - `@store/` → State management                                                                          │ │
+│ │   103 +  - `@utils/` → Utilities                                                                                 │ │
+│ │   104 +  - `@theme/` → Theme configuration                                                                       │ │
+│ │   105 +  - `@constants/` → App constants                                                                         │ │
+│ │   106 +  - `@types/` → TypeScript definitions                                                                    │ │
+│ │   107                                                                                                            │ │
+│ │   108 -  ## Environment Setup                                                                                    │ │
+│ │   108 +  ### Development Patterns                                                                                │ │
+│ │   109                                                                                                            │ │
+│ │   110 -  ### Required for Development                                                                            │ │
+│ │   111 -  1. **Expo CLI**: `npm install -g @expo/cli`                                                             │ │
+│ │   112 -  2. **iOS Development**: Xcode + iOS Simulator                                                           │ │
+│ │   113 -  3. **Android Development**: Android Studio + AVD                                                        │ │
+│ │   114 -  4. **Security Testing**: Device with biometric capabilities                                             │ │
+│ │   110 +  **Component Structure**:                                                                                │ │
+│ │   111 +  - Screens in `app/(tabs)/` or `app/screens/`                                                            │ │
+│ │   112 +  - Shared components in domain folders                                                                   │ │
+│ │   113 +  - Custom hooks in domain services                                                                       │ │
+│ │   114                                                                                                            │ │
+│ │   115 -  ### Configuration Files                                                                                 │ │
+│ │   116 -  - `app.json` - Expo app configuration with security permissions                                         │ │
+│ │   117 -  - `tsconfig.json` - TypeScript config with strict mode + path aliases                                   │ │
+│ │   118 -  - `babel.config.js` - Babel config with module resolver for aliases                                     │ │
+│ │   119 -  - `eslint.config.js` - ESLint config using Expo defaults                                                │ │
+│ │   115 +  **State Management**:                                                                                   │ │
+│ │   116 +  - Zustand stores for global state                                                                       │ │
+│ │   117 +  - React hooks for local state                                                                           │ │
+│ │   118 +  - Persist sensitive data with Secure Store                                                              │ │
+│ │   119                                                                                                            │ │
+│ │   120 -  ## Security Considerations for Development                                                              │ │
+│ │   120 +  **Error Handling**:                                                                                     │ │
+│ │   121 +  - Global error boundary in app layout                                                                   │ │
+│ │   122 +  - Service-level try-catch blocks                                                                        │ │
+│ │   123 +  - User-friendly error messages                                                                          │ │
+│ │   124                                                                                                            │ │
+│ │   125 -  ### Never Commit                                                                                        │ │
+│ │   126 -  - Real API keys or secrets                                                                              │ │
+│ │   127 -  - Actual patient data or PHI                                                                            │ │
+│ │   128 -  - Production authentication credentials                                                                 │ │
+│ │   129 -  - Hardcoded encryption keys                                                                             │ │
+│ │   125 +  ### Testing Approach                                                                                    │ │
+│ │   126                                                                                                            │ │
+│ │   127 -  ### Always Ensure                                                                                       │ │
+│ │   128 -  - HTTPS-only API communication                                                                          │ │
+│ │   129 -  - Encrypted storage for any sensitive data                                                              │ │
+│ │   130 -  - Proper audit logging for all PHI access                                                               │ │
+│ │   131 -  - Biometric authentication testing on real devices                                                      │ │
+│ │   132 -  - Session timeout implementation                                                                        │ │
+│ │   127 +  Currently no test framework is configured. When adding tests:                                           │ │
+│ │   128 +  - Consider Jest + React Native Testing Library                                                          │ │
+│ │   129 +  - Test security-critical functions first                                                                │ │
+│ │   130 +  - Mock Expo modules appropriately                                                                       │ │
+│ │   131 +  - Ensure PHI is never logged in tests                                                                   │ │
+│ │   132                                                                                                            │ │
+│ │   133 -  ### Testing PHI Compliance                                                                              │ │
+│ │   134 -  - Use synthetic/mock patient data only                                                                  │ │
+│ │   135 -  - Test encryption/decryption flows                                                                      │ │
+│ │   136 -  - Verify audit log completeness                                                                         │ │
+│ │   137 -  - Test offline sync and conflict resolution                                                             │ │
+│ │   138 -  - Validate session management and timeouts                                                              │ │
+│ │   133 +  ### Important Files                                                                                     │ │
+│ │   134                                                                                                            │ │
+│ │   135 -  ## Common Development Tasks                                                                             │ │
+│ │   135 +  - `app/_layout.tsx` - Root navigation setup                                                             │ │
+│ │   136 +  - `api/client.ts` - API configuration                                                                   │ │
+│ │   137 +  - `store/authStore.ts` - Authentication state                                                           │ │
+│ │   138 +  - `utils/encryption.ts` - Encryption utilities                                                          │ │
+│ │   139 +  - `constants/config.ts` - App configuration                                                             │ │
+│ │   140 +  - `theme/colors.ts` - Design system colors                                                              │ │
+│ │   141                                                                                                            │ │
+│ │   142 -  ### Adding New Screens                                                                                  │ │
+│ │   143 -  1. Create in appropriate `src/screens/[feature]/` directory                                             │ │
+│ │   144 -  2. Add to navigation types in `types/navigation.types.ts`                                               │ │
+│ │   145 -  3. Update navigator configuration                                                                       │ │
+│ │   146 -  4. Implement security audit logging if accessing PHI                                                    │ │
+│ │   142 +  ## Compliance Requirements                                                                              │ │
+│ │   143                                                                                                            │ │
+│ │   144 -  ### Adding New API Endpoints                                                                            │ │
+│ │   145 -  1. Add endpoint to `src/api/endpoints.ts`                                                               │ │
+│ │   146 -  2. Create or update corresponding API service file                                                      │ │
+│ │   147 -  3. Ensure HTTPS-only communication via SecureAPIClient                                                  │ │
+│ │   148 -  4. Add proper error handling and audit logging                                                          │ │
+│ │   144 +  When developing features:                                                                               │ │
+│ │   145 +  1. Never log PHI to console in production                                                               │ │
+│ │   146 +  2. Always encrypt patient data before storage                                                           │ │
+│ │   147 +  3. Implement audit logging for all data access                                                          │ │
+│ │   148 +  4. Validate and sanitize all user inputs                                                                │ │
+│ │   149 +  5. Use HTTPS for all network requests                                                                   │ │
+│ │   150 +  6. Implement proper session timeout                                                                     │ │
+│ │   151 +  7. Clear sensitive data on logout                                                                       │ │
+│ │   152                                                                                                            │ │
+│ │   153 -  ### Adding New Features                                                                                 │ │
+│ │   154 -  1. Create feature directory under `src/`                                                                │ │
+│ │   155 -  2. Implement business logic in `src/core/`                                                              │ │
+│ │   156 -  3. Add Zustand store if needed in `store/`                                                              │ │
+│ │   157 -  4. Create reusable components in `components/`                                                          │ │
+│ │   158 -  5. Add proper TypeScript types in `types/`                                                              │ │
+│ │   159 -  6. Ensure HIPAA compliance and audit logging                                                            │ │
+│ │   160 -                                                                                                          │ │
+│ │   161 -  ## Performance Considerations                                                                           │ │
+│ │   162 -                                                                                                          │ │
+│ │   163 -  ### Optimization Strategies                                                                             │ │
+│ │   164 -  - Use React.memo for expensive components                                                               │ │
+│ │   165 -  - Implement proper list virtualization for large datasets                                               │ │
+│ │   166 -  - Lazy load screens and heavy components                                                                │ │
+│ │   167 -  - Optimize image loading and caching                                                                    │ │
+│ │   168 -  - Monitor bundle size and implement code splitting                                                      │ │
+│ │   169 -                                                                                                          │ │
+│ │   170 -  ### Security vs Performance Balance                                                                     │ │
+│ │   171 -  - Encryption/decryption adds overhead - use judiciously                                                 │ │
+│ │   172 -  - Audit logging is comprehensive - balance detail vs performance                                        │ │
+│ │   173 -  - Biometric authentication adds UI flow complexity                                                      │ │
+│ │   174 -  - Secure storage operations are slower than regular storage                                             │ │
+│ │   175 -                                                                                                          │ │
+│ │   176 -  ## Production Deployment                                                                                │ │
+│ │   177 -                                                                                                          │ │
+│ │   178 -  ### Security Checklist                                                                                  │ │
+│ │   179 -  - [ ] All API communications over HTTPS                                                                 │ │
+│ │   180 -  - [ ] Certificate pinning implemented                                                                   │ │
+│ │   181 -  - [ ] Encryption keys properly managed                                                                  │ │
+│ │   182 -  - [ ] Audit logging fully implemented                                                                   │ │
+│ │   183 -  - [ ] Session timeouts configured                                                                       │ │
+│ │   184 -  - [ ] Screenshot/recording prevention enabled                                                           │ │
+│ │   185 -  - [ ] Compliance requirements verified                                                                  │ │
+│ │   186 -                                                                                                          │ │
+│ │   187 -  ### Build Configuration                                                                                 │ │
+│ │   188 -  - Configure proper signing certificates                                                                 │ │
+│ │   189 -  - Set up proper environment variables                                                                   │ │
+│ │   190 -  - Ensure security permissions are minimal                                                               │ │
+│ │   191 -  - Test on real devices with biometrics                                                                  │ │
+│ │   192 -  - Validate offline functionality                                                                        │ │
+│ │   193 -                                                                                                          │ │
+│ │   194 -  ---                                                                                                     │ │
+│ │   195 -                                                                                                          │ │
+│ │   153    ## Quick Reference                                                                                      │ │
+│ │   154                                                                                                            │ │
+│ │   155 -  ### Most Important Files                                                                                │ │
+│ │   156 -  - `app.tsx` - Main app entry point with security initialization                                         │ │
+│ │   157 -  - `src/navigation/RootNavigator.tsx` - Navigation structure                                             │ │
+│ │   158 -  - `src/services/SecureStorageService.ts` - Encrypted storage                                            │ │
+│ │   159 -  - `src/core/compliance/AuditLog.ts` - HIPAA audit logging                                               │ │
+│ │   160 -  - `src/store/authStore.ts` - Authentication state management                                            │ │
+│ │   161 -                                                                                                          │ │
+│ │   162 -  ### Key Commands for Claude                                                                             │ │
+│ │   163 -  ```bash                                                                                                 │ │
+│ │   164 -  # Start development                                                                                     │ │
+│ │   165 -  npm install && npm start                                                                                │ │
+│ │   166 -                                                                                                          │ │
+│ │   167 -  # Check code quality                                                                                    │ │
+│ │   168 -  npm run lint                                                                                            │ │
+│ │   169 -                                                                                                          │ │
+│ │   170 -  # Common file operations                                                                                │ │
+│ │   171 -  # Read: C:\Users\rache\catbook\MedicalManagementApp\src\[path]                                          │ │
+│ │   172 -  # Edit: Use absolute paths with @aliases in imports                                                     │ │
+│ │   173 -  ```                                                                                                     │ │
+│ │   174 -                                                                                                          │ │
+│ │   175 -  ### Architecture Principles                                                                             │ │
+│ │   176 -  1. **Security First**: All PHI handling must be encrypted and audited                                   │ │
+│ │   177 -  2. **Compliance by Design**: HIPAA and California regulations built-in                                  │ │
+│ │   178 -  3. **User Experience**: Intuitive medical workflows with proper error handling                          │ │
+│ │   179 -  4. **Maintainability**: Clean architecture with TypeScript and proper separation                        │ │
+│ │   180 -  5. **Performance**: Efficient data handling with offline-first capabilities                             │ │
+│ │   181 -                                                                                                          │ │
+│ │   182 -  This codebase represents a production-ready medical application with enterprise-level security and      │ │
+│ │       - compliance requirements. Always prioritize patient data protection and regulatory compliance in any      │ │
+│ │       - modifications.                                                                                           │ │
+│ │   155   \ No newline at end of file                                                                              │ │
+│ │   156 +  **Add a new screen**: Create in `app/screens/` and add to navigation                                    │ │
+│ │   157 +  **Add a new API endpoint**: Update `api/client.ts` and create service in relevant domain                │ │
+│ │   158 +  **Add global state**: Create new store in `store/` directory                                            │ │
+│ │   159 +  **Add a new domain**: Create folder structure in `domains/` with services, types, and components        │ │
+│ │   160 +  **Update theme**: Modify files in `theme/` directory                                                    │ │
+│ │   161   \ No newline at end of file                                                                              │ │

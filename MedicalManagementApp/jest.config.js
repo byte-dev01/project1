@@ -1,45 +1,37 @@
 module.exports = {
-  preset: 'react-native',
-  testEnvironment: 'node',
+  preset: 'jest-expo',
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
+  testEnvironment: 'node',
+  transformIgnorePatterns: [
+    'node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base|react-native-svg|react-native-webview|@react-native-async-storage/async-storage)'
+  ],
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
-    '^@api/(.*)$': '<rootDir>/src/api/$1',
     '^@components/(.*)$': '<rootDir>/src/components/$1',
-    '^@screens/(.*)$': '<rootDir>/src/screens/$1',
-    '^@navigation/(.*)$': '<rootDir>/src/navigation/$1',
-    '^@store/(.*)$': '<rootDir>/store/$1',
-    '^@types/(.*)$': '<rootDir>/types/$1',
-    '^@utils/(.*)$': '<rootDir>/utils/$1',
-    '^@theme/(.*)$': '<rootDir>/theme/$1',
-    '^@domains/(.*)$': '<rootDir>/domains/$1',
-    '^@constants/(.*)$': '<rootDir>/constants/$1',
-  },
-  transform: {
-    '^.+\\.(js|jsx|ts|tsx)$': 'babel-jest',
+    '^@hooks/(.*)$': '<rootDir>/src/hooks/$1',
+    '^@core/(.*)$': '<rootDir>/src/core/$1',
+    '^@services/(.*)$': '<rootDir>/src/services/$1',
+    '^@utils/(.*)$': '<rootDir>/src/utils/$1',
+    '^@store/(.*)$': '<rootDir>/src/store/$1',
   },
   testMatch: [
-    '**/__tests__/**/*.(ts|tsx|js)',
-    '**/*.(test|spec).(ts|tsx|js)',
+    '**/__tests__/**/*.test.ts',
+    '**/__tests__/**/*.test.tsx',
+    '**/*.test.ts',
+    '**/*.test.tsx'
   ],
-  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
   collectCoverageFrom: [
-    'src/**/*.{js,jsx,ts,tsx}',
-    'store/**/*.{js,jsx,ts,tsx}',
-    'utils/**/*.{js,jsx,ts,tsx}',
-    'domains/**/*.{js,jsx,ts,tsx}',
-    '!**/node_modules/**',
-    '!**/__tests__/**',
-    '!**/*.test.{js,jsx,ts,tsx}',
-    '!**/*.spec.{js,jsx,ts,tsx}',
+    'src/**/*.{ts,tsx}',
+    '!src/**/*.d.ts',
+    '!src/**/index.ts',
+    '!src/**/*.stories.tsx',
   ],
   coverageThreshold: {
     global: {
       branches: 70,
       functions: 70,
       lines: 70,
-      statements: 70,
-    },
-  },
-  testTimeout: 10000,
+      statements: 70
+    }
+  }
 };

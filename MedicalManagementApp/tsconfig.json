@@ -10,8 +10,7 @@
     "noEmit": true,
     "jsx": "react-native",
     "lib": ["ESNext"],
-    "moduleResolution": "bundler",
-    "types": [],
+    "moduleResolution": "node",
     "allowJs": true,
     "baseUrl": ".",
     "paths": {
@@ -20,12 +19,10 @@
       "@components/*": ["src/components/*"],
       "@screens/*": ["src/screens/*"],
       "@navigation/*": ["src/navigation/*"],
-      "@store/*": ["store/*"],
-      "@types/*": ["types/*"],
-      "@utils/*": ["utils/*"],
-      "@theme/*": ["theme/*"],
-      "@domains/*": ["domains/*"],
-      "@constants/*": ["constants/*"]
+      "@store/*": ["src/store/*"],
+      "@types/*": ["src/types/*"],
+      "@utils/*": ["src/utils/*"],
+      "@theme/*": ["src/theme/*"]
     }
   },
   "include": [

@@ -97,8 +97,3 @@ class RequestSecurity {
 
     if (this.attestationKey && Platform.OS === 'ios') {
       const { AppAttestation } = NativeModules;
-    }
-    
-    return headers;
-  }
-}

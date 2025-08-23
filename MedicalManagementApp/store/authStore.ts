@@ -4,6 +4,8 @@ import { authAPI } from '../src/api/auth';
 import { User } from '../types/models.types';
 import { AUTH_CONFIG } from '../utils/constants';
 import { securityManager } from '../src/services/security';
+import { oAuthService } from '../src/services/OAuthService';
+import { UserInfoResponse } from '../src/config/oauth.config';
 
 interface AuthState {
   user: User | null;
@@ -12,11 +14,14 @@ interface AuthState {
   isAuthenticated: boolean;
   loading: boolean;
   error: string | null;
+  authMethod: 'traditional' | 'oauth' | null;
   
   // Actions
   login: (username: string, password: string, clinicId: string) => Promise<void>;
+  loginWithOAuth: () => Promise<void>;
   logout: () => Promise<void>;
   checkAuthStatus: () => Promise<void>;
+  refreshTokens: () => Promise<void>;
   updateUser: (user: Partial<User>) => void;
   clearError: () => void;
 }
@@ -28,6 +33,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   isAuthenticated: false,
   loading: false,
   error: null,
+  authMethod: null,
 
   login: async (username, password, clinicId) => {
     set({ loading: true, error: null });
@@ -54,6 +60,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         isAuthenticated: true,
         loading: false,
         error: null,
+        authMethod: 'traditional',
       });
       
       // Log security event
@@ -79,18 +86,96 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     }
   },
 
-  logout: async () => {
-    const { user } = get();
+  loginWithOAuth: async () => {
+    set({ loading: true, error: null });
     
     try {
-      // Call logout API
-      await authAPI.logout();
+      // Initialize OAuth service
+      await oAuthService.initialize();
+      
+      // Start OAuth flow
+      const tokens = await oAuthService.authenticate();
+      
+      // Get user info from OAuth provider
+      const userInfo = await oAuthService.getUserInfo();
+      
+      // Map OAuth user info to app User model
+      const user: User = {
+        id: userInfo.sub,
+        name: userInfo.name || '',
+        email: userInfo.email || '',
+        roles: userInfo.roles || [],
+        permissions: userInfo.permissions || [],
+        clinicId: userInfo.clinic_id || '',
+        providerId: userInfo.provider_id || '',
+        licenseNumber: userInfo.license_number || '',
+        profilePicture: userInfo.picture,
+        emailVerified: userInfo.email_verified,
+      };
+      
+      // Store user info
+      await SecureStore.setItemAsync(AUTH_CONFIG.USER_KEY, JSON.stringify(user));
+      
+      set({ 
+        user, 
+        token: tokens.access_token,
+        refreshToken: tokens.refresh_token || null,
+        isAuthenticated: true,
+        loading: false,
+        error: null,
+        authMethod: 'oauth',
+      });
+      
+      // Log security event
+      await securityManager.logSecurityEvent({
+        type: 'OAUTH_LOGIN_SUCCESS',
+        userId: user.id,
+        metadata: {
+          provider: 'healthbridge',
+          scopes: tokens.scope,
+        },
+      });
+      
+      // Start session timer
+      securityManager.startSessionTimer(() => {
+        get().logout();
+      });
+    } catch (error: any) {
+      const errorMessage = error.message || 'OAuth login failed';
+      set({ 
+        loading: false, 
+        error: errorMessage,
+        isAuthenticated: false,
+      });
+      
+      // Log security event
+      await securityManager.logSecurityEvent({
+        type: 'OAUTH_LOGIN_FAILED',
+        details: { error: errorMessage },
+      });
+      
+      throw error;
+    }
+  },
+
+  logout: async () => {
+    const { user, authMethod } = get();
+    
+    try {
+      // Handle OAuth logout
+      if (authMethod === 'oauth') {
+        await oAuthService.logout();
+      } else {
+        // Call traditional logout API
+        await authAPI.logout();
+      }
       
       // Log security event
       if (user) {
         await securityManager.logSecurityEvent({
           type: 'LOGOUT',
           userId: user.id,
+          metadata: { authMethod },
         });
       }
     } catch (error) {
@@ -109,6 +194,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         refreshToken: null,
         isAuthenticated: false,
         error: null,
+        authMethod: null,
       });
       
       // Stop session timer
@@ -120,41 +206,115 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     set({ loading: true });
     
     try {
-      const [token, refreshToken, userJson] = await Promise.all([
-        SecureStore.getItemAsync(AUTH_CONFIG.TOKEN_KEY),
-        SecureStore.getItemAsync(AUTH_CONFIG.REFRESH_TOKEN_KEY),
-        SecureStore.getItemAsync(AUTH_CONFIG.USER_KEY),
-      ]);
+      // First check OAuth authentication
+      const isOAuthAuthenticated = await oAuthService.isAuthenticated();
       
-      if (token && userJson) {
-        const user = JSON.parse(userJson);
+      if (isOAuthAuthenticated) {
+        // Get OAuth tokens and user info
+        const tokens = await oAuthService.getStoredTokens();
+        const userInfo = await oAuthService.getUserInfo();
         
-        // Verify token is still valid
-        try {
-          const currentUser = await authAPI.whoami();
-          
-          set({
-            user: currentUser,
-            token,
-            refreshToken,
-            isAuthenticated: true,
-            loading: false,
-          });
-          
-          // Start session timer
-          securityManager.startSessionTimer(() => {
-            get().logout();
-          });
-        } catch (error) {
-          // Token is invalid, clear auth
-          await get().logout();
-        }
+        // Map OAuth user info to app User model
+        const user: User = {
+          id: userInfo.sub,
+          name: userInfo.name || '',
+          email: userInfo.email || '',
+          roles: userInfo.roles || [],
+          permissions: userInfo.permissions || [],
+          clinicId: userInfo.clinic_id || '',
+          providerId: userInfo.provider_id || '',
+          licenseNumber: userInfo.license_number || '',
+          profilePicture: userInfo.picture,
+          emailVerified: userInfo.email_verified,
+        };
+        
+        set({
+          user,
+          token: tokens?.access_token || null,
+          refreshToken: tokens?.refresh_token || null,
+          isAuthenticated: true,
+          loading: false,
+          authMethod: 'oauth',
+        });
+        
+        // Start session timer
+        securityManager.startSessionTimer(() => {
+          get().logout();
+        });
       } else {
-        set({ loading: false, isAuthenticated: false });
+        // Check traditional authentication
+        const [token, refreshToken, userJson] = await Promise.all([
+          SecureStore.getItemAsync(AUTH_CONFIG.TOKEN_KEY),
+          SecureStore.getItemAsync(AUTH_CONFIG.REFRESH_TOKEN_KEY),
+          SecureStore.getItemAsync(AUTH_CONFIG.USER_KEY),
+        ]);
+        
+        if (token && userJson) {
+          const user = JSON.parse(userJson);
+          
+          // Verify token is still valid
+          try {
+            const currentUser = await authAPI.whoami();
+            
+            set({
+              user: currentUser,
+              token,
+              refreshToken,
+              isAuthenticated: true,
+              loading: false,
+              authMethod: 'traditional',
+            });
+            
+            // Start session timer
+            securityManager.startSessionTimer(() => {
+              get().logout();
+            });
+          } catch (error) {
+            // Token is invalid, clear auth
+            await get().logout();
+          }
+        } else {
+          set({ loading: false, isAuthenticated: false });
+        }
       }
     } catch (error) {
       console.error('Auth check error:', error);
       set({ loading: false, isAuthenticated: false });
+    }
+  },
+
+  refreshTokens: async () => {
+    const { authMethod } = get();
+    
+    try {
+      if (authMethod === 'oauth') {
+        // Refresh OAuth tokens
+        const newTokens = await oAuthService.refreshAccessToken();
+        set({
+          token: newTokens.access_token,
+          refreshToken: newTokens.refresh_token || get().refreshToken,
+        });
+      } else if (authMethod === 'traditional') {
+        // Refresh traditional tokens
+        const refreshToken = await SecureStore.getItemAsync(AUTH_CONFIG.REFRESH_TOKEN_KEY);
+        if (refreshToken) {
+          const response = await authAPI.refreshToken(refreshToken);
+          
+          // Store new tokens
+          await SecureStore.setItemAsync(AUTH_CONFIG.TOKEN_KEY, response.token);
+          await SecureStore.setItemAsync(AUTH_CONFIG.REFRESH_TOKEN_KEY, response.refreshToken);
+          
+          set({
+            token: response.token,
+            refreshToken: response.refreshToken,
+          });
+        }
+      }
+    } catch (error) {
+      console.error('Token refresh failed:', error);
+      // If refresh fails, logout
+      await get().logout();
+      throw error;
     }
   },
 

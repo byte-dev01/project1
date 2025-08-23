@@ -11,7 +11,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Picker } from '@react-native-picker/picker';
 import { useAuthStore } from '../../../store/authStore';
-import { useNavigation } from '@react-navigation/native';
+import { useRouter } from 'expo-router';
 import * as SecureStore from 'expo-secure-store';
 import * as LocalAuthentication from 'expo-local-authentication';
 
@@ -24,12 +24,23 @@ export const LoginScreen: React.FC = () => {
   const [biometricAvailable, setBiometricAvailable] = useState(false);
   
   const { login } = useAuthStore();
-  const navigation = useNavigation();
-
+  const router = useRouter();
+  
   useEffect(() => {
     checkBiometricAvailability();
     loadClinics();
   }, []);
+const loadClinics = async () => {
+  try {
+    const res = await fetch("https://your-api.com/clinics");
+    const data = await res.json();
+    setClinics(data); // expect [{ _id, name }]
+  } catch (err) {
+    console.error("Failed to load clinics:", err);
+    Alert.alert("Error", "Could not fetch clinics");
+  }
+};
+
 
   const checkBiometricAvailability = async () => {
     const compatible = await LocalAuthentication.hasHardwareAsync();
@@ -57,9 +68,10 @@ export const LoginScreen: React.FC = () => {
     setLoading(true);
     try {
       await login(user, pass, clinic);
-      navigation.replace('Main');
+      router.replace('(tabs)'); // e.g. '/', '/main', or '(tabs)' – match your app routes
     } catch (error) {
-      Alert.alert('Login Failed', error.message);
+      const msg = error instanceof Error ? err.message : 'Unknown error';
+      Alert.alert('Login Failed', msg);
     } finally {
       setLoading(false);
     }

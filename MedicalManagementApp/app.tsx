@@ -12,9 +12,9 @@ import { notificationManager } from '@utils/notifications';
 import { offlineManager } from '@utils/offline';
 import { ErrorBoundary } from '@components/common/ErrorBoundary';
 import { LoadingSpinner } from '@components/common/LoadingSpinner';
-import { SecureStorageService } from './src/services/SecureStorageService';
+import { SecureStorageService } from '../SecureStorageService';
 import { SecureAPIClient } from './src/services/SecureAPIClient';
-import { SimpleConsentService } from './src/services/SimpleConsentService';
+import { SimpleConsentService } from './src/services/simpleConsentServices';
 import { AppState, Platform, NativeModules } from 'react-native';
 
 // Keep the splash screen visible while we fetch resources
@@ -29,6 +29,8 @@ export default function App() {
     initializeApp();
   }, []);
   
+  useEffect(() => {
+  let unsubscribe: (() => void) | undefined;
 
   const initializeApp = async () => {
     try {
@@ -42,8 +44,17 @@ export default function App() {
         if (state.isConnected) {
           // Process offline sync queue when connection restored
           offlineManager.syncQueue.process();
+        } else {
+          // Show offline alert
+          Alert.alert(
+            'Offline Mode',
+            'You are currently offline. Some features may be limited.',
+            [{ text: 'OK' }]
+          );
         }
       });
+  };
+
 
       // Check authentication status
       await checkAuthStatus();
@@ -78,6 +89,11 @@ export default function App() {
       setIsReady(true);
       await SplashScreen.hideAsync();
     }
+    initializeApp();
+
+    return () => {
+    if (unsubscribe) unsubscribe();
+
   };
 
   if (!isReady) {
@@ -118,12 +134,7 @@ export default function App() {
       <NavigationContainer>
         <StatusBar style="auto" />
         <RootNavigator />
-        {isConnected === false && (
-          <Alert 
-            title="Offline Mode"
-            message="You are currently offline. Some features may be limited."
-          />
-        )}
+        {/* Show offline status if needed - Alert.alert() should be called, not rendered as JSX */}
       </NavigationContainer>
     </ErrorBoundary>
   );

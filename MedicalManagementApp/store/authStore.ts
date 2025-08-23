@@ -1,11 +1,10 @@
-import { create } from 'zustand';
 import * as SecureStore from 'expo-secure-store';
-import { authAPI } from '../src/api/auth';
+import { create } from 'zustand';
+import { authAPI } from '../src/api/AuthApi';
+import { oAuthService } from '../src/services/OAuthService';
+import { securityManager } from '../src/services/security';
 import { User } from '../types/models.types';
 import { AUTH_CONFIG } from '../utils/constants';
-import { securityManager } from '../src/services/security';
-import { oAuthService } from '../src/services/OAuthService';
-import { UserInfoResponse } from '../src/config/oauth.config';
 
 interface AuthState {
   user: User | null;
@@ -96,30 +95,27 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       // Start OAuth flow
       const tokens = await oAuthService.authenticate();
       
-      // Get user info from OAuth provider
-      const userInfo = await oAuthService.getUserInfo();
+      // Store OAuth tokens first so API client can use them
+      await SecureStore.setItemAsync(AUTH_CONFIG.TOKEN_KEY, tokens.access_token);
+      if (tokens.refresh_token) {
+        await SecureStore.setItemAsync(AUTH_CONFIG.REFRESH_TOKEN_KEY, tokens.refresh_token);
+      }
       
-      // Map OAuth user info to app User model
-      const user: User = {
-        id: userInfo.sub,
-        name: userInfo.name || '',
-        email: userInfo.email || '',
-        roles: userInfo.roles || [],
-        permissions: userInfo.permissions || [],
-        clinicId: userInfo.clinic_id || '',
-        providerId: userInfo.provider_id || '',
-        licenseNumber: userInfo.license_number || '',
-        profilePicture: userInfo.picture,
-        emailVerified: userInfo.email_verified,
-      };
+      // Set token in store state so apiClient can use it
+      set({ 
+        token: tokens.access_token,
+        refreshToken: tokens.refresh_token || null,
+      });
+      
+      // Now fetch the complete user object from our backend using the OAuth token
+      // The apiClient will automatically use the token we just stored
+      const user = await authAPI.whoami();
       
       // Store user info
       await SecureStore.setItemAsync(AUTH_CONFIG.USER_KEY, JSON.stringify(user));
       
       set({ 
         user, 
-        token: tokens.access_token,
-        refreshToken: tokens.refresh_token || null,
         isAuthenticated: true,
         loading: false,
         error: null,
@@ -130,7 +126,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       await securityManager.logSecurityEvent({
         type: 'OAUTH_LOGIN_SUCCESS',
         userId: user.id,
-        metadata: {
+        details: {
           provider: 'healthbridge',
           scopes: tokens.scope,
         },
@@ -175,7 +171,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         await securityManager.logSecurityEvent({
           type: 'LOGOUT',
           userId: user.id,
-          metadata: { authMethod },
+          details: { authMethod },
         });
       }
     } catch (error) {
@@ -210,23 +206,19 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       const isOAuthAuthenticated = await oAuthService.isAuthenticated();
       
       if (isOAuthAuthenticated) {
-        // Get OAuth tokens and user info
+        // Get OAuth tokens
         const tokens = await oAuthService.getStoredTokens();
-        const userInfo = await oAuthService.getUserInfo();
         
-        // Map OAuth user info to app User model
-        const user: User = {
-          id: userInfo.sub,
-          name: userInfo.name || '',
-          email: userInfo.email || '',
-          roles: userInfo.roles || [],
-          permissions: userInfo.permissions || [],
-          clinicId: userInfo.clinic_id || '',
-          providerId: userInfo.provider_id || '',
-          licenseNumber: userInfo.license_number || '',
-          profilePicture: userInfo.picture,
-          emailVerified: userInfo.email_verified,
-        };
+        // Store tokens so API client can use them
+        if (tokens?.access_token) {
+          await SecureStore.setItemAsync(AUTH_CONFIG.TOKEN_KEY, tokens.access_token);
+          if (tokens.refresh_token) {
+            await SecureStore.setItemAsync(AUTH_CONFIG.REFRESH_TOKEN_KEY, tokens.refresh_token);
+          }
+        }
+        
+        // Fetch complete user object from backend using OAuth token
+        const user = await authAPI.whoami();
         
         set({
           user,

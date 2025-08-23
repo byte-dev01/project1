@@ -1,26 +1,15 @@
-import { API_ENDPOINTS } from './endpoints';
-import { apiClient } from './client';
-import { FaxMessage, FaxStatsResponse } from '../../types/models.types';
 import { PaginatedResponse } from '../../types/api.types';
-import { offlineManager } from '../../utils/offline';
+import { FaxMessage, FaxStatsResponse } from '../../types/models.types';
+import { apiClient } from './ApiClient';
+import { API_ENDPOINTS } from './endpoints';
 
 class FaxAPI {
   async getFaxRecords(timeRange: string = '24h'): Promise<{ faxData: FaxMessage[] }> {
-    // Use offline-first strategy
-    return await offlineManager.fetchWithCache(
-      `fax_records_${timeRange}`,
-      async () => {
-        const response = await apiClient.get<{ faxData: FaxMessage[] }>(
-          API_ENDPOINTS.FAX.LIST,
-          { params: { timeRange } }
-        );
-        return response.data;
-      },
-      {
-        ttl: 5 * 60 * 1000, // 5 minutes cache
-        offlineFallback: { faxData: [] }
-      }
+    const response = await apiClient.get<{ faxData: FaxMessage[] }>(
+      API_ENDPOINTS.FAX.LIST,
+      { params: { timeRange } }
     );
+    return response.data;
   }
 
   async getFaxStats(timeRange: string = '24h'): Promise<FaxStatsResponse> {

@@ -1,7 +1,8 @@
-import { API_ENDPOINTS } from './endpoints';
-import { apiClient } from './client';
-import { AuthRequest, AuthResponse, User } from '../../types/api.types';
+import { AuthRequest, AuthResponse } from '../../types/api.types';
+import { User } from '../../types/models.types';
 import { securityManager } from '../services/security';
+import { apiClient } from './ApiClient';
+import { API_ENDPOINTS } from './endpoints';
 
 class AuthAPI {
   async login(credentials: AuthRequest): Promise<AuthResponse> {
@@ -20,10 +21,10 @@ class AuthAPI {
       
       return response.data;
     } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       await securityManager.logSecurityEvent({
         type: 'LOGIN_FAILED',
-        details: { username: credentials.username, error: error.message }
-      });
+        details: { username: credentials.username, error: errorMessage }      });
       throw error;
     }
   }

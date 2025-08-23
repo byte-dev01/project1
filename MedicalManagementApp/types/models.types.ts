@@ -87,6 +87,21 @@ export interface FaxMessage {
   patientId?: string;
 }
 
+export interface FaxStatsResponse {
+  total: number;
+  pending: number;
+  processed: number;
+  reviewed: number;
+  archived: number;
+  urgent: number;
+  high: number;
+  normal: number;
+  low: number;
+  averageProcessingTime?: number;
+  todayCount?: number;
+  weekCount?: number;
+}
+
 export interface MedicalRecord {
   id: string;
   patientId: string;

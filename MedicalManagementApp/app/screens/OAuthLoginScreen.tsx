@@ -19,8 +19,8 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
-import { useAuthStore } from '@store/authStore';
-import { theme } from '@theme/colors';
+import { useAuthStore } from '../../store/authStore';
+import { theme } from '../../theme/colors';
 
 export const OAuthLoginScreen: React.FC = () => {
   const navigation = useNavigation();

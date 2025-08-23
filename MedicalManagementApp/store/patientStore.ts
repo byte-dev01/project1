@@ -1,7 +1,6 @@
 import { create } from 'zustand';
-import { patientsAPI } from '../src/api/patients';
+import { patientsAPI } from '../src/api/PatientsApi';
 import { Patient } from '../types/models.types';
-import { offlineManager } from '../utils/offline';
 
 interface PatientState {
   patients: Patient[];
@@ -113,8 +112,7 @@ export const usePatientStore = create<PatientState>((set, get) => ({
           ? updatedPatient
           : state.selectedPatient,
       }));
-      
-      return updatedPatient;
+
     } catch (error: any) {
       set({ error: error.message || 'Failed to update patient' });
       throw error;

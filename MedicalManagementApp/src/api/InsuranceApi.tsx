@@ -1,7 +1,6 @@
 
+import { apiClient } from './ApiClient';
 import { API_ENDPOINTS } from './endpoints';
-import { apiClient } from './client';
-import { Insurance } from '../../types/models.types';
 
 interface InsuranceFormData {
   patientName: string;
@@ -12,6 +11,29 @@ interface InsuranceFormData {
   groupNumber?: string;
   reasonForVisit: string;
 }
+  interface CostEstimateResponse {
+    estimatedCost: number;
+    copay: number;
+    deductibleRemaining: number;
+  }
+  interface ClaimResponse {
+    claimId: string;
+    status: string;
+    confirmationNumber: string;
+    submissionDate: string;
+    claimAmount: number;
+    message?: string;
+    tracking: {
+      confirmationNumber: string;
+      referenceNumber: string;
+      batchId?: string;
+    };
+    additionalInfoRequired?: {
+      required: boolean;
+      items?: string[];
+      dueDate?: string;
+    };
+  }
 
 interface PrefillResponse {
   insuranceCompany?: string;
@@ -21,6 +43,54 @@ interface PrefillResponse {
   copay?: number;
   deductible?: number;
 }
+
+  interface InsuranceVerifyResponse {
+    isValid: boolean;
+    coverage: {
+      planName: string;
+      planType: string;  // HMO, PPO, EPO, etc.
+      effectiveDate: string;
+      expirationDate: string;
+      copay: {
+        primary: number;
+        specialist: number;
+        emergency: number;
+      };
+      deductible: {
+        individual: number;
+        individualRemaining: number;
+        family: number;
+        familyRemaining: number;
+      };
+      outOfPocketMax: {
+        individual: number;
+        individualRemaining: number;
+        family: number;
+        familyRemaining: number;
+      };
+      coinsurance: number;  // Percentage (e.g., 20 for 20%)
+      coverageDetails: {
+        preventiveCare: boolean;
+        emergencyServices: boolean;
+        prescriptionDrugs: boolean;
+        mentalHealth: boolean;
+        dental: boolean;
+        vision: boolean;
+      };
+    } | null;  // null if invalid
+    errors?: string[];  // Any validation errors
+    verificationDate: string;
+    verificationId: string;
+  }
+
+  interface InsuranceClaimData {
+    patientId: string;
+    providerId: string;
+    serviceDate: string;
+    diagnosis: string;
+    procedures: string[];
+    amount: number;
+  }
 
 class InsuranceAPI {
   async prefill(insuranceNumber: string): Promise<PrefillResponse> {
@@ -36,28 +106,22 @@ class InsuranceAPI {
     }
   }
 
-  async verify(insuranceData: Partial<Insurance>): Promise<{
-    isValid: boolean;
-    coverage: any;
-  }> {
-    const response = await apiClient.post(
-      API_ENDPOINTS.INSURANCE.VERIFY,
-      insuranceData
-    );
-    return response.data;
-  }
-
-  async submit(formData: InsuranceFormData): Promise<{
-    success: boolean;
-    claimId?: string;
-    message?: string;
-  }> {
-    const response = await apiClient.post(
-      API_ENDPOINTS.INSURANCE.SUBMIT,
-      formData
-    );
-    return response.data;
-  }
+    async verifyInsurance(formData: InsuranceFormData):
+  Promise<InsuranceVerifyResponse> {
+      const response = await apiClient.post<InsuranceVerifyResponse>(
+        API_ENDPOINTS.INSURANCE.VERIFY,
+        formData
+      );
+      return response.data;
+    }
+    async submitInsuranceClaim(claimData: InsuranceClaimData):
+  Promise<ClaimResponse> {
+      const response = await apiClient.post<ClaimResponse>(
+        API_ENDPOINTS.INSURANCE.SUBMIT,
+        claimData
+      );
+      return response.data;
+    }
 
   async getInsuranceProviders(): Promise<string[]> {
     const response = await apiClient.get<string[]>('/api/insurance/providers');
@@ -67,17 +131,12 @@ class InsuranceAPI {
   async estimateCost(
     procedureCode: string,
     insuranceId: string
-  ): Promise<{
-    estimatedCost: number;
-    copay: number;
-    deductibleRemaining: number;
-  }> {
-    const response = await apiClient.post('/api/insurance/estimate', {
-      procedureCode,
-      insuranceId
-    });
+  ): Promise<CostEstimateResponse> {
+    const response = await apiClient.post<CostEstimateResponse>(
+      '/api/insurance/estimate',
+      { procedureCode, insuranceId }
+    );
     return response.data;
   }
 }
-
 export const insuranceAPI = new InsuranceAPI();

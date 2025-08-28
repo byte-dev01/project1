@@ -611,6 +611,12 @@ window.addEventListener('regenerateLoginForm', () => {
 // Export renderMainHeader to window for WebRTC integration
 window.renderMainHeader = renderMainHeader;
 
+// Also trigger WebRTC button addition after header renders
+window.addEventListener('DOMContentLoaded', () => {
+	// Export again in case it wasn't ready
+	window.renderMainHeader = renderMainHeader;
+});
+
 // 初始化翻转卡片功能
 // Initialize flip card functionality
 export function initFlipCard() {

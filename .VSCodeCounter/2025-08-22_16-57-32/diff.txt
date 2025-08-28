@@ -1,0 +1,212 @@
+Date : 2025-08-22 16:57:32
+Directory : c:\Users\rache\catbook\MedicalManagementApp
+Total : 132 files,  40843 codes, 2361 comments, 2785 blanks, all 45989 lines
+
+Languages
++--------------------+------------+------------+------------+------------+------------+
+| language           | files      | code       | comment    | blank      | total      |
++--------------------+------------+------------+------------+------------+------------+
+| JSON               |          3 |     20,618 |          0 |          2 |     20,620 |
+| TypeScript JSX     |         56 |      9,944 |        777 |        893 |     11,614 |
+| TypeScript         |         55 |      8,934 |      1,481 |      1,618 |     12,033 |
+| Swift              |          5 |        722 |         71 |        135 |        928 |
+| JavaScript         |          6 |        326 |         25 |         57 |        408 |
+| Markdown           |          2 |        154 |          0 |         57 |        211 |
+| Objective-C        |          3 |        103 |          7 |         22 |        132 |
+| JSON with Comments |          1 |         42 |          0 |          0 |         42 |
+| JavaScript JSX     |          1 |          0 |          0 |          1 |          1 |
++--------------------+------------+------------+------------+------------+------------+
+
+Directories
++------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                                                             | files      | code       | comment    | blank      | total      |
++------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                                                |        132 |     40,843 |      2,361 |      2,785 |     45,989 |
+| . (Files)                                                                                                        |          9 |     20,948 |         15 |         81 |     21,044 |
+| HealthBridge                                                                                                     |          8 |        825 |         78 |        157 |      1,060 |
+| api                                                                                                              |          1 |        213 |         23 |         40 |        276 |
+| app                                                                                                              |          6 |        560 |         16 |         36 |        612 |
+| app (Files)                                                                                                      |          2 |         53 |          1 |          9 |         63 |
+| app\(tabs)                                                                                                       |          3 |        220 |          1 |         12 |        233 |
+| app\screens                                                                                                      |          1 |        287 |         14 |         15 |        316 |
+| assets                                                                                                           |          1 |          0 |          0 |          1 |          1 |
+| assets\test                                                                                                      |          1 |          0 |          0 |          1 |          1 |
+| constants                                                                                                        |          1 |         20 |          4 |          3 |         27 |
+| domains                                                                                                          |          1 |        252 |         44 |         40 |        336 |
+| domains\clinical                                                                                                 |          1 |        252 |         44 |         40 |        336 |
+| domains\clinical\medications                                                                                     |          1 |        252 |         44 |         40 |        336 |
+| mobile                                                                                                           |          2 |        140 |         31 |         30 |        201 |
+| scripts                                                                                                          |          1 |         89 |         10 |         14 |        113 |
+| src                                                                                                              |         82 |     15,625 |      1,920 |      1,992 |     19,537 |
+| src\api                                                                                                          |          8 |        677 |         51 |        118 |        846 |
+| src\background                                                                                                   |          1 |        310 |         70 |         65 |        445 |
+| src\components                                                                                                   |         23 |      3,729 |        112 |        362 |      4,203 |
+| src\components (Files)                                                                                           |         10 |      1,629 |         81 |        150 |      1,860 |
+| src\components\__tests__                                                                                         |          1 |        546 |          5 |         95 |        646 |
+| src\components\common                                                                                            |          3 |        335 |          3 |         32 |        370 |
+| src\components\fax                                                                                               |          3 |        386 |          1 |         24 |        411 |
+| src\components\forms                                                                                             |          2 |        757 |          8 |         49 |        814 |
+| src\components\ui                                                                                                |          4 |         76 |         14 |         12 |        102 |
+| src\config                                                                                                       |          1 |         86 |         18 |         14 |        118 |
+| src\core                                                                                                         |         13 |      2,779 |        439 |        495 |      3,713 |
+| src\core\clinical                                                                                                |          2 |        467 |         68 |         80 |        615 |
+| src\core\compliance                                                                                              |         11 |      2,312 |        371 |        415 |      3,098 |
+| src\features                                                                                                     |          3 |        667 |        155 |        133 |        955 |
+| src\features\medications                                                                                         |          1 |         29 |          4 |          4 |         37 |
+| src\features\provider                                                                                            |          1 |        321 |         42 |         64 |        427 |
+| src\features\telehealth                                                                                          |          1 |        317 |        109 |         65 |        491 |
+| src\features\telehealth\services                                                                                 |          1 |        317 |        109 |         65 |        491 |
+| src\features\telehealth\services\LiveKitService.ts                                                               |          1 |        317 |        109 |         65 |        491 |
+| src\hooks                                                                                                        |          5 |        569 |         88 |        106 |        763 |
+| src\navigation                                                                                                   |          3 |        418 |         10 |         34 |        462 |
+| src\paper                                                                                                        |          1 |         65 |         11 |         15 |         91 |
+| src\screens                                                                                                      |         14 |      4,314 |        559 |        296 |      5,169 |
+| src\screens (Files)                                                                                              |         10 |      3,242 |        532 |        218 |      3,992 |
+| src\screens\auth                                                                                                 |          2 |        159 |          7 |         18 |        184 |
+| src\screens\fax                                                                                                  |          2 |        913 |         20 |         60 |        993 |
+| src\services                                                                                                     |         10 |      2,011 |        407 |        354 |      2,772 |
+| store                                                                                                            |          3 |        497 |         36 |         85 |        618 |
+| sync                                                                                                             |          1 |        203 |         16 |         39 |        258 |
+| theme                                                                                                            |          3 |        345 |         28 |         28 |        401 |
+| types                                                                                                            |          3 |        265 |          9 |         31 |        305 |
+| utils                                                                                                            |         10 |        861 |        131 |        208 |      1,200 |
++------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++------------------------------------------------------------------------------------------------------------------+--------------------+------------+------------+------------+------------+
+| filename                                                                                                         | language           | code       | comment    | blank      | total      |
++------------------------------------------------------------------------------------------------------------------+--------------------+------------+------------+------------+------------+
+| c:\Users\rache\catbook\MedicalManagementApp\CLAUDE.md                                                            | Markdown           |        123 |          0 |         36 |        159 |
+| c:\Users\rache\catbook\MedicalManagementApp\HealthBridge\MedicalTableView.m                                      | Objective-C        |          0 |          0 |          1 |          1 |
+| c:\Users\rache\catbook\MedicalManagementApp\HealthBridge\MedicalTableView.swift                                  | Swift              |        191 |         21 |         41 |        253 |
+| c:\Users\rache\catbook\MedicalManagementApp\HealthBridge\PHIProtection.m                                         | Objective-C        |         86 |          3 |         15 |        104 |
+| c:\Users\rache\catbook\MedicalManagementApp\HealthBridge\PaperPrescriptionModule.swift                           | Swift              |        101 |          4 |         20 |        125 |
+| c:\Users\rache\catbook\MedicalManagementApp\HealthBridge\SecurityEnhancements.swift                              | Swift              |         33 |          2 |          6 |         41 |
+| c:\Users\rache\catbook\MedicalManagementApp\HealthBridge\SecurityModule.swift                                    | Swift              |        290 |         38 |         50 |        378 |
+| c:\Users\rache\catbook\MedicalManagementApp\HealthBridge\WebViewBridge.m                                         | Objective-C        |         17 |          4 |          6 |         27 |
+| c:\Users\rache\catbook\MedicalManagementApp\HealthBridge\WebViewBridge.swift                                     | Swift              |        107 |          6 |         18 |        131 |
+| c:\Users\rache\catbook\MedicalManagementApp\api\ApiClient.tsx                                                    | TypeScript JSX     |        213 |         23 |         40 |        276 |
+| c:\Users\rache\catbook\MedicalManagementApp\app.json                                                             | JSON               |         59 |          0 |          0 |         59 |
+| c:\Users\rache\catbook\MedicalManagementApp\app.tsx                                                              | TypeScript JSX     |         99 |         14 |         20 |        133 |
+| c:\Users\rache\catbook\MedicalManagementApp\app\(tabs)\_layout.tsx                                               | TypeScript JSX     |         41 |          1 |          4 |         46 |
+| c:\Users\rache\catbook\MedicalManagementApp\app\(tabs)\explore.tsx                                               | TypeScript JSX     |        107 |          0 |          4 |        111 |
+| c:\Users\rache\catbook\MedicalManagementApp\app\(tabs)\index.tsx                                                 | TypeScript JSX     |         72 |          0 |          4 |         76 |
+| c:\Users\rache\catbook\MedicalManagementApp\app\+not-found.tsx                                                   | TypeScript JSX     |         29 |          0 |          4 |         33 |
+| c:\Users\rache\catbook\MedicalManagementApp\app\_layout.tsx                                                      | TypeScript JSX     |         24 |          1 |          5 |         30 |
+| c:\Users\rache\catbook\MedicalManagementApp\app\screens\OAuthLoginScreen.tsx                                     | TypeScript JSX     |        287 |         14 |         15 |        316 |
+| c:\Users\rache\catbook\MedicalManagementApp\assets\test\AutomationFramework.js                                   | JavaScript         |          0 |          0 |          1 |          1 |
+| c:\Users\rache\catbook\MedicalManagementApp\babel.config.js                                                      | JavaScript         |         27 |          0 |          0 |         27 |
+| c:\Users\rache\catbook\MedicalManagementApp\constants\Colors.ts                                                  | TypeScript         |         20 |          4 |          3 |         27 |
+| c:\Users\rache\catbook\MedicalManagementApp\domains\clinical\medications\DrugInteractionChecker.ts               | TypeScript         |        252 |         44 |         40 |        336 |
+| c:\Users\rache\catbook\MedicalManagementApp\eslint.config.js                                                     | JavaScript         |          8 |          1 |          2 |         11 |
+| c:\Users\rache\catbook\MedicalManagementApp\mobile\LocalAuditService.ts                                          | TypeScript         |        113 |         27 |         21 |        161 |
+| c:\Users\rache\catbook\MedicalManagementApp\mobile\useAudit.ts                                                   | TypeScript         |         27 |          4 |          9 |         40 |
+| c:\Users\rache\catbook\MedicalManagementApp\package-lock.json                                                    | JSON               |     20,487 |          0 |          1 |     20,488 |
+| c:\Users\rache\catbook\MedicalManagementApp\package.json                                                         | JSON               |         72 |          0 |          1 |         73 |
+| c:\Users\rache\catbook\MedicalManagementApp\readMe.md                                                            | Markdown           |         31 |          0 |         21 |         52 |
+| c:\Users\rache\catbook\MedicalManagementApp\scripts\reset-project.js                                             | JavaScript         |         89 |         10 |         14 |        113 |
+| c:\Users\rache\catbook\MedicalManagementApp\src\api\ApiClient.tsx                                                | TypeScript JSX     |        213 |         23 |         40 |        276 |
+| c:\Users\rache\catbook\MedicalManagementApp\src\api\ApiOptimize.tsx                                              | TypeScript JSX     |         50 |         12 |         14 |         76 |
+| c:\Users\rache\catbook\MedicalManagementApp\src\api\AuthApi.tsx                                                  | TypeScript JSX     |         49 |          1 |          9 |         59 |
+| c:\Users\rache\catbook\MedicalManagementApp\src\api\FaxApi.tsx                                                   | TypeScript JSX     |         67 |          1 |          8 |         76 |
+| c:\Users\rache\catbook\MedicalManagementApp\src\api\InsuranceApi.tsx                                             | TypeScript JSX     |         74 |          0 |          9 |         83 |
+| c:\Users\rache\catbook\MedicalManagementApp\src\api\MessageApi.tsx                                               | TypeScript JSX     |         93 |          1 |         16 |        110 |
+| c:\Users\rache\catbook\MedicalManagementApp\src\api\PatientsApi.tsx                                              | TypeScript JSX     |         91 |          5 |         13 |        109 |
+| c:\Users\rache\catbook\MedicalManagementApp\src\api\endpoints.ts                                                 | TypeScript         |         40 |          8 |          9 |         57 |
+| c:\Users\rache\catbook\MedicalManagementApp\src\background\BackgroundTaskManager.ts                              | TypeScript         |        310 |         70 |         65 |        445 |
+| c:\Users\rache\catbook\MedicalManagementApp\src\components\Collapsible.tsx                                       | TypeScript JSX     |         40 |          0 |          6 |         46 |
+| c:\Users\rache\catbook\MedicalManagementApp\src\components\ExternalLink.tsx                                      | TypeScript JSX     |         20 |          2 |          3 |         25 |
+| c:\Users\rache\catbook\MedicalManagementApp\src\components\HapticTab.tsx                                         | TypeScript JSX     |         16 |          1 |          2 |         19 |
+| c:\Users\rache\catbook\MedicalManagementApp\src\components\HelloWave.tsx                                         | TypeScript JSX     |         34 |          0 |          7 |         41 |
+| c:\Users\rache\catbook\MedicalManagementApp\src\components\MedicalRecordTableView.tsx                            | TypeScript JSX     |         75 |          3 |          9 |         87 |
+| c:\Users\rache\catbook\MedicalManagementApp\src\components\ParallaxScrollView.tsx                                | TypeScript JSX     |         76 |          0 |          7 |         83 |
+| c:\Users\rache\catbook\MedicalManagementApp\src\components\SecureWebViewWrapper.tsx                              | TypeScript JSX     |        644 |         32 |         48 |        724 |
+| c:\Users\rache\catbook\MedicalManagementApp\src\components\ThemedText.tsx                                        | TypeScript JSX     |         55 |          0 |          6 |         61 |
+| c:\Users\rache\catbook\MedicalManagementApp\src\components\ThemedView.tsx                                        | TypeScript JSX     |         10 |          0 |          5 |         15 |
+| c:\Users\rache\catbook\MedicalManagementApp\src\components\WebViewWrapper.tsx                                    | TypeScript JSX     |        659 |         43 |         57 |        759 |
+| c:\Users\rache\catbook\MedicalManagementApp\src\components\__tests__\SecureWebViewWrapper.test.tsx               | TypeScript JSX     |        546 |          5 |         95 |        646 |
+| c:\Users\rache\catbook\MedicalManagementApp\src\components\common\ErrorBoundary.tsx                              | TypeScript JSX     |        200 |          2 |         19 |        221 |
+| c:\Users\rache\catbook\MedicalManagementApp\src\components\common\LoadingSpinner.tsx                             | TypeScript JSX     |         62 |          0 |          6 |         68 |
+| c:\Users\rache\catbook\MedicalManagementApp\src\components\common\SafeAreaWrapper.tsx                            | TypeScript JSX     |         73 |          1 |          7 |         81 |
+| c:\Users\rache\catbook\MedicalManagementApp\src\components\fax\FaxCard.tsx                                       | TypeScript JSX     |        167 |          0 |         12 |        179 |
+| c:\Users\rache\catbook\MedicalManagementApp\src\components\fax\FaxFilters.tsx                                    | TypeScript JSX     |        144 |          0 |          7 |        151 |
+| c:\Users\rache\catbook\MedicalManagementApp\src\components\fax\SeverityBadge.tsx                                 | TypeScript JSX     |         75 |          1 |          5 |         81 |
+| c:\Users\rache\catbook\MedicalManagementApp\src\components\forms\InsuranceForm.tsx                               | TypeScript JSX     |        141 |          1 |         16 |        158 |
+| c:\Users\rache\catbook\MedicalManagementApp\src\components\forms\PatientForms.tsx                                | TypeScript JSX     |        616 |          7 |         33 |        656 |
+| c:\Users\rache\catbook\MedicalManagementApp\src\components\ui\IconSymbol.ios.tsx                                 | TypeScript JSX     |         31 |          0 |          2 |         33 |
+| c:\Users\rache\catbook\MedicalManagementApp\src\components\ui\IconSymbol.tsx                                     | TypeScript JSX     |         26 |         11 |          5 |         42 |
+| c:\Users\rache\catbook\MedicalManagementApp\src\components\ui\TabBarBackground.ios.tsx                           | TypeScript JSX     |         15 |          2 |          3 |         20 |
+| c:\Users\rache\catbook\MedicalManagementApp\src\components\ui\TabBarBackground.tsx                               | TypeScript JSX     |          4 |          1 |          2 |          7 |
+| c:\Users\rache\catbook\MedicalManagementApp\src\config\oauth.config.ts                                           | TypeScript         |         86 |         18 |         14 |        118 |
+| c:\Users\rache\catbook\MedicalManagementApp\src\core\clinical\ClinicalSafetyService.ts                           | TypeScript         |        292 |         47 |         53 |        392 |
+| c:\Users\rache\catbook\MedicalManagementApp\src\core\clinical\DrugInteractionService.ts                          | TypeScript         |        175 |         21 |         27 |        223 |
+| c:\Users\rache\catbook\MedicalManagementApp\src\core\compliance\AuditLog.ts                                      | TypeScript         |        522 |         83 |        103 |        708 |
+| c:\Users\rache\catbook\MedicalManagementApp\src\core\compliance\AuditLogEnhanced.ts                              | TypeScript         |          0 |          0 |          1 |          1 |
+| c:\Users\rache\catbook\MedicalManagementApp\src\core\compliance\AuditLogUsage.tsx                                | TypeScript JSX     |          0 |          0 |          1 |          1 |
+| c:\Users\rache\catbook\MedicalManagementApp\src\core\compliance\AuditTrail.ts                                    | TypeScript         |        562 |        108 |        136 |        806 |
+| c:\Users\rache\catbook\MedicalManagementApp\src\core\compliance\CURES2Service.ts                                 | TypeScript         |        232 |         44 |         40 |        316 |
+| c:\Users\rache\catbook\MedicalManagementApp\src\core\compliance\CaliforniaHealthcareCompliance.ts                | TypeScript         |        215 |         50 |         48 |        313 |
+| c:\Users\rache\catbook\MedicalManagementApp\src\core\compliance\ConsentManager.ts                                | TypeScript         |        171 |         11 |         25 |        207 |
+| c:\Users\rache\catbook\MedicalManagementApp\src\core\compliance\KnoxKeeneCompliance.ts                           | TypeScript         |         61 |         48 |         11 |        120 |
+| c:\Users\rache\catbook\MedicalManagementApp\src\core\compliance\TelehealthConsentService.ts                      | TypeScript         |          0 |          0 |          1 |          1 |
+| c:\Users\rache\catbook\MedicalManagementApp\src\core\compliance\dataRetentionService.ts                          | TypeScript         |         89 |          4 |         19 |        112 |
+| c:\Users\rache\catbook\MedicalManagementApp\src\core\compliance\fhir.ts                                          | TypeScript         |        460 |         23 |         30 |        513 |
+| c:\Users\rache\catbook\MedicalManagementApp\src\features\medications\PrescriptionScreen.tsx                      | TypeScript JSX     |         29 |          4 |          4 |         37 |
+| c:\Users\rache\catbook\MedicalManagementApp\src\features\provider\ProviderEfficiencyService.ts                   | TypeScript         |        321 |         42 |         64 |        427 |
+| c:\Users\rache\catbook\MedicalManagementApp\src\features\telehealth\services\LiveKitService.ts\LiveKitService.ts | TypeScript         |        317 |        109 |         65 |        491 |
+| c:\Users\rache\catbook\MedicalManagementApp\src\hooks\useAuditedAction.ts                                        | TypeScript         |        376 |         76 |         64 |        516 |
+| c:\Users\rache\catbook\MedicalManagementApp\src\hooks\useAuth.js                                                 | JavaScript         |        165 |          5 |         31 |        201 |
+| c:\Users\rache\catbook\MedicalManagementApp\src\hooks\useColorScheme.ts                                          | TypeScript         |          1 |          0 |          1 |          2 |
+| c:\Users\rache\catbook\MedicalManagementApp\src\hooks\useColorScheme.web.ts                                      | TypeScript         |         13 |          3 |          6 |         22 |
+| c:\Users\rache\catbook\MedicalManagementApp\src\hooks\useThemeColor.ts                                           | TypeScript         |         14 |          4 |          4 |         22 |
+| c:\Users\rache\catbook\MedicalManagementApp\src\navigation\AuthNavigator.tsx                                     | TypeScript JSX     |         19 |          1 |          3 |         23 |
+| c:\Users\rache\catbook\MedicalManagementApp\src\navigation\MainNavigator.tsx                                     | TypeScript JSX     |        179 |          4 |         10 |        193 |
+| c:\Users\rache\catbook\MedicalManagementApp\src\navigation\RootNavigator.tsx                                     | TypeScript JSX     |        220 |          5 |         21 |        246 |
+| c:\Users\rache\catbook\MedicalManagementApp\src\paper\PaperPrescriptionService.ts                                | TypeScript         |         65 |         11 |         15 |         91 |
+| c:\Users\rache\catbook\MedicalManagementApp\src\screens\ConsentFormScreen.tsx                                    | TypeScript JSX     |        411 |         19 |         31 |        461 |
+| c:\Users\rache\catbook\MedicalManagementApp\src\screens\DashboardScreen.tsx                                      | TypeScript JSX     |        461 |         10 |         24 |        495 |
+| c:\Users\rache\catbook\MedicalManagementApp\src\screens\HomeScreen.tsx                                           | TypeScript JSX     |        139 |          1 |          6 |        146 |
+| c:\Users\rache\catbook\MedicalManagementApp\src\screens\LoginScreen.tsx                                          | TypeScript JSX     |        517 |         20 |         36 |        573 |
+| c:\Users\rache\catbook\MedicalManagementApp\src\screens\MessageScreen.tsx                                        | TypeScript JSX     |        431 |        466 |         26 |        923 |
+| c:\Users\rache\catbook\MedicalManagementApp\src\screens\PatientDetailScreen.tsx                                  | TypeScript JSX     |        754 |          6 |         47 |        807 |
+| c:\Users\rache\catbook\MedicalManagementApp\src\screens\PatientMedicalHistory.tsx                                | TypeScript JSX     |         35 |          4 |          6 |         45 |
+| c:\Users\rache\catbook\MedicalManagementApp\src\screens\PatientSearchScreen.tsx                                  | TypeScript JSX     |        392 |          1 |         26 |        419 |
+| c:\Users\rache\catbook\MedicalManagementApp\src\screens\SecurePrescriptionScreen.ts                              | TypeScript         |         55 |          4 |          9 |         68 |
+| c:\Users\rache\catbook\MedicalManagementApp\src\screens\WebViewScreen.tsx                                        | TypeScript JSX     |         47 |          1 |          7 |         55 |
+| c:\Users\rache\catbook\MedicalManagementApp\src\screens\auth\LoginScreen.tsx                                     | TypeScript JSX     |        135 |          1 |         14 |        150 |
+| c:\Users\rache\catbook\MedicalManagementApp\src\screens\auth\QRLogin.tsx                                         | TypeScript JSX     |         24 |          6 |          4 |         34 |
+| c:\Users\rache\catbook\MedicalManagementApp\src\screens\fax\FaxDetailScreen.tsx                                  | TypeScript JSX     |        490 |         11 |         30 |        531 |
+| c:\Users\rache\catbook\MedicalManagementApp\src\screens\fax\FaxListScreen.tsx                                    | TypeScript JSX     |        423 |          9 |         30 |        462 |
+| c:\Users\rache\catbook\MedicalManagementApp\src\services\AuthService.ts                                          | TypeScript         |        493 |        100 |         77 |        670 |
+| c:\Users\rache\catbook\MedicalManagementApp\src\services\EncryptedDatabaseService.ts                             | TypeScript         |        206 |         71 |         45 |        322 |
+| c:\Users\rache\catbook\MedicalManagementApp\src\services\OAuthService.ts                                         | TypeScript         |        423 |         83 |         74 |        580 |
+| c:\Users\rache\catbook\MedicalManagementApp\src\services\OAuthWebViewBridge.ts                                   | TypeScript         |        274 |         36 |         28 |        338 |
+| c:\Users\rache\catbook\MedicalManagementApp\src\services\SecureAPIClient.ts                                      | TypeScript         |         91 |         35 |         22 |        148 |
+| c:\Users\rache\catbook\MedicalManagementApp\src\services\phiProtection.ts                                        | TypeScript         |        127 |         15 |         26 |        168 |
+| c:\Users\rache\catbook\MedicalManagementApp\src\services\requestSecurity.ts                                      | TypeScript         |         76 |          6 |         18 |        100 |
+| c:\Users\rache\catbook\MedicalManagementApp\src\services\security.ts                                             | TypeScript         |        169 |         19 |         36 |        224 |
+| c:\Users\rache\catbook\MedicalManagementApp\src\services\simpleConsentServices.ts                                | TypeScript         |         81 |         18 |         16 |        115 |
+| c:\Users\rache\catbook\MedicalManagementApp\src\services\webViewServices.ts                                      | TypeScript         |         71 |         24 |         12 |        107 |
+| c:\Users\rache\catbook\MedicalManagementApp\store\authStore.ts                                                   | TypeScript         |        256 |         31 |         46 |        333 |
+| c:\Users\rache\catbook\MedicalManagementApp\store\faxStore.ts                                                    | TypeScript         |        103 |          3 |         17 |        123 |
+| c:\Users\rache\catbook\MedicalManagementApp\store\patientStore.ts                                                | TypeScript         |        138 |          2 |         22 |        162 |
+| c:\Users\rache\catbook\MedicalManagementApp\sync\conflictResolutionService.ts                                    | TypeScript         |        203 |         16 |         39 |        258 |
+| c:\Users\rache\catbook\MedicalManagementApp\theme\colors.ts                                                      | TypeScript         |        109 |         11 |         11 |        131 |
+| c:\Users\rache\catbook\MedicalManagementApp\theme\spacing.ts                                                     | TypeScript         |         89 |          7 |          7 |        103 |
+| c:\Users\rache\catbook\MedicalManagementApp\theme\typography.ts                                                  | TypeScript         |        147 |         10 |         10 |        167 |
+| c:\Users\rache\catbook\MedicalManagementApp\tsconfig.json                                                        | JSON with Comments |         42 |          0 |          0 |         42 |
+| c:\Users\rache\catbook\MedicalManagementApp\types\api.types.ts                                                   | TypeScript         |         38 |          0 |          6 |         44 |
+| c:\Users\rache\catbook\MedicalManagementApp\types\models.types.ts                                                | TypeScript         |        181 |          0 |         16 |        197 |
+| c:\Users\rache\catbook\MedicalManagementApp\types\navigation.types.ts                                            | TypeScript         |         46 |          9 |          9 |         64 |
+| c:\Users\rache\catbook\MedicalManagementApp\utils\DeviceFingerprint.ts                                           | TypeScript         |         99 |          7 |         21 |        127 |
+| c:\Users\rache\catbook\MedicalManagementApp\utils\backgroundTasks.js                                             | JavaScript         |         37 |          9 |          9 |         55 |
+| c:\Users\rache\catbook\MedicalManagementApp\utils\constants.ts                                                   | TypeScript         |         57 |          0 |          8 |         65 |
+| c:\Users\rache\catbook\MedicalManagementApp\utils\disasterRecover.ts                                             | TypeScript         |        142 |         40 |         44 |        226 |
+| c:\Users\rache\catbook\MedicalManagementApp\utils\helpers.ts                                                     | TypeScript         |          0 |          0 |          1 |          1 |
+| c:\Users\rache\catbook\MedicalManagementApp\utils\notifications.ts                                               | TypeScript         |        170 |         12 |         37 |        219 |
+| c:\Users\rache\catbook\MedicalManagementApp\utils\offline.ts                                                     | TypeScript         |        232 |         32 |         55 |        319 |
+| c:\Users\rache\catbook\MedicalManagementApp\utils\pdfoptimize.ts                                                 | TypeScript         |         75 |         16 |         18 |        109 |
+| c:\Users\rache\catbook\MedicalManagementApp\utils\performanceMonitor.jsx                                         | JavaScript JSX     |          0 |          0 |          1 |          1 |
+| c:\Users\rache\catbook\MedicalManagementApp\utils\search.ts                                                      | TypeScript         |         49 |         15 |         14 |         78 |
+| Total                                                                                                            |                    |     40,843 |      2,361 |      2,785 |     45,989 |
++------------------------------------------------------------------------------------------------------------------+--------------------+------------+------------+------------+------------+

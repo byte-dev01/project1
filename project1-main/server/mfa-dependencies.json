@@ -1,0 +1,19 @@
+{
+  "description": "Add these dependencies to your server package.json",
+  "dependencies": {
+    "speakeasy": "^2.0.0",
+    "qrcode": "^1.5.3",
+    "twilio": "^4.19.0"
+  },
+  "devDependencies": {
+    "@types/speakeasy": "^2.0.7",
+    "@types/qrcode": "^1.5.5"
+  },
+  "environmentVariables": {
+    "TWILIO_ENABLED": "true or false",
+    "TWILIO_ACCOUNT_SID": "Your Twilio Account SID",
+    "TWILIO_AUTH_TOKEN": "Your Twilio Auth Token", 
+    "TWILIO_PHONE_NUMBER": "Your Twilio Phone Number (e.g., +1234567890)"
+  },
+  "installCommand": "npm install speakeasy qrcode twilio"
+}

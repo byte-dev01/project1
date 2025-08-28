@@ -1,32 +1,70 @@
 
+import { useState, useCallback } from 'react';
+import { apiClient } from './ApiClient';
+
+interface APIRequest {
+  url: string;
+  method?: string;
+  body?: any;
+  headers?: Record<string, string>;
+}
+
+interface CacheEntry<T = any> {
+  data: T;
+  timestamp: number;
+}
+
+interface CacheOptions<T> {
+  ttl?: number; // Time to live in milliseconds
+  offlineFallback?: T;
+}
+
+interface PaginatedResponse<T = any> {
+  items: T[];
+  hasMore: boolean;
+  total?: number;
+  page?: number;
+}
+
 class APIOptimizer {
-  private requestCache = new Map();
-  private pendingRequests = new Map();
+  private requestCache = new Map<string, CacheEntry>();
+  private pendingRequests = new Map<string, Promise<any>>();
   
   /**
-   * Implement request deduplication
+   * Fetch with cache and offline support - elegant async pattern
    */
-  async fetchWithDedup(url: string, options = {}) {
-    const key = `${url}_${JSON.stringify(options)}`;
+  async fetchWithCache<T>(
+    key: string,
+    fetcher: () => Promise<T>,
+    options: CacheOptions<T> = {}
+  ): Promise<T> {
+    const { ttl = 60000, offlineFallback } = options;
+    
+    // Check cache first
+    const cached = this.requestCache.get(key);
+    if (cached && Date.now() - cached.timestamp < ttl) {
+      return cached.data as T;
+    }
     
     // Return pending request if exists
     if (this.pendingRequests.has(key)) {
       return this.pendingRequests.get(key);
     }
     
-    // Check cache
-    const cached = this.requestCache.get(key);
-    if (cached && Date.now() - cached.timestamp < 60000) { // 1 min cache
-      return cached.data;
-    }
-    
-    // Make request
-    const promise = fetch(url, options)
-      .then(res => res.json())
+    // Make request with elegant error handling
+    const promise = fetcher()
       .then(data => {
         this.requestCache.set(key, { data, timestamp: Date.now() });
         this.pendingRequests.delete(key);
         return data;
+      })
+      .catch(error => {
+        this.pendingRequests.delete(key);
+        // Return offline fallback if provided
+        if (offlineFallback !== undefined) {
+          return offlineFallback;
+        }
+        throw error;
       });
     
     this.pendingRequests.set(key, promise);
@@ -34,42 +72,58 @@ class APIOptimizer {
   }
   
   /**
-   * Batch API requests
+   * Implement request deduplication
    */
-  async batchRequests(requests: APIRequest[]) {
-    const response = await fetch('/api/batch', {
-      method: 'POST',
-      body: JSON.stringify({ requests }),
-    });
+  async fetchWithDedup(url: string, options: RequestInit = {}): Promise<any> {
+    const key = `${url}_${JSON.stringify(options)}`;
     
-    return response.json();
+    return this.fetchWithCache(
+      key,
+      async () => {
+        const response = await fetch(url, options);
+        return response.json();
+      },
+      { ttl: 60000 }
+    );
   }
   
   /**
-   * Implement pagination with infinite scroll
+   * Batch API requests
    */
-  usePaginatedData(endpoint: string, pageSize = 20) {
-    const [data, setData] = useState([]);
-    const [page, setPage] = useState(1);
-    const [hasMore, setHasMore] = useState(true);
-    const [loading, setLoading] = useState(false);
-    
-    const loadMore = useCallback(async () => {
-      if (loading || !hasMore) return;
-      
-      setLoading(true);
-      try {
-        const response = await fetch(`${endpoint}?page=${page}&limit=${pageSize}`);
-        const newData = await response.json();
-        
-        setData(prev => [...prev, ...newData.items]);
-        setHasMore(newData.hasMore);
-        setPage(prev => prev + 1);
-      } finally {
-        setLoading(false);
-      }
-    }, [page, hasMore, loading]);
-    
-    return { data, loadMore, hasMore, loading };
+  async batchRequests(requests: APIRequest[]): Promise<any> {
+    const response = await apiClient.post('/api/batch', { requests });
+    return response.data;
   }
 }
+
+/**
+ * Custom hook for paginated data with infinite scroll
+ */
+export function usePaginatedData<T = any>(endpoint: string, pageSize = 20) {
+  const [data, setData] = useState<T[]>([]);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const [loading, setLoading] = useState(false);
+  
+  const loadMore = useCallback(async () => {
+    if (loading || !hasMore) return;
+    
+    setLoading(true);
+    try {
+      const response = await apiClient.get<PaginatedResponse<T>>(endpoint, {
+        params: { page, limit: pageSize }
+      });
+      const newData = response.data;
+      
+      setData((prev: T[]) => [...prev, ...newData.items]);
+      setHasMore(newData.hasMore);
+      setPage((prev: number) => prev + 1);
+    } finally {
+      setLoading(false);
+    }
+  }, [page, hasMore, loading, endpoint, pageSize]);
+  
+  return { data, loadMore, hasMore, loading };
+}
+
+export const apiOptimizer = new APIOptimizer();

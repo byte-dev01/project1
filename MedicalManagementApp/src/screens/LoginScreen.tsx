@@ -1,29 +1,27 @@
-import React, { useState, useEffect } from 'react';
+import { Picker } from '@react-native-picker/picker';
+import { useNavigation } from '@react-navigation/native';
+import * as SecureStore from 'expo-secure-store';
+import React, { useEffect, useState } from 'react';
 import {
-  View,
+  ActivityIndicator,
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
   Text,
   TextInput,
   TouchableOpacity,
-  ScrollView,
-  Alert,
-  ActivityIndicator,
-  KeyboardAvoidingView,
-  Platform,
-  Image,
+  View
 } from 'react-native';
-import { SafeAreaWrapper } from '../components/common/SafeAreaWrapper';
-import { Picker } from '@react-native-picker/picker';
 import { useAuthStore } from '../../store/authStore';
-import { useNavigation } from '@react-navigation/native';
-import { LoginScreenNavigationProp } from '../../types/navigation.types';
-import * as SecureStore from 'expo-secure-store';
-import * as LocalAuthentication from 'expo-local-authentication';
-import { apiClient } from '../api/client';
-import { Clinic } from '../../types/models.types';
 import { colors } from '../../theme/colors';
-import { typography } from '../../theme/typography';
 import { spacing } from '../../theme/spacing';
+import { typography } from '../../theme/typography';
+import { Clinic } from '../../types/models.types';
+import { LoginScreenNavigationProp } from '../../types/navigation.types';
 import { validateLoginForm } from '../../utils/validators';
+import { apiClient } from '../api/ApiClient';
+import { SafeAreaWrapper } from '../components/common/SafeAreaWrapper';
 import { securityManager } from '../services/security';
 
 export const LoginScreen: React.FC = () => {

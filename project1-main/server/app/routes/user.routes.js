@@ -39,4 +39,11 @@ module.exports = function(app) {
     [authJwt.verifyToken, authJwt.isAdmin],
     controller.adminBoard
   );
+
+  // New dynamic dashboard endpoint - returns content based on user's role
+  app.get(
+    "/api/dashboard",
+    [authJwt.verifyToken],
+    controller.getDashboard
+  );
 };

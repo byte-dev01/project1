@@ -2,11 +2,13 @@
  * WebRTC Integration for NodeCrypt Chat
  * This module adds video/audio calling to existing chat rooms
  * Integrates with the existing WebSocket connection and encryption
+ * Includes HIPAA-compliant audit logging for medical use cases
  */
 
 import { roomsData, activeRoomIndex } from './room.js';
 import { addSystemMsg } from './chat.js';
 import { createElement, $id, addClass, removeClass } from './util.dom.js';
+import WebRTCAuditLogger from '../js/hipaa/WebRTCAuditLogger.js';
 
 class WebRTCManager {
     constructor() {
@@ -22,14 +24,24 @@ class WebRTCManager {
                 { urls: 'stun:stun1.l.google.com:19302' }
             ]
         };
+        
+        // HIPAA Audit Logger
+        this.auditLogger = null;
+        this.currentCallId = null;
+        this.callStartTime = null;
+        this.participants = new Map(); // Track participants for audit
     }
 
     /**
      * Add video call button to the header
      */
     addVideoCallButton() {
+        console.log('Attempting to add video call button');
         const headerActions = document.querySelector('.main-header-actions');
+        console.log('Header actions element:', headerActions);
+        
         if (headerActions && !document.getElementById('video-call-btn')) {
+            console.log('Adding video call button to header');
             const callButton = createElement('button', {
                 id: 'video-call-btn',
                 class: 'video-call-btn',
@@ -41,10 +53,16 @@ class WebRTCManager {
             // Insert before the more button
             const moreBtn = headerActions.querySelector('.more-btn');
             if (moreBtn) {
+                console.log('Inserting before more button');
                 headerActions.insertBefore(callButton, moreBtn);
             } else {
+                console.log('Appending to header actions');
                 headerActions.appendChild(callButton);
             }
+        } else if (document.getElementById('video-call-btn')) {
+            console.log('Video call button already exists');
+        } else {
+            console.log('Header actions not found');
         }
     }
 
@@ -52,26 +70,49 @@ class WebRTCManager {
      * Initialize WebRTC UI components in the chat interface
      */
     initializeUI() {
-        // Hook into renderMainHeader to add button after each render
-        const originalRenderHeader = window.renderMainHeader;
+        console.log('Initializing WebRTC UI');
         const self = this;
         
-        // Override renderMainHeader function
-        window.renderMainHeader = function() {
-            // Call original function if it exists
-            if (originalRenderHeader && typeof originalRenderHeader === 'function') {
+        // Try to add button immediately if header exists
+        setTimeout(() => {
+            self.addVideoCallButton();
+        }, 100);
+        
+        // Also hook into renderMainHeader for future renders
+        const originalRenderHeader = window.renderMainHeader;
+        if (originalRenderHeader) {
+            window.renderMainHeader = function() {
                 originalRenderHeader.apply(this, arguments);
+                // Add our video call button after render
+                setTimeout(() => self.addVideoCallButton(), 0);
+            };
+        }
+        
+        // Watch for header changes using MutationObserver as backup
+        const observer = new MutationObserver(() => {
+            self.addVideoCallButton();
+        });
+        
+        // Start observing when document is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => {
+                const mainHeader = document.getElementById('main-header');
+                if (mainHeader) {
+                    observer.observe(mainHeader, { childList: true, subtree: true });
+                }
+            });
+        } else {
+            const mainHeader = document.getElementById('main-header');
+            if (mainHeader) {
+                observer.observe(mainHeader, { childList: true, subtree: true });
             }
-            // Add our video call button
-            setTimeout(() => self.addVideoCallButton(), 0);
-        };
+        }
 
         // Create video container (hidden by default)
         if (!document.getElementById('video-container')) {
-            const videoContainer = createElement('div', {
-                id: 'video-container',
-                class: 'video-container hidden'
-            });
+            const videoContainer = document.createElement('div');
+            videoContainer.id = 'video-container';
+            videoContainer.className = 'video-container hidden';
             
             videoContainer.innerHTML = `
                 <div class="video-grid" id="video-grid">
@@ -81,15 +122,19 @@ class WebRTCManager {
                     </div>
                 </div>
                 <div class="video-controls">
-                    <button id="toggle-mic" class="control-btn">🎤</button>
-                    <button id="toggle-camera" class="control-btn">📷</button>
-                    <button id="end-call" class="control-btn danger">📞</button>
+                    <button id="toggle-mic" class="control-btn" type="button">🎤</button>
+                    <button id="toggle-camera" class="control-btn" type="button">📷</button>
+                    <button id="end-call" class="control-btn danger" type="button">📞</button>
                 </div>
             `;
             
             document.body.appendChild(videoContainer);
             this.videoContainer = videoContainer;
+            console.log('Video container created:', this.videoContainer);
             this.setupVideoControls();
+        } else {
+            this.videoContainer = document.getElementById('video-container');
+            console.log('Video container already exists:', this.videoContainer);
         }
     }
 
@@ -116,10 +161,28 @@ class WebRTCManager {
      * Toggle video call on/off
      */
     async toggleVideoCall() {
-        if (this.isCallActive) {
-            this.endCall();
-        } else {
-            await this.startCall();
+        console.log('Toggle video call clicked, isCallActive:', this.isCallActive);
+        try {
+            if (this.isCallActive) {
+                this.endCall();
+            } else {
+                await this.startCall();
+            }
+        } catch (error) {
+            console.error('Error toggling video call:', error);
+            addSystemMsg('Failed to toggle video call: ' + error.message);
+        }
+    }
+
+    /**
+     * Initialize HIPAA audit logger for this call
+     */
+    async initializeAuditLogger() {
+        const room = roomsData[activeRoomIndex];
+        if (room) {
+            this.auditLogger = new WebRTCAuditLogger(room.myId, room.roomName);
+            await this.auditLogger.initialize();
+            console.log('HIPAA audit logger initialized for video call');
         }
     }
 
@@ -127,26 +190,46 @@ class WebRTCManager {
      * Start a video call in the current room
      */
     async startCall() {
+        console.log('Starting video call...');
+        
         if (activeRoomIndex < 0) {
+            console.log('No active room');
             addSystemMsg('Please join a room first');
             return;
         }
 
         try {
+            // Initialize audit logger if not already done
+            if (!this.auditLogger) {
+                await this.initializeAuditLogger();
+            }
+            
+            // Generate call ID and start time
+            this.currentCallId = `call_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+            this.callStartTime = Date.now();
+            console.log('Requesting user media...');
             // Get user media
             this.localStream = await navigator.mediaDevices.getUserMedia({
                 video: true,
                 audio: true
             });
+            console.log('Got user media stream:', this.localStream);
 
             // Display local video
             const localVideo = $id('local-video');
+            console.log('Local video element:', localVideo);
             if (localVideo) {
                 localVideo.srcObject = this.localStream;
             }
 
             // Show video container
-            removeClass(this.videoContainer, 'hidden');
+            console.log('Video container:', this.videoContainer);
+            if (this.videoContainer) {
+                this.videoContainer.classList.remove('hidden');
+                console.log('Video container shown');
+            } else {
+                console.error('Video container not found!');
+            }
             this.isCallActive = true;
 
             // Update button
@@ -159,13 +242,21 @@ class WebRTCManager {
             // Send call initiation to room
             this.sendSignal({
                 type: 'webrtc_call_start',
-                room: roomsData[activeRoomIndex].roomName
+                room: roomsData[activeRoomIndex].roomName,
+                callId: this.currentCallId
             });
+
+            // Log call start for HIPAA compliance
+            const room = roomsData[activeRoomIndex];
+            if (this.auditLogger) {
+                await this.auditLogger.logCallStart(this.currentCallId, [
+                    { userId: room.myId, role: 'initiator' }
+                ]);
+            }
 
             addSystemMsg('Video call started');
 
             // Create peer connections for existing users in room
-            const room = roomsData[activeRoomIndex];
             if (room.userList) {
                 room.userList.forEach(user => {
                     if (user.clientId !== room.myId) {
@@ -240,9 +331,21 @@ class WebRTCManager {
                 // Another user started a call
                 if (from !== roomsData[activeRoomIndex]?.myId) {
                     addSystemMsg(`${from} started a video call`);
+                    // Store the call ID from the initiator
+                    if (message.callId) {
+                        this.currentCallId = message.callId;
+                    }
                     // Auto-join the call
                     if (!this.isCallActive) {
                         await this.startCall();
+                    }
+                    // Log participant joined
+                    if (this.auditLogger && this.currentCallId) {
+                        await this.auditLogger.logParticipantJoined(this.currentCallId, {
+                            userId: roomsData[activeRoomIndex]?.myId,
+                            role: 'participant',
+                            authenticated: true
+                        });
                     }
                 }
                 break;
@@ -342,7 +445,20 @@ class WebRTCManager {
     /**
      * End the video call
      */
-    endCall() {
+    async endCall() {
+        console.log('Ending video call');
+        
+        // Log call end for HIPAA compliance
+        if (this.auditLogger && this.currentCallId) {
+            await this.auditLogger.logCallEnd(this.currentCallId, 'user_ended');
+            
+            // Save logs to localStorage
+            this.auditLogger.saveToLocalStorage();
+            
+            // Optionally export to JSON file (can be triggered manually)
+            // this.auditLogger.exportToJSON();
+        }
+        
         // Stop local stream
         if (this.localStream) {
             this.localStream.getTracks().forEach(track => track.stop());
@@ -357,7 +473,9 @@ class WebRTCManager {
         this.remoteStreams.clear();
 
         // Hide video container
-        addClass(this.videoContainer, 'hidden');
+        if (this.videoContainer) {
+            this.videoContainer.classList.add('hidden');
+        }
         this.isCallActive = false;
 
         // Reset UI
@@ -432,10 +550,45 @@ class WebRTCManager {
             }));
         }
     }
+
+    /**
+     * Export HIPAA audit logs to JSON file
+     */
+    exportAuditLogs() {
+        if (this.auditLogger) {
+            const filename = this.auditLogger.exportToJSON();
+            addSystemMsg(`Audit logs exported to ${filename}`);
+            return filename;
+        } else {
+            addSystemMsg('No audit logs available to export');
+            return null;
+        }
+    }
+
+    /**
+     * Get audit log summary
+     */
+    getAuditSummary() {
+        if (this.auditLogger) {
+            const logs = this.auditLogger.auditLogs;
+            return {
+                totalEvents: logs.length,
+                sessionId: this.auditLogger.sessionId,
+                currentCallId: this.currentCallId,
+                callActive: this.isCallActive,
+                storedSessions: this.auditLogger.constructor.getAllStoredSessions()
+            };
+        }
+        return null;
+    }
 }
 
 // Create global WebRTC manager instance
 window.webRTCManager = new WebRTCManager();
+
+// Make audit functions accessible from console for testing/debugging
+window.exportWebRTCAuditLogs = () => window.webRTCManager.exportAuditLogs();
+window.getWebRTCAuditSummary = () => window.webRTCManager.getAuditSummary();
 
 // Export for use in other modules
 export default window.webRTCManager;

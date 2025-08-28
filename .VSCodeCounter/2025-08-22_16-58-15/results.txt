@@ -1,0 +1,117 @@
+Date : 2025-08-22 16:58:15
+Directory : c:\Users\rache\catbook\NodeCrypt
+Total : 69 files,  26012 codes, 2782 comments, 4115 blanks, all 32909 lines
+
+Languages
++------------+------------+------------+------------+------------+------------+
+| language   | files      | code       | comment    | blank      | total      |
++------------+------------+------------+------------+------------+------------+
+| JavaScript |         47 |     15,284 |      2,642 |      3,097 |     21,023 |
+| JSON       |          4 |      4,950 |          0 |          4 |      4,954 |
+| PostCSS    |          5 |      2,445 |         59 |        366 |      2,870 |
+| HTML       |          4 |      1,935 |         27 |        286 |      2,248 |
+| Markdown   |          7 |      1,325 |          0 |        339 |      1,664 |
+| Docker     |          1 |         67 |         50 |         22 |        139 |
+| XML        |          1 |          6 |          4 |          1 |         11 |
++------------+------------+------------+------------+------------+------------+
+
+Directories
++--------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                           | files      | code       | comment    | blank      | total      |
++--------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                              |         69 |     26,012 |      2,782 |      4,115 |     32,909 |
+| . (Files)                                                                      |         17 |      9,118 |        247 |        879 |     10,244 |
+| client                                                                         |         40 |     13,709 |      1,975 |      2,355 |     18,039 |
+| client (Files)                                                                 |          1 |        207 |          6 |          3 |        216 |
+| client\assets                                                                  |          1 |          6 |          4 |          1 |         11 |
+| client\css                                                                     |          5 |      2,445 |         59 |        366 |      2,870 |
+| client\js                                                                      |         33 |     11,051 |      1,906 |      1,985 |     14,942 |
+| client\js (Files)                                                              |         21 |      6,280 |      1,221 |      1,024 |      8,525 |
+| client\js\encryption                                                           |          2 |        348 |         32 |         79 |        459 |
+| client\js\hipaa                                                                |          2 |        807 |        175 |        160 |      1,142 |
+| client\js\keymanagement                                                        |          1 |        292 |         42 |         64 |        398 |
+| client\js\messaging                                                            |          1 |        449 |         90 |        127 |        666 |
+| client\js\queue                                                                |          3 |      2,075 |        184 |        332 |      2,591 |
+| client\js\security                                                             |          1 |        451 |         68 |        115 |        634 |
+| client\js\utils                                                                |          1 |         58 |         47 |         11 |        116 |
+| client\js\webrtc                                                               |          1 |        291 |         47 |         73 |        411 |
+| server                                                                         |          4 |      1,179 |        101 |        319 |      1,599 |
+| tests                                                                          |          6 |      1,517 |        415 |        455 |      2,387 |
+| worker                                                                         |          2 |        489 |         44 |        107 |        640 |
++--------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++--------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| filename                                                                       | language   | code       | comment    | blank      | total      |
++--------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| c:\Users\rache\catbook\NodeCrypt\CLAUDE.md                                     | Markdown   |         28 |          0 |          3 |         31 |
+| c:\Users\rache\catbook\NodeCrypt\Dockerfile                                    | Docker     |         67 |         50 |         22 |        139 |
+| c:\Users\rache\catbook\NodeCrypt\HIPAA-IMPLEMENTATION.md                       | Markdown   |        159 |          0 |         47 |        206 |
+| c:\Users\rache\catbook\NodeCrypt\LEGAL_IP_LOGGING.md                           | Markdown   |        444 |          0 |         97 |        541 |
+| c:\Users\rache\catbook\NodeCrypt\README.md                                     | Markdown   |        126 |          0 |         54 |        180 |
+| c:\Users\rache\catbook\NodeCrypt\README_EN.md                                  | Markdown   |        121 |          0 |         50 |        171 |
+| c:\Users\rache\catbook\NodeCrypt\SECURITY_RECOMMENDATIONS.md                   | Markdown   |        136 |          0 |         21 |        157 |
+| c:\Users\rache\catbook\NodeCrypt\STUN_TURN_SETUP.md                            | Markdown   |        311 |          0 |         67 |        378 |
+| c:\Users\rache\catbook\NodeCrypt\client\assets\favicon.svg                     | XML        |          6 |          4 |          1 |         11 |
+| c:\Users\rache\catbook\NodeCrypt\client\css\body.css                           | PostCSS    |        493 |         15 |         66 |        574 |
+| c:\Users\rache\catbook\NodeCrypt\client\css\form-animation.css                 | PostCSS    |         23 |          1 |          4 |         28 |
+| c:\Users\rache\catbook\NodeCrypt\client\css\phone.css                          | PostCSS    |        201 |          6 |         30 |        237 |
+| c:\Users\rache\catbook\NodeCrypt\client\css\style.css                          | PostCSS    |      1,590 |         30 |        243 |      1,863 |
+| c:\Users\rache\catbook\NodeCrypt\client\css\webrtc.css                         | PostCSS    |        138 |          7 |         23 |        168 |
+| c:\Users\rache\catbook\NodeCrypt\client\index.html                             | HTML       |        207 |          6 |          3 |        216 |
+| c:\Users\rache\catbook\NodeCrypt\client\js\HIPAAIntegration.js                 | JavaScript |        328 |         47 |         86 |        461 |
+| c:\Users\rache\catbook\NodeCrypt\client\js\HIPAAMedicalChat.js                 | JavaScript |        521 |         91 |        116 |        728 |
+| c:\Users\rache\catbook\NodeCrypt\client\js\HIPAAMedicalChatWithQueue.js        | JavaScript |        548 |        121 |        143 |        812 |
+| c:\Users\rache\catbook\NodeCrypt\client\js\HIPAAWebRTCApp.js                   | JavaScript |        420 |         57 |        109 |        586 |
+| c:\Users\rache\catbook\NodeCrypt\client\js\NodeCrypt.js                        | JavaScript |        538 |         58 |         29 |        625 |
+| c:\Users\rache\catbook\NodeCrypt\client\js\chat.js                             | JavaScript |        404 |         53 |         22 |        479 |
+| c:\Users\rache\catbook\NodeCrypt\client\js\encryption\SignalProtocolManager.js | JavaScript |        211 |         24 |         43 |        278 |
+| c:\Users\rache\catbook\NodeCrypt\client\js\encryption\SignalProtocolStore.js   | JavaScript |        137 |          8 |         36 |        181 |
+| c:\Users\rache\catbook\NodeCrypt\client\js\hipaa\HIPAAMiddleware.js            | JavaScript |        356 |         58 |         85 |        499 |
+| c:\Users\rache\catbook\NodeCrypt\client\js\hipaa\WebRTCAuditLogger.js          | JavaScript |        451 |        117 |         75 |        643 |
+| c:\Users\rache\catbook\NodeCrypt\client\js\keymanagement\KeyRotationManager.js | JavaScript |        292 |         42 |         64 |        398 |
+| c:\Users\rache\catbook\NodeCrypt\client\js\main.js                             | JavaScript |        292 |         93 |         50 |        435 |
+| c:\Users\rache\catbook\NodeCrypt\client\js\messaging\MessageFlowManager.js     | JavaScript |        449 |         90 |        127 |        666 |
+| c:\Users\rache\catbook\NodeCrypt\client\js\queue\QueuePersistence.js           | JavaScript |        365 |         68 |         92 |        525 |
+| c:\Users\rache\catbook\NodeCrypt\client\js\queue\QueueUIComponents.js          | JavaScript |      1,275 |         35 |        123 |      1,433 |
+| c:\Users\rache\catbook\NodeCrypt\client\js\queue\SecureQueueManager.js         | JavaScript |        435 |         81 |        117 |        633 |
+| c:\Users\rache\catbook\NodeCrypt\client\js\room.js                             | JavaScript |        334 |         41 |         29 |        404 |
+| c:\Users\rache\catbook\NodeCrypt\client\js\security\SecurityHardening.js       | JavaScript |        451 |         68 |        115 |        634 |
+| c:\Users\rache\catbook\NodeCrypt\client\js\ui.js                               | JavaScript |        513 |         88 |         57 |        658 |
+| c:\Users\rache\catbook\NodeCrypt\client\js\util.avatar.js                      | JavaScript |         15 |          8 |          0 |         23 |
+| c:\Users\rache\catbook\NodeCrypt\client\js\util.dom.js                         | JavaScript |         46 |         18 |          0 |         64 |
+| c:\Users\rache\catbook\NodeCrypt\client\js\util.emoji.js                       | JavaScript |         75 |         15 |          3 |         93 |
+| c:\Users\rache\catbook\NodeCrypt\client\js\util.file.js                        | JavaScript |        540 |        105 |        104 |        749 |
+| c:\Users\rache\catbook\NodeCrypt\client\js\util.fileUpload.js                  | JavaScript |        244 |         60 |         58 |        362 |
+| c:\Users\rache\catbook\NodeCrypt\client\js\util.i18n.js                        | JavaScript |        362 |         77 |         42 |        481 |
+| c:\Users\rache\catbook\NodeCrypt\client\js\util.image.js                       | JavaScript |        165 |         40 |         30 |        235 |
+| c:\Users\rache\catbook\NodeCrypt\client\js\util.settings.js                    | JavaScript |        391 |         93 |         47 |        531 |
+| c:\Users\rache\catbook\NodeCrypt\client\js\util.string.js                      | JavaScript |         22 |         10 |          2 |         34 |
+| c:\Users\rache\catbook\NodeCrypt\client\js\util.theme.js                       | JavaScript |         78 |         23 |         12 |        113 |
+| c:\Users\rache\catbook\NodeCrypt\client\js\utils\crypto.js                     | JavaScript |         58 |         47 |         11 |        116 |
+| c:\Users\rache\catbook\NodeCrypt\client\js\webrtc-handler.js                   | JavaScript |         21 |         25 |         12 |         58 |
+| c:\Users\rache\catbook\NodeCrypt\client\js\webrtc-integration.js               | JavaScript |        423 |         98 |         73 |        594 |
+| c:\Users\rache\catbook\NodeCrypt\client\js\webrtc\SecureWebRTC.js              | JavaScript |        291 |         47 |         73 |        411 |
+| c:\Users\rache\catbook\NodeCrypt\demo-working.js                               | JavaScript |        283 |         21 |         53 |        357 |
+| c:\Users\rache\catbook\NodeCrypt\hipaa-demo.html                               | HTML       |        459 |          7 |         98 |        564 |
+| c:\Users\rache\catbook\NodeCrypt\hipaa-queue-demo.html                         | HTML       |      1,048 |         14 |        168 |      1,230 |
+| c:\Users\rache\catbook\NodeCrypt\package-lock.json                             | JSON       |      4,813 |          0 |          1 |      4,814 |
+| c:\Users\rache\catbook\NodeCrypt\package.json                                  | JSON       |         48 |          0 |          1 |         49 |
+| c:\Users\rache\catbook\NodeCrypt\server\package-lock.json                      | JSON       |         76 |          0 |          1 |         77 |
+| c:\Users\rache\catbook\NodeCrypt\server\package.json                           | JSON       |         13 |          0 |          1 |         14 |
+| c:\Users\rache\catbook\NodeCrypt\server\queue-server.js                        | JavaScript |        667 |         85 |        170 |        922 |
+| c:\Users\rache\catbook\NodeCrypt\server\server.js                              | JavaScript |        423 |         16 |        147 |        586 |
+| c:\Users\rache\catbook\NodeCrypt\test-integration.js                           | JavaScript |        295 |         40 |         55 |        390 |
+| c:\Users\rache\catbook\NodeCrypt\test-queue-system.js                          | JavaScript |        511 |         68 |        125 |        704 |
+| c:\Users\rache\catbook\NodeCrypt\test-webrtc-integration.html                  | HTML       |        221 |          0 |         17 |        238 |
+| c:\Users\rache\catbook\NodeCrypt\tests\encryption.test.js                      | JavaScript |        130 |         52 |         48 |        230 |
+| c:\Users\rache\catbook\NodeCrypt\tests\integration.test.js                     | JavaScript |        310 |         96 |        100 |        506 |
+| c:\Users\rache\catbook\NodeCrypt\tests\keymanagement.test.js                   | JavaScript |        144 |         54 |         56 |        254 |
+| c:\Users\rache\catbook\NodeCrypt\tests\messageflow.test.js                     | JavaScript |        293 |         73 |         88 |        454 |
+| c:\Users\rache\catbook\NodeCrypt\tests\security.test.js                        | JavaScript |        372 |         86 |         94 |        552 |
+| c:\Users\rache\catbook\NodeCrypt\tests\webrtc.test.js                          | JavaScript |        268 |         54 |         69 |        391 |
+| c:\Users\rache\catbook\NodeCrypt\vite.config.js                                | JavaScript |         48 |         47 |          0 |         95 |
+| c:\Users\rache\catbook\NodeCrypt\worker\index.js                               | JavaScript |        371 |         34 |         75 |        480 |
+| c:\Users\rache\catbook\NodeCrypt\worker\utils.js                               | JavaScript |        118 |         10 |         32 |        160 |
+| Total                                                                          |            |     26,012 |      2,782 |      4,115 |     32,909 |
++--------------------------------------------------------------------------------+------------+------------+------------+------------+------------+

@@ -1,24 +1,22 @@
+import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
 import {
-  View,
-  Text,
-  ScrollView,
-  TouchableOpacity,
-  RefreshControl,
-  StyleSheet,
   Dimensions,
+  RefreshControl,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from 'react-native';
-import { SafeAreaWrapper } from '../components/common/SafeAreaWrapper';
 import { useAuthStore } from '../../store/authStore';
-import { useFaxStore } from '../../store/faxStore';
-import { useNavigation } from '@react-navigation/native';
 import { colors } from '../../theme/colors';
-import { typography } from '../../theme/typography';
 import { spacing } from '../../theme/spacing';
-import { faxAPI } from '../api/fax';
-import { patientsAPI } from '../api/patients';
-import { messagesAPI } from '../api/messages';
+import { typography } from '../../theme/typography';
 import { formatDate } from '../../utils/helpers';
+import { faxAPI } from '../api/FaxApi';
+import { messagesAPI } from '../api/MessageApi';
+import { SafeAreaWrapper } from '../components/common/SafeAreaWrapper';
 
 const { width: screenWidth } = Dimensions.get('window');
 

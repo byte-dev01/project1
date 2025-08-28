@@ -23,6 +23,7 @@ interface AuthState {
   refreshTokens: () => Promise<void>;
   updateUser: (user: Partial<User>) => void;
   clearError: () => void;
+  getToken: () => Promise<string | null>;
 }
 
 export const useAuthStore = create<AuthState>((set, get) => ({
@@ -318,6 +319,29 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
   clearError: () => {
     set({ error: null });
+  },
+
+  getToken: async () => {
+    const state = get();
+    
+    // If we have a token in memory, return it
+    if (state.token) {
+      return state.token;
+    }
+    
+    // Otherwise, try to get it from secure storage
+    try {
+      const storedToken = await SecureStore.getItemAsync(AUTH_CONFIG.TOKEN_KEY);
+      if (storedToken) {
+        // Update the state with the stored token
+        set({ token: storedToken });
+        return storedToken;
+      }
+    } catch (error) {
+      console.error('Error retrieving token:', error);
+    }
+    
+    return null;
   },
 }));
 

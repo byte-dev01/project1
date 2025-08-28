@@ -3,7 +3,6 @@ import { API_ENDPOINTS } from './endpoints';
 import { apiClient } from './ApiClient';
 import { Message, MessageThread } from '../../types/models.types';
 import { PaginatedResponse } from '../../types/api.types';
-import { offlineManager } from '../../utils/offline';
 
 interface SendMessageData {
   recipient: string;
@@ -12,6 +11,20 @@ interface SendMessageData {
   messageType: string;
   urgent?: boolean;
   attachments?: string[];
+}
+
+interface VideoCallData {
+  recipientId: string;
+  roomId?: string;
+  scheduledTime?: Date;
+}
+
+interface VideoCallResponse {
+  callId: string;
+  roomId: string;
+  token: string;
+  url: string;
+  expiresAt: Date;
 }
 
 class MessagesAPI {
@@ -35,29 +48,7 @@ class MessagesAPI {
   }
 
   async sendMessage(data: SendMessageData): Promise<Message> {
-    // If offline, save to drafts and queue
-    if (!offlineManager.getConnectionStatus()) {
-      const draftMessage: Partial<Message> = {
-        ...data,
-        id: `draft_${Date.now()}`,
-        folder: 'drafts',
-        timestamp: new Date(),
-        unread: false,
-        hasAttachment: data.attachments ? data.attachments.length > 0 : false,
-        sender: 'You',
-        senderRole: 'Patient',
-        senderName: 'You'
-      };
-      
-      await offlineManager.addToSyncQueue({
-        method: 'POST',
-        endpoint: API_ENDPOINTS.MESSAGES.SEND,
-        data
-      });
-      
-      return draftMessage as Message;
-    }
-
+    // Simple online-only message sending
     const response = await apiClient.post<Message>(
       API_ENDPOINTS.MESSAGES.SEND,
       data
@@ -101,6 +92,41 @@ class MessagesAPI {
     const response = await apiClient.get<Message[]>(
       API_ENDPOINTS.MESSAGES.LIST,
       { params: { folder: 'drafts' } }
+    );
+    return response.data;
+  }
+
+  // Video Calling Methods
+  async initiateVideoCall(data: VideoCallData): Promise<VideoCallResponse> {
+    const response = await apiClient.post<VideoCallResponse>(
+      '/api/video/initiate',
+      data
+    );
+    return response.data;
+  }
+
+  async joinVideoCall(callId: string): Promise<VideoCallResponse> {
+    const response = await apiClient.post<VideoCallResponse>(
+      `/api/video/join/${callId}`
+    );
+    return response.data;
+  }
+
+  async endVideoCall(callId: string): Promise<void> {
+    await apiClient.post(`/api/video/end/${callId}`);
+  }
+
+  async getActiveVideoCalls(): Promise<VideoCallResponse[]> {
+    const response = await apiClient.get<VideoCallResponse[]>(
+      '/api/video/active'
+    );
+    return response.data;
+  }
+
+  async scheduleVideoCall(data: VideoCallData): Promise<VideoCallResponse> {
+    const response = await apiClient.post<VideoCallResponse>(
+      '/api/video/schedule',
+      data
     );
     return response.data;
   }

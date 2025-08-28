@@ -1,0 +1,299 @@
+Date : 2025-08-22 16:58:30
+Directory : c:\Users\rache\catbook\project1-main
+Total : 220 files,  277793 codes, 3545 comments, 12221 blanks, all 293559 lines
+
+Languages
++----------------+------------+------------+------------+------------+------------+
+| language       | files      | code       | comment    | blank      | total      |
++----------------+------------+------------+------------+------------+------------+
+| Log            |          5 |    214,183 |          0 |      6,410 |    220,593 |
+| JSON           |          2 |     26,174 |          0 |          2 |     26,176 |
+| JavaScript     |        131 |     16,179 |      2,606 |      2,585 |     21,370 |
+| HTML           |         19 |     10,901 |        127 |      1,527 |     12,555 |
+| PostCSS        |         28 |      4,837 |        187 |        874 |      5,898 |
+| TypeScript     |         16 |      3,120 |        533 |        491 |      4,144 |
+| TypeScript JSX |          4 |      1,289 |         66 |        113 |      1,468 |
+| Markdown       |          3 |        581 |          0 |        159 |        740 |
+| Python         |          4 |        313 |         17 |         48 |        378 |
+| XML            |          7 |        116 |          0 |          0 |        116 |
+| SCSS           |          1 |        100 |          9 |         12 |        121 |
++----------------+------------+------------+------------+------------+------------+
+
+Directories
++--------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                                       | files      | code       | comment    | blank      | total      |
++--------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                          |        220 |    277,793 |      3,545 |     12,221 |    293,559 |
+| . (Files)                                                                                  |         12 |     28,320 |         75 |         68 |     28,463 |
+| .idea                                                                                      |          6 |         82 |          0 |          0 |         82 |
+| .idea (Files)                                                                              |          4 |         29 |          0 |          0 |         29 |
+| .idea\codeStyles                                                                           |          2 |         53 |          0 |          0 |         53 |
+| client                                                                                     |        100 |     24,189 |      1,003 |      3,374 |     28,566 |
+| client\dist                                                                                |         21 |     11,290 |        189 |      1,592 |     13,071 |
+| client\dist (Files)                                                                        |          1 |         12 |          0 |          4 |         16 |
+| client\dist\MenuItems                                                                      |         20 |     11,278 |        189 |      1,588 |     13,055 |
+| client\src                                                                                 |         79 |     12,899 |        814 |      1,782 |     15,495 |
+| client\src (Files)                                                                         |          5 |        127 |         48 |         34 |        209 |
+| client\src\api                                                                             |          2 |         61 |          9 |         11 |         81 |
+| client\src\components                                                                      |         72 |     12,711 |        757 |      1,737 |     15,205 |
+| client\src\components (Files)                                                              |          4 |        678 |         34 |        100 |        812 |
+| client\src\components\config                                                               |          1 |         13 |          0 |          2 |         15 |
+| client\src\components\contexts                                                             |          3 |        495 |         48 |         96 |        639 |
+| client\src\components\modules                                                              |         31 |      2,532 |        171 |        390 |      3,093 |
+| client\src\components\pages                                                                |         33 |      8,993 |        504 |      1,149 |     10,646 |
+| e2e                                                                                        |          1 |         10 |          4 |          6 |         20 |
+| script                                                                                     |          8 |        403 |         31 |         83 |        517 |
+| server                                                                                     |         89 |    224,357 |      2,322 |      8,565 |    235,244 |
+| server (Files)                                                                             |          9 |      1,349 |        182 |        350 |      1,881 |
+| server\app                                                                                 |         40 |      5,806 |      1,421 |        837 |      8,064 |
+| server\app (Files)                                                                         |          1 |          9 |          1 |          5 |         15 |
+| server\app\config                                                                          |          2 |         21 |        340 |          7 |        368 |
+| server\app\controllers                                                                     |         25 |      5,058 |        730 |        692 |      6,480 |
+| server\app\hook                                                                            |          1 |        196 |          6 |         36 |        238 |
+| server\app\middleware                                                                      |          3 |        117 |        312 |         26 |        455 |
+| server\app\models                                                                          |          5 |        222 |         16 |         40 |        278 |
+| server\app\routes                                                                          |          3 |        183 |         16 |         31 |        230 |
+| server\controllers                                                                         |          4 |        359 |         46 |         70 |        475 |
+| server\models                                                                              |          6 |        144 |         11 |         19 |        174 |
+| server\oauth2                                                                              |         12 |      2,742 |        389 |        596 |      3,727 |
+| server\oauth2 (Files)                                                                      |          2 |        559 |          0 |        152 |        711 |
+| server\oauth2\config                                                                       |          2 |        202 |         53 |         35 |        290 |
+| server\oauth2\controllers                                                                  |          2 |        843 |         96 |        163 |      1,102 |
+| server\oauth2\middleware                                                                   |          1 |        267 |         38 |         61 |        366 |
+| server\oauth2\routes                                                                       |          2 |        246 |        116 |         82 |        444 |
+| server\oauth2\strategies                                                                   |          3 |        625 |         86 |        103 |        814 |
+| server\pages                                                                               |          4 |        361 |        127 |         81 |        569 |
+| server\python                                                                              |          3 |        244 |         10 |         31 |        285 |
+| server\services                                                                            |          4 |        557 |         87 |         93 |        737 |
+| server\utilities                                                                           |          7 |    212,795 |         49 |      6,488 |    219,332 |
+| server\utilities (Files)                                                                   |          3 |        338 |         49 |         80 |        467 |
+| server\utilities\daemon                                                                    |          4 |    212,457 |          0 |      6,408 |    218,865 |
+| tests                                                                                      |          4 |        432 |        110 |        125 |        667 |
++--------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++--------------------------------------------------------------------------------------------+----------------+------------+------------+------------+------------+
+| filename                                                                                   | language       | code       | comment    | blank      | total      |
++--------------------------------------------------------------------------------------------+----------------+------------+------------+------------+------------+
+| c:\Users\rache\catbook\project1-main\.idea\catbook-react.iml                               | XML            |          9 |          0 |          0 |          9 |
+| c:\Users\rache\catbook\project1-main\.idea\codeStyles\Project.xml                          | XML            |         48 |          0 |          0 |         48 |
+| c:\Users\rache\catbook\project1-main\.idea\codeStyles\codeStyleConfig.xml                  | XML            |          5 |          0 |          0 |          5 |
+| c:\Users\rache\catbook\project1-main\.idea\misc.xml                                        | XML            |          6 |          0 |          0 |          6 |
+| c:\Users\rache\catbook\project1-main\.idea\modules.xml                                     | XML            |          8 |          0 |          0 |          8 |
+| c:\Users\rache\catbook\project1-main\.idea\vcs.xml                                         | XML            |          6 |          0 |          0 |          6 |
+| c:\Users\rache\catbook\project1-main\README.md                                             | Markdown       |         22 |          0 |          7 |         29 |
+| c:\Users\rache\catbook\project1-main\client\dist\MenuItems\BillingSummary.html             | HTML           |        337 |          2 |         46 |        385 |
+| c:\Users\rache\catbook\project1-main\client\dist\MenuItems\CareTeam.html                   | HTML           |        450 |          0 |         69 |        519 |
+| c:\Users\rache\catbook\project1-main\client\dist\MenuItems\ContactPage.css                 | PostCSS        |        109 |         11 |         21 |        141 |
+| c:\Users\rache\catbook\project1-main\client\dist\MenuItems\ContactPage.html                | HTML           |        170 |          2 |         34 |        206 |
+| c:\Users\rache\catbook\project1-main\client\dist\MenuItems\ContactPage.js                  | JavaScript     |         58 |          1 |         15 |         74 |
+| c:\Users\rache\catbook\project1-main\client\dist\MenuItems\Covid.html                      | HTML           |        569 |          8 |         71 |        648 |
+| c:\Users\rache\catbook\project1-main\client\dist\MenuItems\Document.html                   | HTML           |        338 |          4 |         50 |        392 |
+| c:\Users\rache\catbook\project1-main\client\dist\MenuItems\FindLocation.css                | PostCSS        |        355 |         13 |         62 |        430 |
+| c:\Users\rache\catbook\project1-main\client\dist\MenuItems\FindLocation.html               | HTML           |        807 |         10 |        109 |        926 |
+| c:\Users\rache\catbook\project1-main\client\dist\MenuItems\FindLocation.js                 | JavaScript     |        624 |         42 |         65 |        731 |
+| c:\Users\rache\catbook\project1-main\client\dist\MenuItems\HealthHistory.html              | HTML           |        542 |         14 |         62 |        618 |
+| c:\Users\rache\catbook\project1-main\client\dist\MenuItems\ImmediateCare.html              | HTML           |      1,172 |          7 |        164 |      1,343 |
+| c:\Users\rache\catbook\project1-main\client\dist\MenuItems\InsurancePage.html              | HTML           |        623 |          8 |         84 |        715 |
+| c:\Users\rache\catbook\project1-main\client\dist\MenuItems\Letter.html                     | HTML           |        305 |          2 |         37 |        344 |
+| c:\Users\rache\catbook\project1-main\client\dist\MenuItems\Medications.html                | HTML           |        647 |         11 |         93 |        751 |
+| c:\Users\rache\catbook\project1-main\client\dist\MenuItems\ProviderDashboardIC.html        | HTML           |        732 |          8 |        106 |        846 |
+| c:\Users\rache\catbook\project1-main\client\dist\MenuItems\ProviderMessage.html            | HTML           |      1,139 |          7 |        160 |      1,306 |
+| c:\Users\rache\catbook\project1-main\client\dist\MenuItems\ProviderMessageWidget.js        | JavaScript     |        432 |         18 |         51 |        501 |
+| c:\Users\rache\catbook\project1-main\client\dist\MenuItems\Schedule.html                   | HTML           |      1,498 |         21 |        236 |      1,755 |
+| c:\Users\rache\catbook\project1-main\client\dist\MenuItems\TestResults.html                | HTML           |        371 |          0 |         53 |        424 |
+| c:\Users\rache\catbook\project1-main\client\dist\index.html                                | HTML           |         12 |          0 |          4 |         16 |
+| c:\Users\rache\catbook\project1-main\client\src\api\client.js                              | JavaScript     |         30 |          4 |          4 |         38 |
+| c:\Users\rache\catbook\project1-main\client\src\api\socket.js                              | JavaScript     |         31 |          5 |          7 |         43 |
+| c:\Users\rache\catbook\project1-main\client\src\client-socket.js                           | JavaScript     |         10 |          8 |          3 |         21 |
+| c:\Users\rache\catbook\project1-main\client\src\components\App.css                         | PostCSS        |        411 |         15 |         68 |        494 |
+| c:\Users\rache\catbook\project1-main\client\src\components\App.js                          | JavaScript     |         67 |          1 |         12 |         80 |
+| c:\Users\rache\catbook\project1-main\client\src\components\config\index.js                 | JavaScript     |         13 |          0 |          2 |         15 |
+| c:\Users\rache\catbook\project1-main\client\src\components\contexts\AppContext.js          | JavaScript     |        163 |         25 |         39 |        227 |
+| c:\Users\rache\catbook\project1-main\client\src\components\contexts\AuthContext.js         | JavaScript     |        266 |         14 |         41 |        321 |
+| c:\Users\rache\catbook\project1-main\client\src\components\contexts\UIContext.js           | JavaScript     |         66 |          9 |         16 |         91 |
+| c:\Users\rache\catbook\project1-main\client\src\components\modules\AlertPanel.css          | PostCSS        |        184 |          3 |         33 |        220 |
+| c:\Users\rache\catbook\project1-main\client\src\components\modules\AlertPanel.js           | JavaScript     |        243 |          0 |         21 |        264 |
+| c:\Users\rache\catbook\project1-main\client\src\components\modules\Card.css                | PostCSS        |         27 |          0 |          7 |         34 |
+| c:\Users\rache\catbook\project1-main\client\src\components\modules\Card.js                 | JavaScript     |         44 |         11 |          7 |         62 |
+| c:\Users\rache\catbook\project1-main\client\src\components\modules\CatHappiness.css        | PostCSS        |         15 |          0 |          4 |         19 |
+| c:\Users\rache\catbook\project1-main\client\src\components\modules\CatHappiness.js         | JavaScript     |         18 |          6 |          5 |         29 |
+| c:\Users\rache\catbook\project1-main\client\src\components\modules\Chat.css                | PostCSS        |         10 |          0 |          3 |         13 |
+| c:\Users\rache\catbook\project1-main\client\src\components\modules\Chat.js                 | JavaScript     |         25 |         22 |          6 |         53 |
+| c:\Users\rache\catbook\project1-main\client\src\components\modules\ChatList.js             | JavaScript     |         25 |          9 |          5 |         39 |
+| c:\Users\rache\catbook\project1-main\client\src\components\modules\CommentsBlock.js        | JavaScript     |         29 |         13 |          5 |         47 |
+| c:\Users\rache\catbook\project1-main\client\src\components\modules\FaxTable.css            | PostCSS        |        388 |         13 |         70 |        471 |
+| c:\Users\rache\catbook\project1-main\client\src\components\modules\FaxTable.js             | JavaScript     |        247 |          3 |         24 |        274 |
+| c:\Users\rache\catbook\project1-main\client\src\components\modules\Menu.css                | PostCSS        |        233 |          8 |         40 |        281 |
+| c:\Users\rache\catbook\project1-main\client\src\components\modules\Menu.js                 | JavaScript     |        216 |          4 |         15 |        235 |
+| c:\Users\rache\catbook\project1-main\client\src\components\modules\NavBar.css              | PostCSS        |         26 |          0 |          7 |         33 |
+| c:\Users\rache\catbook\project1-main\client\src\components\modules\NavBar.js               | JavaScript     |         88 |          6 |          7 |        101 |
+| c:\Users\rache\catbook\project1-main\client\src\components\modules\NewPostInput.css        | PostCSS        |         27 |          0 |          5 |         32 |
+| c:\Users\rache\catbook\project1-main\client\src\components\modules\NewPostInput.js         | JavaScript     |         79 |         31 |         15 |        125 |
+| c:\Users\rache\catbook\project1-main\client\src\components\modules\NotFound.js             | JavaScript     |         15 |          0 |          4 |         19 |
+| c:\Users\rache\catbook\project1-main\client\src\components\modules\SeverityChart.css       | PostCSS        |        153 |          4 |         26 |        183 |
+| c:\Users\rache\catbook\project1-main\client\src\components\modules\SeverityChart.js        | JavaScript     |         81 |          0 |          8 |         89 |
+| c:\Users\rache\catbook\project1-main\client\src\components\modules\SingleComment.js        | JavaScript     |         18 |          9 |          4 |         31 |
+| c:\Users\rache\catbook\project1-main\client\src\components\modules\SingleMessage.css       | PostCSS        |         17 |          0 |          4 |         21 |
+| c:\Users\rache\catbook\project1-main\client\src\components\modules\SingleMessage.js        | JavaScript     |         16 |          6 |          5 |         27 |
+| c:\Users\rache\catbook\project1-main\client\src\components\modules\SingleStory.js          | JavaScript     |         18 |          9 |          4 |         31 |
+| c:\Users\rache\catbook\project1-main\client\src\components\modules\SingleUser.css          | PostCSS        |         12 |          0 |          3 |         15 |
+| c:\Users\rache\catbook\project1-main\client\src\components\modules\SingleUser.js           | JavaScript     |         22 |          8 |          5 |         35 |
+| c:\Users\rache\catbook\project1-main\client\src\components\modules\StatCard.css            | PostCSS        |        183 |          5 |         32 |        220 |
+| c:\Users\rache\catbook\project1-main\client\src\components\modules\StatCard.js             | JavaScript     |         27 |          0 |          6 |         33 |
+| c:\Users\rache\catbook\project1-main\client\src\components\modules\Unauthorized.css        | PostCSS        |          0 |          0 |          1 |          1 |
+| c:\Users\rache\catbook\project1-main\client\src\components\modules\Unauthorized.js         | JavaScript     |         46 |          1 |          9 |         56 |
+| c:\Users\rache\catbook\project1-main\client\src\components\pages\Calendar.css              | PostCSS        |        645 |         14 |        110 |        769 |
+| c:\Users\rache\catbook\project1-main\client\src\components\pages\Calendar.js               | JavaScript     |        571 |         22 |         64 |        657 |
+| c:\Users\rache\catbook\project1-main\client\src\components\pages\CalendarFeedLink.js       | JavaScript     |         84 |          6 |         15 |        105 |
+| c:\Users\rache\catbook\project1-main\client\src\components\pages\Chatbook.css              | PostCSS        |         10 |          0 |          3 |         13 |
+| c:\Users\rache\catbook\project1-main\client\src\components\pages\Chatbook.js               | JavaScript     |         94 |         23 |         15 |        132 |
+| c:\Users\rache\catbook\project1-main\client\src\components\pages\ChatbookWrapper.js        | JavaScript     |         14 |          2 |          6 |         22 |
+| c:\Users\rache\catbook\project1-main\client\src\components\pages\ClientSelect.js           | JavaScript     |         34 |          2 |          5 |         41 |
+| c:\Users\rache\catbook\project1-main\client\src\components\pages\ClinicLogin.css           | PostCSS        |         80 |          0 |         13 |         93 |
+| c:\Users\rache\catbook\project1-main\client\src\components\pages\ClinicLogin.js            | JavaScript     |         52 |          1 |          8 |         61 |
+| c:\Users\rache\catbook\project1-main\client\src\components\pages\FaxDashboardWrapper.js    | JavaScript     |          8 |          2 |          2 |         12 |
+| c:\Users\rache\catbook\project1-main\client\src\components\pages\FaxExtract.js             | JavaScript     |         53 |          0 |          7 |         60 |
+| c:\Users\rache\catbook\project1-main\client\src\components\pages\Feed.js                   | JavaScript     |         61 |          0 |          8 |         69 |
+| c:\Users\rache\catbook\project1-main\client\src\components\pages\GeneralDashboard.css      | PostCSS        |        359 |          9 |         67 |        435 |
+| c:\Users\rache\catbook\project1-main\client\src\components\pages\GeneralDashboard.js       | JavaScript     |        289 |         10 |         34 |        333 |
+| c:\Users\rache\catbook\project1-main\client\src\components\pages\Login.css                 | PostCSS        |        282 |          7 |         48 |        337 |
+| c:\Users\rache\catbook\project1-main\client\src\components\pages\Login2.css                | PostCSS        |        461 |         24 |         89 |        574 |
+| c:\Users\rache\catbook\project1-main\client\src\components\pages\LoginPage.js              | JavaScript     |        302 |         10 |         35 |        347 |
+| c:\Users\rache\catbook\project1-main\client\src\components\pages\LoginPage2.js             | JavaScript     |        371 |        273 |         45 |        689 |
+| c:\Users\rache\catbook\project1-main\client\src\components\pages\LoginPage3.css            | PostCSS        |        461 |         23 |         89 |        573 |
+| c:\Users\rache\catbook\project1-main\client\src\components\pages\LoginPage3.js             | JavaScript     |        372 |         10 |         51 |        433 |
+| c:\Users\rache\catbook\project1-main\client\src\components\pages\MedDashboard.js           | JavaScript     |        383 |          8 |         17 |        408 |
+| c:\Users\rache\catbook\project1-main\client\src\components\pages\MedDashboard1.js          | JavaScript     |        680 |          6 |         49 |        735 |
+| c:\Users\rache\catbook\project1-main\client\src\components\pages\MedDashboard2.js          | JavaScript     |        273 |         13 |         13 |        299 |
+| c:\Users\rache\catbook\project1-main\client\src\components\pages\Profile.css               | PostCSS        |         40 |          6 |         11 |         57 |
+| c:\Users\rache\catbook\project1-main\client\src\components\pages\Profile.js                | JavaScript     |         59 |          0 |          7 |         66 |
+| c:\Users\rache\catbook\project1-main\client\src\components\pages\Recorder.css              | PostCSS        |        125 |          8 |         24 |        157 |
+| c:\Users\rache\catbook\project1-main\client\src\components\pages\Recorder.js               | JavaScript     |        368 |          1 |         59 |        428 |
+| c:\Users\rache\catbook\project1-main\client\src\components\pages\Recorder2.js              | JavaScript     |        583 |          1 |         48 |        632 |
+| c:\Users\rache\catbook\project1-main\client\src\components\pages\Recorder3.js              | JavaScript     |        656 |          0 |         47 |        703 |
+| c:\Users\rache\catbook\project1-main\client\src\components\pages\Upload.css                | PostCSS        |         65 |          0 |          8 |         73 |
+| c:\Users\rache\catbook\project1-main\client\src\components\pages\Upload.js                 | JavaScript     |         74 |          0 |         15 |         89 |
+| c:\Users\rache\catbook\project1-main\client\src\components\pages\ucla.html                 | HTML           |        606 |         12 |         80 |        698 |
+| c:\Users\rache\catbook\project1-main\client\src\components\pages\ucla2.html                | HTML           |        478 |         11 |         57 |        546 |
+| c:\Users\rache\catbook\project1-main\client\src\components\style.scss                      | SCSS           |        100 |          9 |         12 |        121 |
+| c:\Users\rache\catbook\project1-main\client\src\components\styles.css                      | PostCSS        |        100 |          9 |          8 |        117 |
+| c:\Users\rache\catbook\project1-main\client\src\config.js                                  | JavaScript     |          6 |          0 |          2 |          8 |
+| c:\Users\rache\catbook\project1-main\client\src\index.js                                   | JavaScript     |          5 |          2 |          3 |         10 |
+| c:\Users\rache\catbook\project1-main\client\src\utilities.css                              | PostCSS        |         59 |         15 |         18 |         92 |
+| c:\Users\rache\catbook\project1-main\client\src\utilities.js                               | JavaScript     |         47 |         23 |          8 |         78 |
+| c:\Users\rache\catbook\project1-main\combined.log                                          | Log            |      1,674 |          0 |          1 |      1,675 |
+| c:\Users\rache\catbook\project1-main\e2e\example.spec.js                                   | JavaScript     |         10 |          4 |          6 |         20 |
+| c:\Users\rache\catbook\project1-main\error.log                                             | Log            |         86 |          0 |          1 |         87 |
+| c:\Users\rache\catbook\project1-main\frontend.html                                         | HTML           |        105 |          0 |         12 |        117 |
+| c:\Users\rache\catbook\project1-main\ocr.py                                                | Python         |         69 |          7 |         17 |         93 |
+| c:\Users\rache\catbook\project1-main\package-lock.json                                     | JSON           |     26,071 |          0 |          1 |     26,072 |
+| c:\Users\rache\catbook\project1-main\package.json                                          | JSON           |        103 |          0 |          1 |        104 |
+| c:\Users\rache\catbook\project1-main\playwright.config.js                                  | JavaScript     |         26 |         45 |         11 |         82 |
+| c:\Users\rache\catbook\project1-main\postcss.config.js                                     | JavaScript     |          6 |          0 |          0 |          6 |
+| c:\Users\rache\catbook\project1-main\script\adminDirect.js                                 | JavaScript     |         69 |          6 |         14 |         89 |
+| c:\Users\rache\catbook\project1-main\script\checkMongo.js                                  | JavaScript     |         35 |          1 |         10 |         46 |
+| c:\Users\rache\catbook\project1-main\script\checkroles.js                                  | JavaScript     |         34 |          3 |          8 |         45 |
+| c:\Users\rache\catbook\project1-main\script\fixUserRoles.js                                | JavaScript     |         70 |          6 |         13 |         89 |
+| c:\Users\rache\catbook\project1-main\script\initRoles.js                                   | JavaScript     |         50 |          4 |         10 |         64 |
+| c:\Users\rache\catbook\project1-main\script\script.js                                      | JavaScript     |         41 |          1 |          5 |         47 |
+| c:\Users\rache\catbook\project1-main\script\script2.js                                     | JavaScript     |         47 |          5 |         11 |         63 |
+| c:\Users\rache\catbook\project1-main\script\verifyFix.js                                   | JavaScript     |         57 |          5 |         12 |         74 |
+| c:\Users\rache\catbook\project1-main\server\api.js                                         | JavaScript     |        524 |         52 |        126 |        702 |
+| c:\Users\rache\catbook\project1-main\server\app\bezkoder.js                                | JavaScript     |          9 |          1 |          5 |         15 |
+| c:\Users\rache\catbook\project1-main\server\app\config\auth.config.js                      | JavaScript     |         18 |        339 |          5 |        362 |
+| c:\Users\rache\catbook\project1-main\server\app\config\db.config.js                        | JavaScript     |          3 |          1 |          2 |          6 |
+| c:\Users\rache\catbook\project1-main\server\app\controllers\AuditService.ts                | TypeScript     |        183 |         34 |         25 |        242 |
+| c:\Users\rache\catbook\project1-main\server\app\controllers\AuthService.ts                 | TypeScript     |        493 |        100 |         77 |        670 |
+| c:\Users\rache\catbook\project1-main\server\app\controllers\ConsentFormScreen.tsx          | TypeScript JSX |        411 |         19 |         31 |        461 |
+| c:\Users\rache\catbook\project1-main\server\app\controllers\EncryptedDatabaseService.ts    | TypeScript     |        206 |         71 |         45 |        322 |
+| c:\Users\rache\catbook\project1-main\server\app\controllers\EncryptedPrismaService.ts      | TypeScript     |        153 |         45 |         37 |        235 |
+| c:\Users\rache\catbook\project1-main\server\app\controllers\LoginScreen.tsx                | TypeScript JSX |        135 |          1 |         14 |        150 |
+| c:\Users\rache\catbook\project1-main\server\app\controllers\OAuthService.ts                | TypeScript     |        423 |         83 |         74 |        580 |
+| c:\Users\rache\catbook\project1-main\server\app\controllers\OAuthWebViewBridge.ts          | TypeScript     |        274 |         36 |         28 |        338 |
+| c:\Users\rache\catbook\project1-main\server\app\controllers\SecureAPIClient.ts             | TypeScript     |         91 |         35 |         22 |        148 |
+| c:\Users\rache\catbook\project1-main\server\app\controllers\SecureWebViewWrapper.tsx       | TypeScript JSX |        644 |         32 |         48 |        724 |
+| c:\Users\rache\catbook\project1-main\server\app\controllers\api.types.ts                   | TypeScript     |         38 |          0 |          6 |         44 |
+| c:\Users\rache\catbook\project1-main\server\app\controllers\app.tsx                        | TypeScript JSX |         99 |         14 |         20 |        133 |
+| c:\Users\rache\catbook\project1-main\server\app\controllers\audit.ts                       | TypeScript     |         45 |          6 |         12 |         63 |
+| c:\Users\rache\catbook\project1-main\server\app\controllers\auth.controller.js             | JavaScript     |        217 |        116 |         43 |        376 |
+| c:\Users\rache\catbook\project1-main\server\app\controllers\auth.js                        | JavaScript     |         52 |          3 |         10 |         65 |
+| c:\Users\rache\catbook\project1-main\server\app\controllers\clinic.controller.js           | JavaScript     |         20 |          0 |          5 |         25 |
+| c:\Users\rache\catbook\project1-main\server\app\controllers\compare.js                     | JavaScript     |         33 |          6 |          9 |         48 |
+| c:\Users\rache\catbook\project1-main\server\app\controllers\ios.secure.ts                  | TypeScript     |        644 |         32 |         48 |        724 |
+| c:\Users\rache\catbook\project1-main\server\app\controllers\navigation.types.ts            | TypeScript     |         46 |          9 |          9 |         64 |
+| c:\Users\rache\catbook\project1-main\server\app\controllers\phiProtection.ts               | TypeScript     |        127 |         15 |         26 |        168 |
+| c:\Users\rache\catbook\project1-main\server\app\controllers\requestSecurity.ts             | TypeScript     |         76 |          6 |         18 |        100 |
+| c:\Users\rache\catbook\project1-main\server\app\controllers\security.ts                    | TypeScript     |        169 |         19 |         36 |        224 |
+| c:\Users\rache\catbook\project1-main\server\app\controllers\simpleConsentServices.ts       | TypeScript     |         81 |         18 |         16 |        115 |
+| c:\Users\rache\catbook\project1-main\server\app\controllers\user.controller.js             | JavaScript     |        327 |          6 |         21 |        354 |
+| c:\Users\rache\catbook\project1-main\server\app\controllers\webViewServices.ts             | TypeScript     |         71 |         24 |         12 |        107 |
+| c:\Users\rache\catbook\project1-main\server\app\hook\useAuth.js                            | JavaScript     |        196 |          6 |         36 |        238 |
+| c:\Users\rache\catbook\project1-main\server\app\middleware\authJwt.js                      | JavaScript     |         75 |        310 |         13 |        398 |
+| c:\Users\rache\catbook\project1-main\server\app\middleware\index.js                        | JavaScript     |          6 |          0 |          2 |          8 |
+| c:\Users\rache\catbook\project1-main\server\app\middleware\verifySignUp.js                 | JavaScript     |         36 |          2 |         11 |         49 |
+| c:\Users\rache\catbook\project1-main\server\app\models\clinic.model.js                     | JavaScript     |         27 |          0 |          4 |         31 |
+| c:\Users\rache\catbook\project1-main\server\app\models\index.js                            | JavaScript     |          9 |          0 |          6 |         15 |
+| c:\Users\rache\catbook\project1-main\server\app\models\role.model.js                       | JavaScript     |          8 |          0 |          3 |         11 |
+| c:\Users\rache\catbook\project1-main\server\app\models\user.js                             | JavaScript     |        109 |         13 |         20 |        142 |
+| c:\Users\rache\catbook\project1-main\server\app\models\user.model.js                       | JavaScript     |         69 |          3 |          7 |         79 |
+| c:\Users\rache\catbook\project1-main\server\app\routes\auth.routes.js                      | JavaScript     |        100 |         11 |         16 |        127 |
+| c:\Users\rache\catbook\project1-main\server\app\routes\clinic.routes.js                    | JavaScript     |         41 |          4 |          8 |         53 |
+| c:\Users\rache\catbook\project1-main\server\app\routes\user.routes.js                      | JavaScript     |         42 |          1 |          7 |         50 |
+| c:\Users\rache\catbook\project1-main\server\auth.js                                        | JavaScript     |         53 |          3 |         10 |         66 |
+| c:\Users\rache\catbook\project1-main\server\controllers\handleNewFax.js                    | JavaScript     |        116 |          4 |         31 |        151 |
+| c:\Users\rache\catbook\project1-main\server\controllers\simpleFaxMonitor.js                | JavaScript     |        117 |         35 |         23 |        175 |
+| c:\Users\rache\catbook\project1-main\server\controllers\simpleFaxMonitorTemp.js            | JavaScript     |         43 |          4 |          7 |         54 |
+| c:\Users\rache\catbook\project1-main\server\controllers\transcribe_data.js                 | JavaScript     |         83 |          3 |          9 |         95 |
+| c:\Users\rache\catbook\project1-main\server\dbConnection.js                                | JavaScript     |         38 |          4 |         12 |         54 |
+| c:\Users\rache\catbook\project1-main\server\debug-moogo.js                                 | JavaScript     |         86 |          9 |         15 |        110 |
+| c:\Users\rache\catbook\project1-main\server\install.js                                     | JavaScript     |         29 |          4 |          5 |         38 |
+| c:\Users\rache\catbook\project1-main\server\models\Event.js                                | JavaScript     |         47 |          2 |          4 |         53 |
+| c:\Users\rache\catbook\project1-main\server\models\Transcription.js                        | JavaScript     |         55 |          3 |          3 |         61 |
+| c:\Users\rache\catbook\project1-main\server\models\TranscriptionFax.js                     | JavaScript     |         11 |          2 |          3 |         16 |
+| c:\Users\rache\catbook\project1-main\server\models\comment.js                              | JavaScript     |          8 |          2 |          3 |         13 |
+| c:\Users\rache\catbook\project1-main\server\models\message.js                              | JavaScript     |         16 |          0 |          3 |         19 |
+| c:\Users\rache\catbook\project1-main\server\models\story.js                                | JavaScript     |          7 |          2 |          3 |         12 |
+| c:\Users\rache\catbook\project1-main\server\oauth2\OAuth2-Setup-Guide.md                   | Markdown       |        236 |          0 |         71 |        307 |
+| c:\Users\rache\catbook\project1-main\server\oauth2\SMART-FHIR-Guide.md                     | Markdown       |        323 |          0 |         81 |        404 |
+| c:\Users\rache\catbook\project1-main\server\oauth2\config\oauth2.config.js                 | JavaScript     |         67 |         19 |          8 |         94 |
+| c:\Users\rache\catbook\project1-main\server\oauth2\config\smart-fhir.config.js             | JavaScript     |        135 |         34 |         27 |        196 |
+| c:\Users\rache\catbook\project1-main\server\oauth2\controllers\oauth2.controller.js        | JavaScript     |        379 |         47 |         87 |        513 |
+| c:\Users\rache\catbook\project1-main\server\oauth2\controllers\smart-fhir.controller.js    | JavaScript     |        464 |         49 |         76 |        589 |
+| c:\Users\rache\catbook\project1-main\server\oauth2\middleware\oauth2.middleware.js         | JavaScript     |        267 |         38 |         61 |        366 |
+| c:\Users\rache\catbook\project1-main\server\oauth2\routes\oauth2.routes.js                 | JavaScript     |        106 |         47 |         35 |        188 |
+| c:\Users\rache\catbook\project1-main\server\oauth2\routes\smart-fhir.routes.js             | JavaScript     |        140 |         69 |         47 |        256 |
+| c:\Users\rache\catbook\project1-main\server\oauth2\strategies\genericStrategy.js           | JavaScript     |        174 |         27 |         28 |        229 |
+| c:\Users\rache\catbook\project1-main\server\oauth2\strategies\googleStrategy.js            | JavaScript     |        116 |         19 |         19 |        154 |
+| c:\Users\rache\catbook\project1-main\server\oauth2\strategies\smartFhirStrategy.js         | JavaScript     |        335 |         40 |         56 |        431 |
+| c:\Users\rache\catbook\project1-main\server\ocr_data.js                                    | JavaScript     |         46 |          0 |          8 |         54 |
+| c:\Users\rache\catbook\project1-main\server\pages\MedicalAutomationFramework.js            | JavaScript     |        166 |         25 |         36 |        227 |
+| c:\Users\rache\catbook\project1-main\server\pages\MedicalFramework.js                      | JavaScript     |        162 |         60 |         37 |        259 |
+| c:\Users\rache\catbook\project1-main\server\pages\fixures.js                               | JavaScript     |         17 |         42 |          4 |         63 |
+| c:\Users\rache\catbook\project1-main\server\pages\login.js                                 | JavaScript     |         16 |          0 |          4 |         20 |
+| c:\Users\rache\catbook\project1-main\server\python\medscy.py                               | Python         |         19 |          1 |          5 |         25 |
+| c:\Users\rache\catbook\project1-main\server\python\ocr.py                                  | Python         |        173 |          5 |         17 |        195 |
+| c:\Users\rache\catbook\project1-main\server\python\ocr_plain.py                            | Python         |         52 |          4 |          9 |         65 |
+| c:\Users\rache\catbook\project1-main\server\server-socket.js                               | JavaScript     |         58 |          5 |         13 |         76 |
+| c:\Users\rache\catbook\project1-main\server\server.js                                      | JavaScript     |        470 |         92 |        151 |        713 |
+| c:\Users\rache\catbook\project1-main\server\services\aiResultAnalyzer.js                   | JavaScript     |        462 |         77 |         79 |        618 |
+| c:\Users\rache\catbook\project1-main\server\services\assessSeverityWithDeepSeek.js         | JavaScript     |         37 |          0 |          4 |         41 |
+| c:\Users\rache\catbook\project1-main\server\services\deepseek.js                           | JavaScript     |         40 |          5 |          5 |         50 |
+| c:\Users\rache\catbook\project1-main\server\services\twilio.js                             | JavaScript     |         18 |          5 |          5 |         28 |
+| c:\Users\rache\catbook\project1-main\server\utilities\cloudUploadMonitor.js                | JavaScript     |        137 |         17 |         27 |        181 |
+| c:\Users\rache\catbook\project1-main\server\utilities\daemon\faxmonitorservice.err.log     | Log            |    164,709 |          0 |      6,404 |    171,113 |
+| c:\Users\rache\catbook\project1-main\server\utilities\daemon\faxmonitorservice.out.log     | Log            |     47,676 |          0 |          1 |     47,677 |
+| c:\Users\rache\catbook\project1-main\server\utilities\daemon\faxmonitorservice.wrapper.log | Log            |         38 |          0 |          3 |         41 |
+| c:\Users\rache\catbook\project1-main\server\utilities\daemon\faxmonitorservice.xml         | XML            |         34 |          0 |          0 |         34 |
+| c:\Users\rache\catbook\project1-main\server\utilities\localMonitor.js                      | JavaScript     |         22 |          2 |          6 |         30 |
+| c:\Users\rache\catbook\project1-main\server\utilities\multiWorkerFaxMonitor.js             | JavaScript     |        179 |         30 |         47 |        256 |
+| c:\Users\rache\catbook\project1-main\server\validator.js                                   | JavaScript     |         45 |         13 |         10 |         68 |
+| c:\Users\rache\catbook\project1-main\tailwind.config.mjs                                   | JavaScript     |          6 |          0 |          1 |          7 |
+| c:\Users\rache\catbook\project1-main\test.js                                               | JavaScript     |         84 |          7 |         12 |        103 |
+| c:\Users\rache\catbook\project1-main\tests\demo-todo-app.spec.js                           | JavaScript     |        314 |         52 |         84 |        450 |
+| c:\Users\rache\catbook\project1-main\tests\example.spec.js                                 | JavaScript     |         10 |          4 |          6 |         20 |
+| c:\Users\rache\catbook\project1-main\tests\login.spec.js                                   | JavaScript     |         68 |         17 |         22 |        107 |
+| c:\Users\rache\catbook\project1-main\tests\login2.spec.js                                  | JavaScript     |         40 |         37 |         13 |         90 |
+| c:\Users\rache\catbook\project1-main\webpack.config.js                                     | JavaScript     |         68 |         16 |          4 |         88 |
+| Total                                                                                      |                |    277,793 |      3,545 |     12,221 |    293,559 |
++--------------------------------------------------------------------------------------------+----------------+------------+------------+------------+------------+

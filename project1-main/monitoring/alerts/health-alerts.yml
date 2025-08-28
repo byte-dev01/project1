@@ -1,0 +1,135 @@
+groups:
+  - name: healthbridge_health
+    interval: 30s
+    rules:
+      # Service down alert
+      - alert: ServiceDown
+        expr: up{job="healthbridge-api"} == 0
+        for: 2m
+        labels:
+          severity: critical
+          component: api
+        annotations:
+          summary: "HealthBridge API is down"
+          description: "{{ $labels.instance }} has been down for more than 2 minutes"
+
+      # High error rate
+      - alert: HighErrorRate
+        expr: rate(http_request_duration_seconds_count{status_code=~"5.."}[5m]) > 0.05
+        for: 5m
+        labels:
+          severity: warning
+          component: api
+        annotations:
+          summary: "High error rate detected"
+          description: "Error rate is {{ $value | humanizePercentage }} for {{ $labels.instance }}"
+
+      # Slow response time
+      - alert: SlowResponseTime
+        expr: histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m])) > 1
+        for: 10m
+        labels:
+          severity: warning
+          component: api
+        annotations:
+          summary: "Slow API response time"
+          description: "95th percentile response time is {{ $value }}s for {{ $labels.instance }}"
+
+      # Database connection issues
+      - alert: DatabaseDown
+        expr: external_service_status{service="mongodb"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          component: database
+        annotations:
+          summary: "MongoDB is unreachable"
+          description: "Cannot connect to MongoDB for more than 1 minute"
+
+      # Redis cache issues
+      - alert: RedisCacheDown
+        expr: external_service_status{service="redis"} == 0
+        for: 2m
+        labels:
+          severity: warning
+          component: cache
+        annotations:
+          summary: "Redis cache is unreachable"
+          description: "Cannot connect to Redis for more than 2 minutes"
+
+      # External service issues
+      - alert: ExternalServiceDown
+        expr: external_service_status{service=~"epic|officeally"} == 0
+        for: 5m
+        labels:
+          severity: warning
+          component: external
+        annotations:
+          summary: "External service {{ $labels.service }} is down"
+          description: "Cannot connect to {{ $labels.service }} for more than 5 minutes"
+
+      # High memory usage
+      - alert: HighMemoryUsage
+        expr: (node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes) / node_memory_MemTotal_bytes > 0.9
+        for: 5m
+        labels:
+          severity: warning
+          component: system
+        annotations:
+          summary: "High memory usage detected"
+          description: "Memory usage is {{ $value | humanizePercentage }} on {{ $labels.instance }}"
+
+      # High CPU usage
+      - alert: HighCPUUsage
+        expr: 100 - (avg by(instance) (irate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 80
+        for: 10m
+        labels:
+          severity: warning
+          component: system
+        annotations:
+          summary: "High CPU usage detected"
+          description: "CPU usage is {{ $value }}% on {{ $labels.instance }}"
+
+      # Certificate expiry warning
+      - alert: CertificateExpiringSoon
+        expr: (probe_ssl_earliest_cert_expiry - time()) / 86400 < 30
+        for: 1h
+        labels:
+          severity: warning
+          component: security
+        annotations:
+          summary: "SSL certificate expiring soon"
+          description: "Certificate for {{ $labels.instance }} expires in {{ $value }} days"
+
+      # Pod restart threshold
+      - alert: PodRestartingTooOften
+        expr: rate(kube_pod_container_status_restarts_total[15m]) > 0.1
+        for: 5m
+        labels:
+          severity: warning
+          component: kubernetes
+        annotations:
+          summary: "Pod restarting frequently"
+          description: "Pod {{ $labels.namespace }}/{{ $labels.pod }} has restarted {{ $value }} times in the last 15 minutes"
+
+      # Disk space warning
+      - alert: DiskSpaceLow
+        expr: (node_filesystem_avail_bytes{mountpoint="/"} / node_filesystem_size_bytes{mountpoint="/"}) < 0.1
+        for: 5m
+        labels:
+          severity: warning
+          component: system
+        annotations:
+          summary: "Low disk space"
+          description: "Less than 10% disk space remaining on {{ $labels.instance }}"
+
+      # Request rate spike
+      - alert: UnusualRequestRate
+        expr: abs(rate(http_request_duration_seconds_count[5m]) - rate(http_request_duration_seconds_count[5m] offset 1h)) > 10
+        for: 10m
+        labels:
+          severity: info
+          component: api
+        annotations:
+          summary: "Unusual request rate detected"
+          description: "Request rate has changed significantly from 1 hour ago on {{ $labels.instance }}"

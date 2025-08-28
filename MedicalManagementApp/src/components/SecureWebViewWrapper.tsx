@@ -1,21 +1,24 @@
-import React, { useRef, useState, useEffect } from 'react';
+import NetInfo from '@react-native-community/netinfo';
+import CryptoJS from 'crypto-js';
+import React, { useEffect, useRef, useState } from 'react';
 import {
-  View,
-  StyleSheet,
-  Alert,
   ActivityIndicator,
-  Text,
+  Alert,
   SafeAreaView,
+  StyleSheet,
+  Text,
+  View,
 } from 'react-native';
 import { WebView, WebViewNavigation } from 'react-native-webview';
-import NetInfo from '@react-native-community/netinfo';
-import { useAuthStore } from '@store/authStore';
-import { SecureStorageService } from '@/services/SecureStorageService';
-import { auditTrailService } from '@/core/compliance/AuditTrail';
-import { encrypt, decrypt } from '@utils/encryption';
-import CryptoJS from 'crypto-js';
-import { oAuthWebViewBridge } from '@/src/services/OAuthWebViewBridge';
-import { oAuthService } from '@/src/services/OAuthService';
+import { AuditTrailService } from '../../src/core/compliance/AuditTrail';
+import { encryptionService } from '../../src/services/EncryptionService';
+import { oAuthService } from '../../src/services/OAuthService';
+import { oAuthWebViewBridge } from '../../src/services/OAuthWebViewBridge';
+import { SecureStorageService } from '../../src/services/SecureStorageService';
+import { useAuthStore } from '../../store/authStore';
+
+// Create audit trail service instance
+const auditTrailService = new AuditTrailService();
 
 interface SecureWebViewWrapperProps {
   baseUrl?: string;
@@ -41,9 +44,21 @@ export const SecureWebViewWrapper: React.FC<SecureWebViewWrapperProps> = ({
   const [currentUrl, setCurrentUrl] = useState(baseUrl);
   const [isOffline, setIsOffline] = useState(false);
   const [sessionKey, setSessionKey] = useState<string>('');
+  const [authToken, setAuthToken] = useState<string>('');
   
-  const { user, isAuthenticated, authMethod } = useAuthStore();
+  const { user, isAuthenticated, authMethod, getToken } = useAuthStore();
   
+  // Fetch auth token
+  useEffect(() => {
+    const fetchToken = async () => {
+      const token = await getToken();
+      if (token) {
+        setAuthToken(token);
+      }
+    };
+    fetchToken();
+  }, [getToken, isAuthenticated]);
+
   // Generate session-specific encryption key and setup OAuth bridge
   useEffect(() => {
     const key = CryptoJS.lib.WordArray.random(256/8).toString();
@@ -388,7 +403,7 @@ export const SecureWebViewWrapper: React.FC<SecureWebViewWrapperProps> = ({
 
         case 'ENCRYPT_STORAGE':
           // Encrypt data before storing
-          const encrypted = await encrypt(message.value, sessionKey);
+          const encrypted = await encryptionService.encryptWithSessionKey(message.value, sessionKey);
           await SecureStorageService.setSecureItem(`web_${message.key}`, encrypted);
           break;
 
@@ -396,7 +411,7 @@ export const SecureWebViewWrapper: React.FC<SecureWebViewWrapperProps> = ({
           // Decrypt and inject back
           const encryptedData = await SecureStorageService.getSecureItem(`web_${message.key}`);
           if (encryptedData) {
-            const decrypted = await decrypt(encryptedData, sessionKey);
+            const decrypted = await encryptionService.decryptWithSessionKey(encryptedData, sessionKey);
             webViewRef.current?.injectJavaScript(`
               localStorage.setItem('${message.key}', '${decrypted}');
             `);
@@ -582,7 +597,7 @@ export const SecureWebViewWrapper: React.FC<SecureWebViewWrapperProps> = ({
           headers: {
             'Authorization': authMethod === 'oauth' 
               ? `Bearer ${oAuthService.getAccessToken() || ''}` 
-              : `Bearer ${user?.token || ''}`,
+              : `Bearer ${authToken || ''}`,
             'X-Session-Id': sessionKey,
             'X-Client-Type': authMethod === 'oauth' ? 'Mobile-OAuth' : 'Mobile-Secure',
             'X-Auth-Method': authMethod || 'none',

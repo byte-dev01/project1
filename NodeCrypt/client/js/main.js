@@ -148,13 +148,18 @@ window.addEventListener('DOMContentLoaded', () => {
 	// updateStaticTexts(); // 在初始化设置后更新静态文本 / Update static texts after initializing settings
 	initTheme(); // 初始化主题 / Initialize theme
 	
-	// Initialize WebRTC UI components
-	webRTCManager.initializeUI();
-	
-	// Initialize WebRTC integration with NodeCrypt
-	import('./webrtc-handler.js').then(module => {
-		module.initWebRTCIntegration();
-	});
+	// Delay WebRTC initialization to ensure UI is ready
+	setTimeout(() => {
+		console.log('Initializing WebRTC manager');
+		// Initialize WebRTC UI components
+		webRTCManager.initializeUI();
+		
+		// Initialize WebRTC integration with NodeCrypt
+		import('./webrtc-handler.js').then(module => {
+			module.initWebRTCIntegration();
+			console.log('WebRTC handler initialized');
+		});
+	}, 500);
 	
 	const settingsBtn = $id('settings-btn'); // 设置按钮 / Settings button
 	if (settingsBtn) {

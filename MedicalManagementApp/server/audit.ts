@@ -1,6 +1,6 @@
-import { ServerAuditService } from '../services/AuditService';
-import { authenticate } from '../middleware/auth';
 import express from 'express';
+import { authenticate } from '../middleware/auth';
+import { ServerAuditService } from './AuditService';
 
 const router = express.Router();
 const auditService = new ServerAuditService();

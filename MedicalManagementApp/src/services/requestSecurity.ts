@@ -97,3 +97,9 @@ class RequestSecurity {
 
     if (this.attestationKey && Platform.OS === 'ios') {
       const { AppAttestation } = NativeModules;
+      // Add iOS attestation logic here if needed
+    }
+    
+    return headers;
+  }
+}

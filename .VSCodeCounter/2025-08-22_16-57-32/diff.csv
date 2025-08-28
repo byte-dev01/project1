@@ -1,0 +1,134 @@
+"filename", "language", "Objective-C", "JavaScript", "Swift", "JavaScript JSX", "JSON with Comments", "TypeScript", "TypeScript JSX", "JSON", "Markdown", "comment", "blank", "total"
+"c:\Users\rache\catbook\MedicalManagementApp\CLAUDE.md", "Markdown", 0, 0, 0, 0, 0, 0, 0, 0, 123, 0, 36, 159
+"c:\Users\rache\catbook\MedicalManagementApp\HealthBridge\MedicalTableView.m", "Objective-C", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1
+"c:\Users\rache\catbook\MedicalManagementApp\HealthBridge\MedicalTableView.swift", "Swift", 0, 0, 191, 0, 0, 0, 0, 0, 0, 21, 41, 253
+"c:\Users\rache\catbook\MedicalManagementApp\HealthBridge\PHIProtection.m", "Objective-C", 86, 0, 0, 0, 0, 0, 0, 0, 0, 3, 15, 104
+"c:\Users\rache\catbook\MedicalManagementApp\HealthBridge\PaperPrescriptionModule.swift", "Swift", 0, 0, 101, 0, 0, 0, 0, 0, 0, 4, 20, 125
+"c:\Users\rache\catbook\MedicalManagementApp\HealthBridge\SecurityEnhancements.swift", "Swift", 0, 0, 33, 0, 0, 0, 0, 0, 0, 2, 6, 41
+"c:\Users\rache\catbook\MedicalManagementApp\HealthBridge\SecurityModule.swift", "Swift", 0, 0, 290, 0, 0, 0, 0, 0, 0, 38, 50, 378
+"c:\Users\rache\catbook\MedicalManagementApp\HealthBridge\WebViewBridge.m", "Objective-C", 17, 0, 0, 0, 0, 0, 0, 0, 0, 4, 6, 27
+"c:\Users\rache\catbook\MedicalManagementApp\HealthBridge\WebViewBridge.swift", "Swift", 0, 0, 107, 0, 0, 0, 0, 0, 0, 6, 18, 131
+"c:\Users\rache\catbook\MedicalManagementApp\api\ApiClient.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 213, 0, 0, 23, 40, 276
+"c:\Users\rache\catbook\MedicalManagementApp\app.json", "JSON", 0, 0, 0, 0, 0, 0, 0, 59, 0, 0, 0, 59
+"c:\Users\rache\catbook\MedicalManagementApp\app.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 99, 0, 0, 14, 20, 133
+"c:\Users\rache\catbook\MedicalManagementApp\app\(tabs)\_layout.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 41, 0, 0, 1, 4, 46
+"c:\Users\rache\catbook\MedicalManagementApp\app\(tabs)\explore.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 107, 0, 0, 0, 4, 111
+"c:\Users\rache\catbook\MedicalManagementApp\app\(tabs)\index.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 72, 0, 0, 0, 4, 76
+"c:\Users\rache\catbook\MedicalManagementApp\app\+not-found.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 29, 0, 0, 0, 4, 33
+"c:\Users\rache\catbook\MedicalManagementApp\app\_layout.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 24, 0, 0, 1, 5, 30
+"c:\Users\rache\catbook\MedicalManagementApp\app\screens\OAuthLoginScreen.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 287, 0, 0, 14, 15, 316
+"c:\Users\rache\catbook\MedicalManagementApp\assets\test\AutomationFramework.js", "JavaScript", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1
+"c:\Users\rache\catbook\MedicalManagementApp\babel.config.js", "JavaScript", 0, 27, 0, 0, 0, 0, 0, 0, 0, 0, 0, 27
+"c:\Users\rache\catbook\MedicalManagementApp\constants\Colors.ts", "TypeScript", 0, 0, 0, 0, 0, 20, 0, 0, 0, 4, 3, 27
+"c:\Users\rache\catbook\MedicalManagementApp\domains\clinical\medications\DrugInteractionChecker.ts", "TypeScript", 0, 0, 0, 0, 0, 252, 0, 0, 0, 44, 40, 336
+"c:\Users\rache\catbook\MedicalManagementApp\eslint.config.js", "JavaScript", 0, 8, 0, 0, 0, 0, 0, 0, 0, 1, 2, 11
+"c:\Users\rache\catbook\MedicalManagementApp\mobile\LocalAuditService.ts", "TypeScript", 0, 0, 0, 0, 0, 113, 0, 0, 0, 27, 21, 161
+"c:\Users\rache\catbook\MedicalManagementApp\mobile\useAudit.ts", "TypeScript", 0, 0, 0, 0, 0, 27, 0, 0, 0, 4, 9, 40
+"c:\Users\rache\catbook\MedicalManagementApp\package-lock.json", "JSON", 0, 0, 0, 0, 0, 0, 0, 20487, 0, 0, 1, 20488
+"c:\Users\rache\catbook\MedicalManagementApp\package.json", "JSON", 0, 0, 0, 0, 0, 0, 0, 72, 0, 0, 1, 73
+"c:\Users\rache\catbook\MedicalManagementApp\readMe.md", "Markdown", 0, 0, 0, 0, 0, 0, 0, 0, 31, 0, 21, 52
+"c:\Users\rache\catbook\MedicalManagementApp\scripts\reset-project.js", "JavaScript", 0, 89, 0, 0, 0, 0, 0, 0, 0, 10, 14, 113
+"c:\Users\rache\catbook\MedicalManagementApp\src\api\ApiClient.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 213, 0, 0, 23, 40, 276
+"c:\Users\rache\catbook\MedicalManagementApp\src\api\ApiOptimize.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 50, 0, 0, 12, 14, 76
+"c:\Users\rache\catbook\MedicalManagementApp\src\api\AuthApi.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 49, 0, 0, 1, 9, 59
+"c:\Users\rache\catbook\MedicalManagementApp\src\api\FaxApi.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 67, 0, 0, 1, 8, 76
+"c:\Users\rache\catbook\MedicalManagementApp\src\api\InsuranceApi.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 74, 0, 0, 0, 9, 83
+"c:\Users\rache\catbook\MedicalManagementApp\src\api\MessageApi.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 93, 0, 0, 1, 16, 110
+"c:\Users\rache\catbook\MedicalManagementApp\src\api\PatientsApi.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 91, 0, 0, 5, 13, 109
+"c:\Users\rache\catbook\MedicalManagementApp\src\api\endpoints.ts", "TypeScript", 0, 0, 0, 0, 0, 40, 0, 0, 0, 8, 9, 57
+"c:\Users\rache\catbook\MedicalManagementApp\src\background\BackgroundTaskManager.ts", "TypeScript", 0, 0, 0, 0, 0, 310, 0, 0, 0, 70, 65, 445
+"c:\Users\rache\catbook\MedicalManagementApp\src\components\Collapsible.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 40, 0, 0, 0, 6, 46
+"c:\Users\rache\catbook\MedicalManagementApp\src\components\ExternalLink.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 20, 0, 0, 2, 3, 25
+"c:\Users\rache\catbook\MedicalManagementApp\src\components\HapticTab.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 16, 0, 0, 1, 2, 19
+"c:\Users\rache\catbook\MedicalManagementApp\src\components\HelloWave.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 34, 0, 0, 0, 7, 41
+"c:\Users\rache\catbook\MedicalManagementApp\src\components\MedicalRecordTableView.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 75, 0, 0, 3, 9, 87
+"c:\Users\rache\catbook\MedicalManagementApp\src\components\ParallaxScrollView.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 76, 0, 0, 0, 7, 83
+"c:\Users\rache\catbook\MedicalManagementApp\src\components\SecureWebViewWrapper.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 644, 0, 0, 32, 48, 724
+"c:\Users\rache\catbook\MedicalManagementApp\src\components\ThemedText.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 55, 0, 0, 0, 6, 61
+"c:\Users\rache\catbook\MedicalManagementApp\src\components\ThemedView.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 5, 15
+"c:\Users\rache\catbook\MedicalManagementApp\src\components\WebViewWrapper.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 659, 0, 0, 43, 57, 759
+"c:\Users\rache\catbook\MedicalManagementApp\src\components\__tests__\SecureWebViewWrapper.test.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 546, 0, 0, 5, 95, 646
+"c:\Users\rache\catbook\MedicalManagementApp\src\components\common\ErrorBoundary.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 200, 0, 0, 2, 19, 221
+"c:\Users\rache\catbook\MedicalManagementApp\src\components\common\LoadingSpinner.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 62, 0, 0, 0, 6, 68
+"c:\Users\rache\catbook\MedicalManagementApp\src\components\common\SafeAreaWrapper.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 73, 0, 0, 1, 7, 81
+"c:\Users\rache\catbook\MedicalManagementApp\src\components\fax\FaxCard.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 167, 0, 0, 0, 12, 179
+"c:\Users\rache\catbook\MedicalManagementApp\src\components\fax\FaxFilters.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 144, 0, 0, 0, 7, 151
+"c:\Users\rache\catbook\MedicalManagementApp\src\components\fax\SeverityBadge.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 75, 0, 0, 1, 5, 81
+"c:\Users\rache\catbook\MedicalManagementApp\src\components\forms\InsuranceForm.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 141, 0, 0, 1, 16, 158
+"c:\Users\rache\catbook\MedicalManagementApp\src\components\forms\PatientForms.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 616, 0, 0, 7, 33, 656
+"c:\Users\rache\catbook\MedicalManagementApp\src\components\ui\IconSymbol.ios.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 31, 0, 0, 0, 2, 33
+"c:\Users\rache\catbook\MedicalManagementApp\src\components\ui\IconSymbol.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 26, 0, 0, 11, 5, 42
+"c:\Users\rache\catbook\MedicalManagementApp\src\components\ui\TabBarBackground.ios.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 15, 0, 0, 2, 3, 20
+"c:\Users\rache\catbook\MedicalManagementApp\src\components\ui\TabBarBackground.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 4, 0, 0, 1, 2, 7
+"c:\Users\rache\catbook\MedicalManagementApp\src\config\oauth.config.ts", "TypeScript", 0, 0, 0, 0, 0, 86, 0, 0, 0, 18, 14, 118
+"c:\Users\rache\catbook\MedicalManagementApp\src\core\clinical\ClinicalSafetyService.ts", "TypeScript", 0, 0, 0, 0, 0, 292, 0, 0, 0, 47, 53, 392
+"c:\Users\rache\catbook\MedicalManagementApp\src\core\clinical\DrugInteractionService.ts", "TypeScript", 0, 0, 0, 0, 0, 175, 0, 0, 0, 21, 27, 223
+"c:\Users\rache\catbook\MedicalManagementApp\src\core\compliance\AuditLog.ts", "TypeScript", 0, 0, 0, 0, 0, 522, 0, 0, 0, 83, 103, 708
+"c:\Users\rache\catbook\MedicalManagementApp\src\core\compliance\AuditLogEnhanced.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1
+"c:\Users\rache\catbook\MedicalManagementApp\src\core\compliance\AuditLogUsage.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1
+"c:\Users\rache\catbook\MedicalManagementApp\src\core\compliance\AuditTrail.ts", "TypeScript", 0, 0, 0, 0, 0, 562, 0, 0, 0, 108, 136, 806
+"c:\Users\rache\catbook\MedicalManagementApp\src\core\compliance\CURES2Service.ts", "TypeScript", 0, 0, 0, 0, 0, 232, 0, 0, 0, 44, 40, 316
+"c:\Users\rache\catbook\MedicalManagementApp\src\core\compliance\CaliforniaHealthcareCompliance.ts", "TypeScript", 0, 0, 0, 0, 0, 215, 0, 0, 0, 50, 48, 313
+"c:\Users\rache\catbook\MedicalManagementApp\src\core\compliance\ConsentManager.ts", "TypeScript", 0, 0, 0, 0, 0, 171, 0, 0, 0, 11, 25, 207
+"c:\Users\rache\catbook\MedicalManagementApp\src\core\compliance\KnoxKeeneCompliance.ts", "TypeScript", 0, 0, 0, 0, 0, 61, 0, 0, 0, 48, 11, 120
+"c:\Users\rache\catbook\MedicalManagementApp\src\core\compliance\TelehealthConsentService.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1
+"c:\Users\rache\catbook\MedicalManagementApp\src\core\compliance\dataRetentionService.ts", "TypeScript", 0, 0, 0, 0, 0, 89, 0, 0, 0, 4, 19, 112
+"c:\Users\rache\catbook\MedicalManagementApp\src\core\compliance\fhir.ts", "TypeScript", 0, 0, 0, 0, 0, 460, 0, 0, 0, 23, 30, 513
+"c:\Users\rache\catbook\MedicalManagementApp\src\features\medications\PrescriptionScreen.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 29, 0, 0, 4, 4, 37
+"c:\Users\rache\catbook\MedicalManagementApp\src\features\provider\ProviderEfficiencyService.ts", "TypeScript", 0, 0, 0, 0, 0, 321, 0, 0, 0, 42, 64, 427
+"c:\Users\rache\catbook\MedicalManagementApp\src\features\telehealth\services\LiveKitService.ts\LiveKitService.ts", "TypeScript", 0, 0, 0, 0, 0, 317, 0, 0, 0, 109, 65, 491
+"c:\Users\rache\catbook\MedicalManagementApp\src\hooks\useAuditedAction.ts", "TypeScript", 0, 0, 0, 0, 0, 376, 0, 0, 0, 76, 64, 516
+"c:\Users\rache\catbook\MedicalManagementApp\src\hooks\useAuth.js", "JavaScript", 0, 165, 0, 0, 0, 0, 0, 0, 0, 5, 31, 201
+"c:\Users\rache\catbook\MedicalManagementApp\src\hooks\useColorScheme.ts", "TypeScript", 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 2
+"c:\Users\rache\catbook\MedicalManagementApp\src\hooks\useColorScheme.web.ts", "TypeScript", 0, 0, 0, 0, 0, 13, 0, 0, 0, 3, 6, 22
+"c:\Users\rache\catbook\MedicalManagementApp\src\hooks\useThemeColor.ts", "TypeScript", 0, 0, 0, 0, 0, 14, 0, 0, 0, 4, 4, 22
+"c:\Users\rache\catbook\MedicalManagementApp\src\navigation\AuthNavigator.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 19, 0, 0, 1, 3, 23
+"c:\Users\rache\catbook\MedicalManagementApp\src\navigation\MainNavigator.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 179, 0, 0, 4, 10, 193
+"c:\Users\rache\catbook\MedicalManagementApp\src\navigation\RootNavigator.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 220, 0, 0, 5, 21, 246
+"c:\Users\rache\catbook\MedicalManagementApp\src\paper\PaperPrescriptionService.ts", "TypeScript", 0, 0, 0, 0, 0, 65, 0, 0, 0, 11, 15, 91
+"c:\Users\rache\catbook\MedicalManagementApp\src\screens\ConsentFormScreen.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 411, 0, 0, 19, 31, 461
+"c:\Users\rache\catbook\MedicalManagementApp\src\screens\DashboardScreen.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 461, 0, 0, 10, 24, 495
+"c:\Users\rache\catbook\MedicalManagementApp\src\screens\HomeScreen.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 139, 0, 0, 1, 6, 146
+"c:\Users\rache\catbook\MedicalManagementApp\src\screens\LoginScreen.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 517, 0, 0, 20, 36, 573
+"c:\Users\rache\catbook\MedicalManagementApp\src\screens\MessageScreen.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 431, 0, 0, 466, 26, 923
+"c:\Users\rache\catbook\MedicalManagementApp\src\screens\PatientDetailScreen.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 754, 0, 0, 6, 47, 807
+"c:\Users\rache\catbook\MedicalManagementApp\src\screens\PatientMedicalHistory.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 35, 0, 0, 4, 6, 45
+"c:\Users\rache\catbook\MedicalManagementApp\src\screens\PatientSearchScreen.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 392, 0, 0, 1, 26, 419
+"c:\Users\rache\catbook\MedicalManagementApp\src\screens\SecurePrescriptionScreen.ts", "TypeScript", 0, 0, 0, 0, 0, 55, 0, 0, 0, 4, 9, 68
+"c:\Users\rache\catbook\MedicalManagementApp\src\screens\WebViewScreen.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 47, 0, 0, 1, 7, 55
+"c:\Users\rache\catbook\MedicalManagementApp\src\screens\auth\LoginScreen.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 135, 0, 0, 1, 14, 150
+"c:\Users\rache\catbook\MedicalManagementApp\src\screens\auth\QRLogin.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 24, 0, 0, 6, 4, 34
+"c:\Users\rache\catbook\MedicalManagementApp\src\screens\fax\FaxDetailScreen.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 490, 0, 0, 11, 30, 531
+"c:\Users\rache\catbook\MedicalManagementApp\src\screens\fax\FaxListScreen.tsx", "TypeScript JSX", 0, 0, 0, 0, 0, 0, 423, 0, 0, 9, 30, 462
+"c:\Users\rache\catbook\MedicalManagementApp\src\services\AuthService.ts", "TypeScript", 0, 0, 0, 0, 0, 493, 0, 0, 0, 100, 77, 670
+"c:\Users\rache\catbook\MedicalManagementApp\src\services\EncryptedDatabaseService.ts", "TypeScript", 0, 0, 0, 0, 0, 206, 0, 0, 0, 71, 45, 322
+"c:\Users\rache\catbook\MedicalManagementApp\src\services\OAuthService.ts", "TypeScript", 0, 0, 0, 0, 0, 423, 0, 0, 0, 83, 74, 580
+"c:\Users\rache\catbook\MedicalManagementApp\src\services\OAuthWebViewBridge.ts", "TypeScript", 0, 0, 0, 0, 0, 274, 0, 0, 0, 36, 28, 338
+"c:\Users\rache\catbook\MedicalManagementApp\src\services\SecureAPIClient.ts", "TypeScript", 0, 0, 0, 0, 0, 91, 0, 0, 0, 35, 22, 148
+"c:\Users\rache\catbook\MedicalManagementApp\src\services\phiProtection.ts", "TypeScript", 0, 0, 0, 0, 0, 127, 0, 0, 0, 15, 26, 168
+"c:\Users\rache\catbook\MedicalManagementApp\src\services\requestSecurity.ts", "TypeScript", 0, 0, 0, 0, 0, 76, 0, 0, 0, 6, 18, 100
+"c:\Users\rache\catbook\MedicalManagementApp\src\services\security.ts", "TypeScript", 0, 0, 0, 0, 0, 169, 0, 0, 0, 19, 36, 224
+"c:\Users\rache\catbook\MedicalManagementApp\src\services\simpleConsentServices.ts", "TypeScript", 0, 0, 0, 0, 0, 81, 0, 0, 0, 18, 16, 115
+"c:\Users\rache\catbook\MedicalManagementApp\src\services\webViewServices.ts", "TypeScript", 0, 0, 0, 0, 0, 71, 0, 0, 0, 24, 12, 107
+"c:\Users\rache\catbook\MedicalManagementApp\store\authStore.ts", "TypeScript", 0, 0, 0, 0, 0, 256, 0, 0, 0, 31, 46, 333
+"c:\Users\rache\catbook\MedicalManagementApp\store\faxStore.ts", "TypeScript", 0, 0, 0, 0, 0, 103, 0, 0, 0, 3, 17, 123
+"c:\Users\rache\catbook\MedicalManagementApp\store\patientStore.ts", "TypeScript", 0, 0, 0, 0, 0, 138, 0, 0, 0, 2, 22, 162
+"c:\Users\rache\catbook\MedicalManagementApp\sync\conflictResolutionService.ts", "TypeScript", 0, 0, 0, 0, 0, 203, 0, 0, 0, 16, 39, 258
+"c:\Users\rache\catbook\MedicalManagementApp\theme\colors.ts", "TypeScript", 0, 0, 0, 0, 0, 109, 0, 0, 0, 11, 11, 131
+"c:\Users\rache\catbook\MedicalManagementApp\theme\spacing.ts", "TypeScript", 0, 0, 0, 0, 0, 89, 0, 0, 0, 7, 7, 103
+"c:\Users\rache\catbook\MedicalManagementApp\theme\typography.ts", "TypeScript", 0, 0, 0, 0, 0, 147, 0, 0, 0, 10, 10, 167
+"c:\Users\rache\catbook\MedicalManagementApp\tsconfig.json", "JSON with Comments", 0, 0, 0, 0, 42, 0, 0, 0, 0, 0, 0, 42
+"c:\Users\rache\catbook\MedicalManagementApp\types\api.types.ts", "TypeScript", 0, 0, 0, 0, 0, 38, 0, 0, 0, 0, 6, 44
+"c:\Users\rache\catbook\MedicalManagementApp\types\models.types.ts", "TypeScript", 0, 0, 0, 0, 0, 181, 0, 0, 0, 0, 16, 197
+"c:\Users\rache\catbook\MedicalManagementApp\types\navigation.types.ts", "TypeScript", 0, 0, 0, 0, 0, 46, 0, 0, 0, 9, 9, 64
+"c:\Users\rache\catbook\MedicalManagementApp\utils\DeviceFingerprint.ts", "TypeScript", 0, 0, 0, 0, 0, 99, 0, 0, 0, 7, 21, 127
+"c:\Users\rache\catbook\MedicalManagementApp\utils\backgroundTasks.js", "JavaScript", 0, 37, 0, 0, 0, 0, 0, 0, 0, 9, 9, 55
+"c:\Users\rache\catbook\MedicalManagementApp\utils\constants.ts", "TypeScript", 0, 0, 0, 0, 0, 57, 0, 0, 0, 0, 8, 65
+"c:\Users\rache\catbook\MedicalManagementApp\utils\disasterRecover.ts", "TypeScript", 0, 0, 0, 0, 0, 142, 0, 0, 0, 40, 44, 226
+"c:\Users\rache\catbook\MedicalManagementApp\utils\helpers.ts", "TypeScript", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1
+"c:\Users\rache\catbook\MedicalManagementApp\utils\notifications.ts", "TypeScript", 0, 0, 0, 0, 0, 170, 0, 0, 0, 12, 37, 219
+"c:\Users\rache\catbook\MedicalManagementApp\utils\offline.ts", "TypeScript", 0, 0, 0, 0, 0, 232, 0, 0, 0, 32, 55, 319
+"c:\Users\rache\catbook\MedicalManagementApp\utils\pdfoptimize.ts", "TypeScript", 0, 0, 0, 0, 0, 75, 0, 0, 0, 16, 18, 109
+"c:\Users\rache\catbook\MedicalManagementApp\utils\performanceMonitor.jsx", "JavaScript JSX", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1
+"c:\Users\rache\catbook\MedicalManagementApp\utils\search.ts", "TypeScript", 0, 0, 0, 0, 0, 49, 0, 0, 0, 15, 14, 78
+"Total", "-", 103, 326, 722, 0, 42, 8934, 9944, 20618, 154, 2361, 2785, 45989
